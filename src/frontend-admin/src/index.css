@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './common.css';
+
+.cognito-form-logo {
+    height: auto !important;
+}
+
+.lp_logo {
+    width: 160px;
+    margin: 0 auto 25px auto;
+}

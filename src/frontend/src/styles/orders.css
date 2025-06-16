@@ -1,0 +1,194 @@
+.toolbox-orders-table {
+    width: 100%;
+  }
+  .toolbox-orders-table thead {
+    background: #224681;
+  }
+  .toolbox-orders-table th, .toolbox-orders-table td {
+    text-align: left;
+  }
+  .toolbox-orders-table th {
+    color: #fff;
+    font-weight: normal;
+  }
+  .toolbox-orders-table th, .toolbox-orders-table td {
+    font-size: 0.9 rem;
+    font-family: 'Oswald' thin;
+    padding: 8px 12px;
+  }
+  .orders-header-sub {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+.register-dialog {
+  padding: 20px;
+}
+
+.register-dialog h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Oswald';
+}
+.register-dialog .form-field input {
+    height: 32px;
+}
+.dialog-content {
+  margin-bottom: 24px;
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+.form-field {
+    display: block;
+}
+.form-field label {
+  display: inline-block;
+  margin-bottom: 8px;
+  width: 15%;
+  text-transform: uppercase;
+  line-height: 15px;
+}
+
+.disabled-input {
+  width: 80%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  color: #666;
+  display: inline-block;
+  vertical-align: middle;
+  height: 32px;
+  font-size: 14px;
+}
+
+.add-location-button {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.new-location-input {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+
+.new-location-input input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  height:32px;
+  font-size: 14px;
+}
+
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+.dialog-actions button {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.cancel-button {
+  color: #666 !important;
+}
+.register-button {
+  background-color: #224681!important;
+  color: white !important;
+}
+.register-button:disabled {
+  background-color: #ccc !important;
+}
+
+
+/* Table styles */
+.toolbox-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.toolbox-orders-table button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.toolbox-orders-table .register-button {
+  background-color: #224681;
+  color: white;
+}
+
+.toolbox-orders-table .modify-button {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.toolbox-orders-table .deregister-button {
+  background-color: #d9534f;
+  color: white;
+} 
+.dialog-headers {
+    display: flex;
+    justify-content: space-between;
+}
+.dialog-headers i {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+
+.register-dialog .leaflet-container  {
+    height: 400px !important;
+}
+
+.location-field .disabled-input{
+    width: 50%;
+}
+.location-field button{
+    width: 30%;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.deregister-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.deregister-button:hover {
+  background-color: #c82333;
+}
+
+.deregister-button:disabled {
+  background-color: #e0a0a0;
+  cursor: not-allowed;
+}
+.label-icon {
+  margin-left: 5px;
+}

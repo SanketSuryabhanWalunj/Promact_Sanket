@@ -1,0 +1,703 @@
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  flex: 1;
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Map and Sidebar Layout */
+.map-and-list-container {
+  display: flex;
+  gap: 20px;
+}
+
+.map-section {
+  flex: 2;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 140px);
+}
+
+.lakes-sidebar {
+  flex: 1;
+  width: 450px;
+  padding: 0 0 0 20px;
+  padding-top: 0;
+}
+
+/* Sidebar Header */
+.lakes-sidebar h2,
+.sidebar-title {
+  font-size: 25px;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.sidebar-description {
+  color: #444444;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Lakes List */
+.lakes-list {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 0 15px;
+  height: 100%;
+  overflow-y: auto;
+  height: calc(100vh - 240px);
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #02A4DC transparent;
+  border-radius: 8px;
+}
+
+.lakes-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lakes-list::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.lakes-list::-webkit-scrollbar-thumb {
+  background-color: #02A4DC;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+.lakes-list::-webkit-scrollbar-thumb:hover {
+  background-color: #0288b7;
+}
+
+.lake-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+
+
+.go-to-lake-btn {
+  background: none;
+  border: none;
+  color: #2196F3;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.go-to-lake-btn:hover {
+  text-decoration: underline;
+}
+
+/* Lake Stats */
+.lake-stats {
+  display: inline-block;
+  vertical-align: middle;
+  gap: 15px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  padding-left: 28px;
+}
+
+.stat-group {
+  display: inline-block;
+  vertical-align: top;
+  width: 49%;
+}
+
+.stat-item {
+  display: inline-block;
+}
+
+.stat-value {
+  font-weight: 700;
+  color: #333;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.stat-label {
+  color: rgb(0, 0, 0, 65%);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Sampling Styles */
+.sampling-row {
+  margin-top: 10px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 15px;
+}
+
+.sampling-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+}
+
+.sampling-level {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.sampling-level.low {
+  background-color: #FFF3E0;
+  color: #E65100;
+}
+
+.sampling-level.medium {
+  background-color: #E3F2FD;
+  color: #1565C0;
+}
+
+.sampling-level.high {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.sampling-label {
+  color: #666;
+}
+
+/* Map Marker Styles */
+.custom-location-marker {
+  background: none;
+  border: none;
+}
+
+.custom-location-marker div {
+  position: relative;
+  transition: transform 0.2s ease-out;
+}
+
+.custom-location-marker:hover div {
+  transform: scale(1.1);
+}
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 20px;
+}
+
+.marker-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.marker-cluster span {
+  line-height: 30px;
+}
+
+.marker-cluster-small {
+  background-color: rgba(181, 226, 140, 0.6);
+}
+
+.marker-cluster-small div {
+  background-color: rgba(110, 204, 57, 0.6);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(241, 211, 87, 0.6);
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(240, 194, 12, 0.6);
+}
+
+.marker-cluster-large {
+  background-color: rgba(253, 156, 115, 0.6);
+}
+
+.marker-cluster-large div {
+  background-color: rgba(241, 128, 23, 0.6);
+}
+
+/* Lake Details */
+.lake-details {
+  margin: 10px 0;
+}
+
+.lake-details p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.lake-details strong {
+  color: #2c3e50;
+}
+
+/* Map Container */
+.map-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* Right Sidebar */
+.right-sidebar {
+  flex: 1;
+  max-width: 400px;
+  overflow-y: hidden;
+  border-radius: 8px;
+}
+.sidebar-content {
+
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: calc(100vh - 140px);
+}
+/* Lake Popup */
+.lake-popup {
+  padding: 10px;
+  max-width: 300px;
+}
+
+.lake-popup h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.lake-popup p {
+  margin: 5px 0;
+  color: #666;
+}
+
+/* No Lakes Message */
+
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.no-lakes-message {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.weather-header {
+  margin-bottom: 10px;
+}
+
+.date-time {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.short-forecast {
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  line-height: 1.9rem;
+  font-weight: 300;
+  color: #444;
+}
+
+.weather-main {
+  width: 80px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.temperature-container {
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+  align-items: center;
+  text-align: center;
+  margin-right: 10px;
+}
+.weather-icon {
+  width: 100%;
+  display: block;
+}
+.weather-icon i{
+ font-size: 60px;
+}
+.weather-details{
+  width: calc(100% - 80px);
+  display: inline-block;
+  padding-left: 10px;
+}
+.temperature-value {
+  margin-top: 10px;
+  font-size: 2.2rem;
+  color: #444;
+}
+.temperature-display {
+  display: flex;
+  flex-direction: column;
+  font-weight: 300;
+  text-align: center;
+}
+.weather-label {
+  color: rgba(0,0,0,0.5);
+  font-weight: 300;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 5px;
+  width: 33%;
+}
+.weather-value {
+  color: #444444;
+  font-weight: 700;
+  display: inline-block;
+  vertical-align: top;
+}
+
+
+
+
+.metric-star {
+  display: inline-block;
+  margin: 0 8px 0 0;
+  min-width: 18px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: #bbb;
+  font-size: 15px;
+  text-align: center;
+}
+
+.metric-star.blue {
+  color: #38588d;
+}
+
+.metric-star:hover,
+.metric-star-blue:hover {
+  transform: scale(1.1);
+}
+
+.metric-star-loading {
+  min-width: 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #38588d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.main-lake-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+
+.lake-page-content {
+  /* padding: 20px; */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+/* Lake Page Charts */
+.chart-title {
+  font-weight: 500;
+}
+.chart-subtitle {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+  margin: -5px 0;
+}
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.chart-filter select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+}
+
+/* Lake Analytics Page Charts */
+.lake-chart-results {
+  padding: 0 1rem;
+}
+.lake-chart-results .chart-section {
+  width: 100%;
+  margin: 0;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0 10px;
+  overflow-x: auto;
+}
+.lake-chart-results .chart-section h3 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+.lake-chart-results .chart-title {
+  margin-top: -5px;
+  font-size: 1.2rem;
+  letter-spacing: -0.02rem;
+}
+.analytics-table-section h2 {
+  margin: 20px 0 5px 0;
+}
+.analytics-table-section .text-label {
+  color: rgba(0,0,0,0.5);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.analytics-table-section .text-value {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.02rem;
+}
+
+
+.chart-duration-select select {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+}
+
+.chart-duration-select select:hover {
+  border-color: #999;
+}
+
+.chart-duration-select select:focus {
+  outline: none;
+  border-color: #38588d;
+  box-shadow: 0 0 0 2px rgba(56, 88, 141, 0.2);
+}
+
+.empty-chart-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.characteristic-subtitle {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.info-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 3px;
+}
+
+.info-icon {
+  color: #666;
+  font-size: 16px;
+  cursor: help;
+}
+
+.info-tooltip {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  padding: 12px;
+  border-radius: 6px;
+  width: 300px;
+  z-index: 1000;
+  margin-top: 8px;
+  white-space: pre-line;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.info-icon-wrapper:hover .info-tooltip {
+  display: block;
+}
+
+/* Add arrow to tooltip */
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.lake-favorites {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.favorite-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  background: #f8f9fa;
+   border: 1px solid #eee;
+  transition: all 0.2s ease;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+
+
+.characteristic-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.characteristic-value {
+  color: #666;
+}
+
+.favorites-section {
+  margin-top: 2rem;
+}
+
+.favorite-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.characteristic-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.characteristic-date {
+  color: #888;
+}
+
+.characteristic-description {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+
+
+.favorite-item:hover {
+  background: #f0f4f8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px #0000000d;
+}
+/* Field notes */
+
+.go-to-field-notes {
+  position: relative;
+  top: 3px;
+  color: #02A4DC;
+  text-transform: uppercase;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: -0.03rem;
+}
+
+
+.field-notes-timings {
+  font-size: 0.8rem;
+  color: #888;
+  text-transform: uppercase;
+}
+.field-notes-title {
+  font-size: 1rem;
+  line-height: 1.2rem;
+  font-weight: 500;
+  color: #000;
+}
+.field-notes-author {
+  font-size: 0.8rem;
+  color: #888;
+  text-transform: uppercase;
+}

@@ -1,0 +1,646 @@
+/* Global Styles
+-------------------------------------------------- */
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.93rem;
+  background: #efefef;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Header and Nav */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: #224681;
+  width: 250px;
+  float: left;
+}
+header a.lake-pulse-logo {
+  display:block;
+  margin: 10px 0 10px 25px;
+  width: 160px;
+  height: 55px;
+  background: url(../assets/LakePulse_Logo_White.png) center no-repeat;
+  background-size: contain;
+  text-indent: -9999px;
+}
+header nav ul {
+  position: relative;
+  margin: 0;
+  padding: 10px 0 10px 25px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+header nav ul li {
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  opacity: 0.5;
+  transition: 250ms;
+}
+header nav ul li.active, header nav ul li:hover {
+  opacity: 1;
+}
+header nav ul li i {
+  width: 40px;
+  font-size: 1.5rem;
+  color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+}
+header nav ul li a {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 400;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+header .user-profile-wrap {
+  position: absolute;
+  left: 15px;
+  bottom: 10px;
+}
+header .user-name-section>div {
+  width: 122px;
+  height: 18px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+header .user-name-section .user-name {
+  margin-top: 6px;
+  
+}
+header .user-name-section .user-role {
+  opacity: 0.5;
+}
+header .sign-out-details .dropdown-item {
+  margin: 10px 0 0 18px;
+  padding: 0;
+  opacity: 0.5;
+}
+header .sign-out-details .dropdown-item:hover {
+  background: transparent;
+  opacity: 1;
+}
+header .sign-out-details .dropdown-item i {
+  font-size: 24px;
+  color: #fff;
+}
+
+
+
+/* Main Content */
+main {
+  width: calc(100% - 250px);
+  height: 100%;
+  margin-left: 250px;
+  padding: 10px 20px;
+  position: relative;
+}
+main .user-stats p {
+  color: #666;
+}
+main .user-stats p strong {
+  color: #000;
+}
+.p-2 {
+  padding: 1rem;
+}
+
+.mt-30px {
+  margin-top: 30px;
+}
+.w-179 {
+  width: 179px;
+}
+
+.admin-title {
+  font-size: 40px;
+  font-family: oswald;
+  padding-left: 1rem;
+}
+.admin-save-btn {
+color: (0,0,0, 35%);
+font-size: 20px;
+
+}
+.admin-save-btn {
+  color: #1D417C;
+}
+.admin-delete-btn {
+  color: rgba(215, 11, 11, 50%);
+  font-size: 20px;
+  margin-left: 20px !important;
+}
+:disabled {
+  cursor: default;
+  color:rgba(0, 0, 0, 0.35);
+}
+.MuiTableRow-root td:first-child{
+ text-align: center;
+}
+
+/* Basic Typography 
+-------------------------------------------------- */
+h1, h2, h3, nav ul li {
+  font-family: 'Oswald', sans-serif;
+}
+h1 {
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.03rem;
+   padding-bottom: 5px;
+}
+h2 {
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: -0.03rem;
+  line-height: 1.9rem;
+  margin-bottom: 0.5rem;
+}
+h3 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: -0.03rem;
+}
+
+.user-profile-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+}
+
+.profile-trigger {
+  display: inline-block;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.profile-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.online-indicator {
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  border: 2px solid white;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+  padding: 16px;
+  min-width: 240px;
+  z-index: 1000;
+}
+
+.user-info {
+  padding: 0;
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.user-info p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.dropdown-links {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0;
+}
+
+.dropdown-links a,
+.dropdown-links button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  transition: background 0.2s;
+  width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    padding: 8px 16px;
+}
+.dropdown-links a:hover,
+.dropdown-links button:hover {
+  background: #eee;
+}
+.dropdown-links a>i, .dropdown-links button>i {
+  color: #224681;
+  opacity: 0.85;
+}
+
+/* Settings Page Styles */
+.settings-wrap {
+
+}
+.settings-page {
+  padding: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.settings-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.settings-sidebar h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #0d0c22;
+}
+
+.settings-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-sidebar a {
+  padding: 8px 12px;
+  color: #6e6d7a;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.settings-sidebar a:hover {
+  background: #f3f3f4;
+}
+
+.settings-sidebar a.active {
+  background: #fff;
+}
+
+.settings-content {
+  flex: 1;
+  max-width: 720px;
+}
+
+.settings-header {
+  margin-bottom: 32px;
+}
+
+.settings-description {
+  color: rgba(0,0,0,0.5);
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-size: 12px;
+  color: rgba(0,0,0,0.5);
+  text-transform: uppercase;
+}
+
+.form-field input {
+  padding: 12px;
+  border: 1px solid #e7e7e9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-field input:focus {
+  border-color: #ea4c89;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(234, 76, 137, 0.1);
+}
+
+.form-field input.error {
+  border-color: #dc3545;
+}
+
+
+.save-changes-button {
+  transition: all 0.2s;
+  opacity: 0.8;
+}
+
+.save-changes-button:hover {
+  opacity: 1;
+}
+
+.save-changes-button:disabled {
+  background: #e7e7e9;
+  cursor: not-allowed;
+}
+
+.profile-picture-section {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-picture-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.current-profile-picture {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-picture-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #6e6d7a;
+}
+
+.upload-button {
+  background: rgb(34,70,129);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.5;
+}
+
+.upload-button:hover {
+  opacity: 1;
+}
+
+/* Add these styles to your existing CSS */
+.profile-avatar-container {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.profile-avatar-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder-large {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #666;
+  letter-spacing: -0.2rem;
+  text-transform: uppercase;
+}
+
+.user-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 0;
+  background: #224681;
+}
+
+
+.dropdown-menu {
+  min-width: 200px;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.user-header h3 {
+  margin: 8px 0 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 22px;
+
+}
+.user-header p {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.75);
+  margin: 0;
+}
+
+.online-indicator {
+  width: 12px;
+  height: 12px;
+  background: #22c55e;
+  border: 2px solid white;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.alert-success {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.delete-picture-button {
+  background: #ef4444;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.delete-picture-button:hover {
+  background: #dc2626;
+}
+
+.delete-picture-button:disabled {
+  background: #999;
+  cursor: not-allowed;
+} 
+.user-name {
+	text-transform: capitalize;
+}
+.user-role i{
+	margin-right: 5px;
+}
+#root {
+	overflow:hidden;
+}
+.admin-dashboard-content {
+	overflow: hidden;
+	overflow-x: auto;
+}
+.confirmation-dialog {
+  text-align: left;
+}
+
+.confirmation-dialog h2 {
+  color: #333;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+}
+
+.confirmation-dialog p {
+  color: #666;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+.cancel-button {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+}
+
+.cancel-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.checkout-dialog {
+  text-align: center;
+}
+
+.checkout-dialog h2 {
+  margin-bottom: 16px;
+  color: #333;
+  font-family: 'oswald', sans-serif;
+}
+
+.checkout-dialog .dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+.checkout-dialog .dialog-buttons button {
+  border-radius: 8px;
+  padding: 8px 16px;
+  line-height: 1;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.checkout-dialog .proceed-button {
+  background-color: #224681;
+  color: #fff;
+  border: none;
+}
+.checkout-dialog .proceed-button:hover {
+  background-color: #224681;
+}
+.checkout-dialog .cancel-button {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+.checkout-dialog .cancel-button:hover {
+  background-color: #e0e0e0;
+}
+.submit-btn {
+  background-color: #02A4DC;
+}

@@ -1,0 +1,199 @@
+# Workflow Configuration
+
+pipelines:
+  branches:
+    develop:
+      - step:
+          image: node:18
+          name: Security Scan
+          # condition:
+          #     changesets:
+          #         includePaths:
+          #           # any changes in frontend directory
+          #           - "src/frontend/**"
+          script:
+            # Run a security scan for sensitive data.
+            # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+            - pipe: atlassian/git-secrets-scan:0.5.1
+
+      - step:
+          image: node:22.10.0
+          name: Frontend Deploy to Develop Environment
+          # deployment: develop
+          condition:
+              changesets:
+                  includePaths:
+                    # any changes in frontend directory
+                    - "src/frontend/**"
+          # clone:
+          #   enabled: false
+          script:
+            - cd src/frontend
+            - apt-get update && apt-get install -y awscli jq
+            - echo "Creating .env file..."
+            - aws ssm get-parameter --name "/lakepulse/develop/frontend/main/.env"  --with-decryption --query "Parameter.Value" --output text > .env
+            # - printenv    ## FOR DEBUG 
+            # - echo "VITE_AUTHORITY=$VITE_AUTHORITY" > .env
+            # - echo "VITE_CLIENT_ID=$VITE_CLIENT_ID" >> .env
+            # - echo "VITE_REDIRECT_URI=$VITE_REDIRECT_URI" >> .env
+            # - echo "VITE_RESPONSE_TYPE=$VITE_RESPONSE_TYPE" >> .env
+            # - echo "VITE_SCOPE=$VITE_SCOPE" >> .env
+            # - echo "VITE_POST_LOGOUT_REDIRECT_URI=$VITE_POST_LOGOUT_REDIRECT_URI" >> .env
+            # - echo "VITE_COGNITO_DOMAIN=$VITE_COGNITO_DOMAIN" >> .env
+            # - echo "VITE_BASE_URL=$DEV_VITE_BASE_URL" >> .env
+            # - echo "VITE_USER_POOL_ID=$DEV_VITE_USER_POOL_ID" >> .env
+            # - echo "VITE_AWS_REGION=$DEV_VITE_AWS_REGION" >> .env
+            # - echo "VITE_AWS_ACCESS_KEY_ID=$DEV_VITE_AWS_ACCESS_KEY_ID" >> .env
+            # - echo "VITE_AWS_SECRET_ACCESS_KEY=$DEV_VITE_AWS_SECRET_ACCESS_KEY" >> .env            
+            # - cat .env
+            - npm install --legacy-peer-deps
+            # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
+            # - npm test
+            - npm run build
+
+            # sync your files to S3
+            - pipe: atlassian/aws-s3-deploy:2.0.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                S3_BUCKET: $DEV_FRONTEND_MAIN_S3BUCK_NAME
+                LOCAL_PATH: 'dist'
+                CACHE_CONTROL: 'no-cache'
+                DELETE_FLAG: 'true'
+            # triggering a distribution invalidation to refresh the CDN caches
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                DISTRIBUTION_ID: $DEV_MAIN_CLOUDFRONT_DISTRIBUTION_ID
+
+      - step:
+          image: node:22.10.0
+          name: Admin Frontend Deploy to Develop Environment
+          # deployment: develop
+          condition:
+              changesets:
+                  includePaths:
+                    # any changes in frontend directory
+                    - "src/frontend-admin/**"
+          # clone:
+          #   enabled: false
+          script:
+            - cd src/frontend-admin
+            - apt-get update && apt-get install -y awscli jq
+            - echo "Creating .env file..."
+            - aws ssm get-parameter --name "/lakepulse/develop/frontend/admin/.env"  --with-decryption --query "Parameter.Value" --output text > .env
+            # - echo "Creating .env file..."
+            # - echo "VITE_AUTHORITY=$DEV_VITE_AUTHORITY" > .env
+            # - echo "VITE_CLIENT_ID=$DEV_VITE_CLIENT_ID" >> .env
+            # - echo "VITE_REDIRECT_URI=$DEV_VITE_REDIRECT_URI" >> .env
+            # - echo "VITE_RESPONSE_TYPE=$DEV_VITE_RESPONSE_TYPE" >> .env
+            # - echo "VITE_SCOPE=$DEV_VITE_SCOPE" >> .env
+            # - echo "VITE_POST_LOGOUT_REDIRECT_URI=$DEV_VITE_POST_LOGOUT_REDIRECT_URI" >> .env
+            # - echo "VITE_COGNITO_DOMAIN=$DEV_VITE_COGNITO_DOMAIN" >> .env
+            # - echo "VITE_BASE_URL=$DEV_VITE_BASE_URL" >> .env
+            # - echo "VITE_USER_POOL_ID=$DEV_VITE_USER_POOL_ID" >> .env
+            # - echo "VITE_AWS_REGION=$DEV_VITE_AWS_REGION" >> .env
+            # - echo "VITE_AWS_ACCESS_KEY_ID=$DEV_VITE_AWS_ACCESS_KEY_ID" >> .env
+            # - echo "VITE_AWS_SECRET_ACCESS_KEY=$DEV_VITE_AWS_SECRET_ACCESS_KEY" >> .env            
+            # - cat .env
+            - npm install
+            # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
+            # - npm test
+            - npm run build
+
+            # sync your files to S3
+            - pipe: atlassian/aws-s3-deploy:1.1.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                S3_BUCKET: $DEV_ADMIN_S3_BUCKET_NAME
+                LOCAL_PATH: 'dist'
+            # triggering a distribution invalidation to refresh the CDN caches
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                DISTRIBUTION_ID: $DEV_ADMIN_CLOUDFRONT_DISTRIBUTION_ID
+
+      - step:
+          name: Backend Build and Push to ECR
+          image: python:3.10
+          condition:
+              changesets:
+                  includePaths:
+                    # any changes in frontend directory
+                    - "src/backend/**"
+          services:
+            - docker
+          caches:
+            - pip
+          script:
+            - pip3 install awscli
+            - pip3 install jq
+            - cd src/backend/LakePulse/LakePulse
+            - echo "Authenticating with AWS ECR..."
+            # - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com)
+            - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+            - echo "Building Docker image..."
+            - docker build -t $DEV_IMAGE_NAME:$BITBUCKET_COMMIT .
+            - echo "Tagging Docker image..."
+            - docker tag $DEV_IMAGE_NAME:$BITBUCKET_COMMIT $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DEV_IMAGE_NAME:$BITBUCKET_COMMIT
+            - echo "Pushing Docker image to ECR..."
+            - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DEV_IMAGE_NAME:$BITBUCKET_COMMIT
+            - echo "Saving image URI for deployment..."
+            - export IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DEV_IMAGE_NAME:$BITBUCKET_COMMIT"
+
+      - step:
+          name: Backend Deploy to ECS
+          image: python:3.10
+          condition:
+              changesets:
+                  includePaths:
+                    # any changes in frontend directory
+                    - "src/backend/**"
+          caches:
+            - pip
+          script:
+            - pip3 install awscli
+            - apt-get update && apt-get install -y jq
+            - cd src/backend/LakePulse/LakePulse
+            - export IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DEV_IMAGE_NAME:$BITBUCKET_COMMIT"
+            - echo "Creating a new task definition revision..."
+            - |
+              TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $DEV_ECS_TASK_DEFINITION_NAME)
+              NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE_URI "$IMAGE_URI" --arg DEV_DOTNET_LOGLEVEL_DEFAULT "$DEV_DOTNET_LOGLEVEL_DEFAULT" --arg DEV_DOTNET_LOGLEVEL_NETCORE "$DEV_DOTNET_LOGLEVEL_NETCORE" --arg DEV_PG_CONNECTION_STRING "$DEV_PG_CONNECTION_STRING"  --arg DEV_REDSHIFT_CONNECTION_STRING "$DEV_REDSHIFT_CONNECTION_STRING"  --arg AWS_DEFAULT_REGION "$AWS_DEFAULT_REGION"  --arg DEV_COGNITO_USERPOOL_ID "$DEV_COGNITO_USERPOOL_ID" --arg DEV_ALLOW_CORS "$DEV_ALLOW_CORS" --arg DEV_HTTP_SET "$DEV_HTTP_SET"  --arg DEV_COGNITO_CLIENTID "$DEV_COGNITO_CLIENTID" --arg DEV_App_CacheTimeOut "$DEV_App_CacheTimeOut" \
+                '.taskDefinition | 
+                { 
+                  family: .family, 
+                  containerDefinitions: (.containerDefinitions | map(
+                    .image = $IMAGE_URI | 
+                    .environment = [
+                        { "name": "ParameterStore__Path", "value": "/lakepulse/develop/backend/main/api" },
+                        { "name": "AWS__Profile", "value": "default" },
+                        { "name": "AWS__Region", "value": "us-east-1" }
+                      ]
+ 
+                    )), 
+                  executionRoleArn: .executionRoleArn, 
+                  taskRoleArn: .taskRoleArn, 
+                  networkMode: .networkMode, 
+                  requiresCompatibilities: (.requiresCompatibilities // ["EC2"]),
+                  cpu: .cpu, 
+                  memory: .memory 
+                }')
+              echo "$NEW_TASK_DEFINITION" > new-task-def.json
+              aws ecs register-task-definition --cli-input-json file://new-task-def.json
+            - echo "Updating ECS service to use the new task definition revision..."
+            - aws ecs update-service --cluster $DEV_ECS_CLUSTER_NAME --service $DEV_ECS_SERVICE_NAME --task-definition $DEV_ECS_TASK_DEFINITION_NAME
+            - sleep 60
+            - echo "Operation Completed Successfully"
+
+  definitions:
+    services:
+      docker:
+        memory: 4096
