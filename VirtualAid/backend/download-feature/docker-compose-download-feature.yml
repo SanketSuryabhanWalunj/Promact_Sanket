@@ -1,0 +1,11 @@
+version: '3'
+services:
+  downloadfeaturedev:
+    build: 
+      context: ../
+      dockerfile: download-feature/downloadfeature.Dockerfile
+    #image: ${DOWNLOADFEATURE_IMAGE_DEV}  #it will read image name from .env file
+    container_name: downloadfeaturecontainerdev
+    restart: always
+    ports:
+      - "8081:80"

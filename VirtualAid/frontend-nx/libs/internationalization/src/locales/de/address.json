@@ -1,0 +1,16 @@
+{
+    "addressLine1Label": "Anschrift Zeile 1",
+    "addressLine1ReqMsg": "Adresszeile 1 ist erforderlich.",
+    "addressLine2Label": "Adresszeile 2",
+    "addressLine3Label": "Adresszeile 3",
+    "countryLabel": "Land",
+    "countryReqMsg": "Land ist erforderlich.",
+    "stateLabel": "Staat / Provinz / Region",
+    "stateReqMsg": "Bundesstaat/Provinz/Region ist erforderlich.",
+    "cityLabel": "Stadt / Gemeinde",
+    "cityReqMsg": "Stadt/Ort ist erforderlich.",
+    "postalLabel": "Postleitzahl.",
+    "postalReqMsg": "Postleitzahl ist erforderlich.",
+    "grantLocationPermission": "Bitte erteilen Sie die Standortgenehmigung.",
+    "giveLocation": "Geben Sie den Standort an"
+}

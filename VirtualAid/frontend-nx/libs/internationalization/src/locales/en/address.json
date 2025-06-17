@@ -1,0 +1,17 @@
+{
+    "addressLine1Label": "Address line 1",
+    "addressLine1ReqMsg": "Address line 1 is required.",
+    "addressLine2Label": "Address line 2",
+    "addressLine3Label": "Address line 3",
+    "countryLabel": "Country",
+    "countryReqMsg": "Country is required.",
+    "stateLabel": "State / Province / Region",
+    "stateReqMsg": "State / Province / Region is required.",
+    "cityLabel": "City / Town",
+    "cityReqMsg": "City / Town is required.",
+    "postalLabel": "Zip / Postal Code.",
+    "postalReqMsg": "Zip / Postal Code is required.",
+
+    "grantLocationPermission": "Please grant location permission.",
+    "giveLocation": "Give Location"
+}

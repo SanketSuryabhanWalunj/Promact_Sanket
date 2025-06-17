@@ -1,0 +1,14 @@
+{
+    "ohNo": "О ні!",
+    "errorInPayment": "Під час оплати сталася помилка. ",
+    "success": "Успіх!",
+    "paymentSuccess": "Ваш платіж пройшов успішно.",
+    "assigningCourses": "Призначення курсів",
+    "purchasedCoursesActivated": "Придбані вами курси активовано.",
+    "noPaymentsProcessed": "Платежі не оброблено.",
+    "paymentsWillBeHere": "Тут ви побачите всі платежі.",
+    "recentPurchase": "Останні покупки",
+    "invoiceNumber": "Номер накладної",
+    "purchasedDate": "Дата придбання",
+    "downloadInvoice": "Завантажити рахунок-фактуру"
+}

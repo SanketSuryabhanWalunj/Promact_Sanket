@@ -1,0 +1,38 @@
+version: '3'
+services:
+  apihostdev:
+    build: 
+      context: ../
+      dockerfile: aspnet-core/Dockerfile
+      target: host
+    #image: ${APIHOST_IMAGE_DEV}  #it will read image name from .env file
+    container_name: apihostcontainerdev
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - "8080:5000"
+    depends_on:
+      - postgres
+
+  dbmigratordev:
+    build: 
+      context: ../
+      dockerfile: aspnet-core/Dockerfile
+      target: migrator
+    #image: ${MIGRATOR_IMAGE_DEV}  #it will read image name from .env file
+    container_name: dbmigratorcontainerdev
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: dbadmin
+      POSTGRES_PASSWORD: dbadminvaid
+      POSTGRES_DB: devdb
+    ports:
+      - "5432:5432"

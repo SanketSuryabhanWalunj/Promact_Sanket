@@ -1,0 +1,58 @@
+html,
+body {
+  min-height: 100%;
+}
+
+#__next {
+  height: 100%;
+}
+
+code {
+  font-family: 'Public Sans', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
+  padding: 0.1rem 0.4rem;
+  font-size: 90%;
+  color: #d400ff;
+  border-radius: 0.1335rem;
+}
+code:not([class*='language-']):before,
+code:not([class*='language-']):after {
+  content: '`';
+}
+code[class*='language-'] {
+  padding: 0;
+}
+
+.breaked-cell {
+  .MuiDataGrid-columnHeaderTitleContainerContent {
+    word-break: break-all;
+    white-space: nowrap;
+    overflow: auto;
+    line-height: normal;
+  }
+  .css-sbn3f9-MuiDataGrid-columnHeaderTitle {
+    text-overflow: unset;
+    overflow: unset;
+    white-space: normal;
+  }
+}
+.courses-assignment-li {
+  list-style: none;
+  li {
+    list-style: none;
+  }
+}
+.carousel-root {
+  width: 100%;
+  height:100%;
+}
+.carousel {
+  height: 100%;
+}
+.carousel-root img {
+  width: 100%;
+  object-fit: cover;
+}
+.fullWidth-datepicker input,.fullWidth-datepicker .MuiInputBase-root {
+  width: 100%;
+}

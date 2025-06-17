@@ -1,0 +1,12 @@
+{
+    "stripeNotOpen": "Unable to open payment page.",
+    "emptyCart": "Your Cart is Empty!",
+    "shoppingCartTitle": "Shopping Cart",
+    "cartTotalCourse_one": "You have total {{count}} Course.",
+    "cartTotalCourse_other": "You have total {{count}} Courses.",
+    "total": "Total",
+    "buyNow": "Buy Now",
+    "costForOneEmp": "\u20ac {{cost}}  per employee.",
+    "subTotal_one": "Subtotal ({{count}} employee)",
+    "subTotal_other": "Subtotal ({{count}} employees)"
+}

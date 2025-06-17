@@ -1,0 +1,15 @@
+{
+    "ohNo": "Oh no!",
+    "errorInPayment": "An error occurred during your payment. Please try again.",
+    "success": "Success!",
+    "paymentSuccess": "Your payment was successful.",
+    "assigningCourses": "Assigning Courses",
+    "purchasedCoursesActivated": "Your purchased courses have been activated.",
+
+    "noPaymentsProcessed": "No payments has been processed.",
+    "paymentsWillBeHere": "This is where you will see all the payments.",
+    "recentPurchase": "Recent purchases",
+    "invoiceNumber": "Invoice Number",
+    "purchasedDate": "Purchased Date",
+    "downloadInvoice": "Download Invoice"
+}

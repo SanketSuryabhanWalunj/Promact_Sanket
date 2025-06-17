@@ -1,0 +1,71 @@
+{
+  "culture": "ar",
+  "texts": {
+    "Menu:Home": "الرئيسية",
+    "Menu:Home": "الصفحة الرئيسية",
+    "LongWelcomeMessage": "مرحبا بكم في التطبيق. هذا مشروع بدء تشغيل يعتمد على إطار عمل ABP. لمزيد من المعلومات ، يرجى زيارة abp.io.",
+
+    
+    "AdminNotExist": "المشرف غير موجود.",
+    "UserNotExist": "هذا المستخدم غير موجود.",
+    "UserExist": "هذا المستخدم موجود بالفعل.",
+    "UserCourseEnrollmentNotFound": "المستخدم غير مسجل في هذه الدورة.",
+    "SomeUserNotExist": "بعض المستخدمين غير موجودين.",
+    "UserDeleted": "تم حذف المستخدم بنجاح.",
+    "UserNotInOrganization": "المستخدم ليس جزءًا من منظمتك.",
+    "UserNotSubscribedCourse": "المستخدم لم يشترك في هذه الدورة.",
+    "CompanyNotExist": "الشركة غير موجودة.",
+    "CompanyAlreadyRejected": "تم رفض تسجيل الشركة بالفعل.",
+    "CompanyAlreadyAccepted": "تم قبول تسجيل الشركة بالفعل.",
+    "CourseNotExist": "الدورة غير موجودة.",
+    "CourseNotPurchased": "لم تقم بشراء الدورة بعد.",
+    "CourseIdCourseCountEmpty": "معرف الدورة أو عدد الدورات فارغ.",
+    "CourseSubscriptionIdNotExist": "معرف اشتراك الدورة غير موجود.",
+    "CourseSubscriptionExist": "اشتراك الدورة موجود بالفعل لهذه الدورة.",
+    "ContentNull": "المحتوى فارغ.",
+    "LessonNotExist": "الدرس غير موجود.",
+    "ModuleNotExist": "الوحدة غير موجودة.",
+    "CartNotExist": "عربة التسوق غير موجودة.",
+    "CartDeleted": "تم حذف عربة التسوق بنجاح.",
+    "InvalidCartCount": "يجب أن يكون عدد الدورات أكبر من صفر.",
+    "CompanyIdUserIdEmpty": "معرف الشركة أو معرف المستخدم يجب أن لا يكون فارغًا.",
+    "ExamExist": "تفاصيل الامتحان موجودة بالفعل لهذه الدورة.",
+    "ExamNotExist": "تفاصيل الامتحان غير موجودة لهذه الدورة.",
+    "ContentNotExist": "المحتوى غير موجود.",
+    "ExamConducted": "تم إجراء الامتحان بالفعل.",
+    "ExamDeleted": "تم حذف عربة التسوق بنجاح.",
+    "LiveExamNotExist": "تفاصيل الامتحان المباشر غير موجودة.",
+    "LiveExamExist": "تفاصيل الامتحان المباشر موجودة بالفعل مع هذا التاريخ ونفس الدورة.",
+    "LiveExamSeatsNotValid": "عدد مقاعد الامتحان المباشر غير صالح.",
+    "LiveExamSeatsFull": "مقاعد الامتحان المباشر ممتلئة.",
+    "QuestionNotExist": "السؤال غير موجود.",
+    "QuestionDeleted": "تم حذف السؤال بنجاح.",
+    "QuestionUpdated": "تم تحديث السؤال بنجاح.",
+    "PhotoFormatSupported": "يرجى استخدام صيغة .JPEG أو .JPG.",
+    "ImageFormatNotSupported": "يرجى استخدام صيغة .JPEG أو .JPG أو .PNG.",
+    "NoRoleAdded": "تم إضافة المستخدم بدون دور!",
+    "SomethingWentWrong": "حدث خطأ ما!",
+    "FeedbackNotFound": "هذا التعليق غير موجود.",
+    "CourseSavedSuccess": "تم حفظ الدورة بنجاح.",
+    "ModuleAddedSuccess": "تم إضافة الوحدة بنجاح.",
+
+    // Auth
+    "AuthorizatioError": "خطأ في التفويض.",
+    "EamilIdNotExist": "معرف البريد الإلكتروني غير موجود.",
+    "EmailExist": "هذا البريد الإلكتروني مستخدم بالفعل.",
+    "AccountLock": "الحساب مقفل.",
+    "OtpNotFound": "لم يتم العثور على الرمز أو انتهت صلاحيته.",
+    "ResultDetailsIssue": "هناك مشكلة في النتائج.",
+    "OtpNotMatched": "الرمز غير متطابق.",
+    "AccountDisabled": "تم تعطيل حسابك، يرجى الاتصال بدعم العملاء.",
+    "CertificateContentIsNotAppropriate": "محتوى الشهادة غير مناسب.",
+    "RequestNotExists": "الطلب غير موجود.",
+
+    // Virtual reality
+    "TokenNotValid": "تم رفض الوصول بسبب رمز غير صالح.",
+    "TokenUnauthorized": "تم رفض الوصول بسبب رمز غير صالح.",
+    "CountMisMatched": "العدد المتبقي أقل من العدد المراد تحديثه."
+    
+
+  }
+}

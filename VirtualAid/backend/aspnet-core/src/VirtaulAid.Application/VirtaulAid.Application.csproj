@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>VirtaulAid</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VirtaulAid.Domain\VirtaulAid.Domain.csproj" />
+    <ProjectReference Include="..\VirtaulAid.Application.Contracts\VirtaulAid.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />-->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.38" />
+    <PackageReference Include="Stripe.net" Version="43.3.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.2" />
+    <PackageReference Include="Volo.Abp.Account.Application" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.BackgroundWorkers.Quartz" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="7.3.3" />
+
+  </ItemGroup>
+
+</Project>

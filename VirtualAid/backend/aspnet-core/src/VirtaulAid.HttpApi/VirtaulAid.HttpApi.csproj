@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>VirtaulAid</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VirtaulAid.Application.Contracts\VirtaulAid.Application.Contracts.csproj" />
+    <ProjectReference Include="..\VirtaulAid.Domain\VirtaulAid.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="DinkToPdfCopy" Version="1.0.0" />
+    <PackageReference Include="PuppeteerSharp" Version="13.0.2" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="23.2.0" />
+    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="7.3.3" />
+  </ItemGroup>
+
+</Project>

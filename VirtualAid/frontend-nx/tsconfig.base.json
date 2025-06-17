@@ -1,0 +1,32 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@virtual-aid-frontend/internationalization": [
+        "libs/internationalization/src/index.ts"
+      ],
+      "@virtual-aid-frontend/internationalization/server": [
+        "libs/internationalization/src/server.ts"
+      ],
+      "@virtual-aid-frontend/utils": ["libs/utils/src/index.ts"],
+      "@virtual-aid-frontend/utils/server": ["libs/utils/src/server.ts"],
+      "apexcharts": ["./node_modules/apexcharts-clevision"],
+      "apexcharts/*": ["./node_modules/apexcharts-clevision/*"],
+      "src/*": ["apps/admin/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

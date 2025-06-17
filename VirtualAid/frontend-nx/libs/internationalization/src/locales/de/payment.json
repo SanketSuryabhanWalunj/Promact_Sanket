@@ -1,0 +1,14 @@
+{
+    "ohNo": "Ach nein!",
+    "errorInPayment": "Bei Ihrer Zahlung ist ein Fehler aufgetreten. ",
+    "success": "Erfolg!",
+    "paymentSuccess": "Ihre Zahlung war erfolgreich.",
+    "assigningCourses": "Kurse zuweisen",
+    "purchasedCoursesActivated": "Ihre gekauften Kurse wurden aktiviert.",
+    "noPaymentsProcessed": "Es wurden keine Zahlungen verarbeitet.",
+    "paymentsWillBeHere": "Hier sehen Sie alle Zahlungen.",
+    "recentPurchase": "Letzte Einkäufe",
+    "invoiceNumber": "Rechnungsnummer",
+    "purchasedDate": "Gekauftes Datum",
+    "downloadInvoice": "Download Rechnung"
+}

@@ -1,0 +1,25 @@
+export type EmpInfoType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  contactNumber: string;
+  designation: string;
+  address1: string;
+  address2: string;
+  address3: string;
+  bio: string;
+  country: string;
+  state: string;
+  city: string;
+  postalcode: string;
+  currentCompanyId: string;
+  latitude: string | number;
+  longitude: string | number;
+  profileImage: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  consentToShareData: boolean;
+  currentCompanyName: string;
+  bannerImage: string;
+};

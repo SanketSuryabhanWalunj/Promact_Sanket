@@ -1,0 +1,13 @@
+{
+    "stripeNotOpen": "Kan de betalingspagina niet openen.",
+    "emptyCart": "Uw winkelwagen is leeg!",
+    "shoppingCartTitle": "Winkelmand",
+    "cartTotalCourse_one": "Je hebt in totaal {{count}} cursus.",
+    "cartTotalCourse_other": "Je hebt in totaal {{count}} cursussen.",
+    "total": "Totaal",
+    "buyNow": "Koop nu",
+
+    "costForOneEmp": "€ {{cost}}  per werknemer.",
+    "subTotal_one": "Subtotaal ({{count}} werknemer)",
+    "subTotal_other": "Subtotaal ({{count}} werknemers)"
+}

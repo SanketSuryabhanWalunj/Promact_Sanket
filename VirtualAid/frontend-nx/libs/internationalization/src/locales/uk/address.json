@@ -1,0 +1,16 @@
+{
+    "addressLine1Label": "Рядок адреси 1",
+    "addressLine1ReqMsg": "Необхідно вказати перший рядок адреси.",
+    "addressLine2Label": "Адресний рядок 2",
+    "addressLine3Label": "Адресний рядок 3",
+    "countryLabel": "Країна",
+    "countryReqMsg": "Необхідно вказати країну.",
+    "stateLabel": "Штат / Провінція / Регіон",
+    "stateReqMsg": "Потрібно вказати штат/провінцію/регіон.",
+    "cityLabel": "Місто / селище",
+    "cityReqMsg": "Необхідно вказати місто.",
+    "postalLabel": "Поштовий індекс.",
+    "postalReqMsg": "Необхідно вказати поштовий індекс.",
+    "grantLocationPermission": "Надайте дозвіл на місцезнаходження.",
+    "giveLocation": "Укажіть місцезнаходження"
+}

@@ -1,0 +1,337 @@
+:root {
+  --position-start: left;
+  --position-end: right;
+  --margin-start: margin-left;
+  --margin-end: margin-right;
+}
+
+
+.testimonial-content {
+  width: calc(100% - 190px);
+  position: relative;
+  margin: 0 auto;
+  height: 404px;
+  max-width: 100%;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+  font-style: italic;
+  text-align: center;
+}
+.testimonial-content::before {
+  position: absolute;
+  content: '';
+  width: 64px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  background-image: url('../public/curly1.svg');
+}
+.testimonial-content::after {
+  position: absolute;
+  content: '';
+  width: 64px;
+  height: 100%;
+  right: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  background-image: url('../public/curly2.svg');
+}
+.css-1pqm26d-MuiAvatar-img {
+  object-fit: fill;
+}
+.custom-timeline {
+  position: relative;
+  border-left: 1px solid #ddd;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  padding: 20px 0;
+}
+.course-box {
+  padding: 20px;
+  border: 1px solid #eeeeee;
+  border-left: none;
+  background: linear-gradient(
+    180deg,
+    rgba(241, 241, 241, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  position: relative;
+  margin-bottom: 20px;
+  &:before {
+    position: absolute;
+    left: -30px;
+    top: -1px;
+    width: 30px;
+    height: 102%;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    content: '';
+    background: linear-gradient(to right, #950c8d, #2e0162);
+  }
+  &.pending {
+    .status-text {
+      color: #d89f00;
+    }
+  }
+  &.expired {
+    opacity: 0.8;
+    .status-text {
+      color: #666666;
+    }
+    &::before {
+      background: linear-gradient(
+        180deg,
+        rgba(212, 212, 212, 1) 0%,
+        rgba(155, 155, 155, 1) 100%
+      );
+    }
+    .expired-button {
+      background: #d4d4d4;
+    }
+  }
+  &.completed {
+    .status-text {
+      color: #009405;
+    }
+    &::before {
+      background: linear-gradient(
+        180deg,
+        rgba(31, 183, 0, 1) 0%,
+        rgba(34, 128, 0, 1) 100%
+      );
+    }
+  }
+}
+.arrow {
+  position: absolute;
+  display: inline-block;
+  top: 50%;
+  &:before {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 2px;
+    background-color: #fff;
+    top: 0;
+    transition: width 0.5s ease-out;
+  }
+  &:after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transform: rotate(45deg);
+    top: -4px;
+    position: absolute;
+    right: 1px;
+  }
+  &:hover {
+    cursor: pointer;
+    &:before {
+      width: 25px;
+    }
+  }
+}
+
+/* change bar chart title style */
+.apexcharts-title-text {
+  margin-bottom: 20px;
+  transform: translate(5px, -6px);
+}
+.apexcharts-xaxis-title,
+.apexcharts-yaxis-title {
+  fill: #666;
+}
+.top-title-chart {
+  margin-bottom: 40px;
+}
+.employee-dashboard {
+  .courses-title {
+    display: none;
+  }
+}
+.course-arrows {
+  .MuiButtonBase-root {
+    background: linear-gradient(88deg, rgba(159,27,150,1) 0%, rgba(39,1,95,1) 100%);
+    opacity: 0.1;
+    transition: 0.2s ease-out;
+  }
+}
+.accordian-details-study {
+  &:hover {
+    .course-arrows {
+      .MuiButtonBase-root {
+        opacity: 1;
+        transition: 0.2s ease-in;
+      }
+    }
+  }
+} 
+/* Design line clamp */
+.line-clamp-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.disabled {
+  background: #ebebeb;
+  opacity: 0.8;
+}
+.label-dialog {
+  font-size: 12px !important;
+}
+.MuiTab-fullWidth.Mui-selected {
+  color: #fff !important;
+  background: linear-gradient(180deg, rgba(159,27,150,1) 0%, rgba(39,1,95,1) 100%);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+.MuiTabs-scroller  {
+  border-bottom: none !important;
+}
+.MuiTab-fullWidth {
+  background: rgba(241, 241, 241, 1);
+  margin: 0 5px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+.MuiPaginationItem-previousNext {
+  position: relative;
+  &:after {
+    content: 'Next';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+.xyz.Mui-disabled{
+opacity: 1 !important;
+pointer-events: all;
+
+}
+.pagination-button{
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white !important;
+  border: none !important;
+  margin: 5px 10px;
+  &.active {
+    background: #5C00A8 !important;
+    color: #fff;
+  }
+}
+/* arabic language styles */
+.rtl .client-photo{
+  left: auto;
+  right: 126px;
+}
+.rtl .sidebar-menu {
+  right: 0;
+}
+/* .rtl-dir .MuiMenu-paper {
+    right: 233%;
+    left: 0px;
+    top: 105px !important;
+} */
+.MuiRadio-root {
+  padding-top: 0 !important;
+  padding-bottom: 10px !important;
+}
+.rtl-6uqg3s{
+  padding-top: 50px;
+}
+.rtl-fpaf1v {
+  transform: rotate(180deg);
+  cursor: pointer !important;
+}
+.rtl-fpaf1v:after {
+  border-right: 2px solid #fff;
+  border-left: none;
+  transform: rotate(225deg);
+}
+.rtl-mkxzao .MuiSvgIcon-root {
+  transform: rotate(180deg);
+}
+
+.rtl-dir .MuiInputBase-input {
+  text-align: right;
+}
+
+@media (max-width: 899px) {
+  .logo {
+    max-height: 13px !important;
+  }
+}
+@media (min-width: 900px) {
+  .testimonial-content {
+    width: calc(100% - 120px);
+  }
+  .logo {
+    max-height: 16px !important;
+  }
+}
+@media (min-width: 1200px) {
+  .testimonial-content {
+    width: calc(100% - 190px);
+  }
+  .login-layout {
+    .client-photo img {
+      max-height: 170px;
+    }
+  }
+}
+@media (min-width: 1366px) {
+  .testimonial-content {
+    width: calc(100% - 170px);
+  }
+  .login-layout {
+    .client-photo img {
+      max-height: 190px;
+    }
+  }
+}
+@media (min-width: 1920px) {
+  .login-layout {
+    .client-photo {
+      bottom: 90px;
+    }
+    .client-photo img {
+      max-height: 100%;
+    }
+  }
+}
+@media (min-width: 2560px) {
+  .login-layout {
+    .client-photo { 
+      bottom: 155px;
+    }
+    .client-photo img {
+      max-height: 100%;
+    }
+  }
+}
+@media(max-width: 900px) {
+  .search-courses-icon {
+    display: none !important;
+  }
+  .course-study-img{
+    width: 30px;
+  }
+  .line-clamp-text {
+    font-size: 12px;
+  }
+}

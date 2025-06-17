@@ -1,0 +1,16 @@
+{
+    "addressLine1Label": "العنوان سطر 1",
+    "addressLine1ReqMsg": "سطر العنوان 1 مطلوب.",
+    "addressLine2Label": "سطر العنوان 2",
+    "addressLine3Label": "سطر العنوان 3",
+    "countryLabel": "دولة",
+    "countryReqMsg": "الدولة مطلوبة.",
+    "stateLabel": "الدولة / الإقليم / المنطقة",
+    "stateReqMsg": "الولاية / المقاطعة / المنطقة مطلوبة.",
+    "cityLabel": "المدينة / البلدة",
+    "cityReqMsg": "المدينة / البلدة مطلوبة.",
+    "postalLabel": "الرمز البريدي / الرمز البريدي.",
+    "postalReqMsg": "الرمز البريدي / الرمز البريدي مطلوب.",
+    "grantLocationPermission": "يرجى منح إذن الموقع.",
+    "giveLocation": "إعطاء الموقع"
+  }

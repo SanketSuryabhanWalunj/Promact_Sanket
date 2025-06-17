@@ -1,0 +1,15 @@
+{
+    "ohNo": "Oh nee!",
+    "errorInPayment": "Er is een fout opgetreden tijdens uw betaling. Probeer het opnieuw.",
+    "success": "Succes!",
+    "paymentSuccess": "Uw betaling is gelukt.",
+    "assigningCourses": "Wijs cursussen toe",
+    "purchasedCoursesActivated": "Uw aangeschafte cursussen zijn geactiveerd.",
+
+    "noPaymentsProcessed": "Er zijn geen betalingen verwerkt.",
+    "paymentsWillBeHere": "Hier ziet u alle betalingen.",
+    "recentPurchase": "Recente aankopen",
+    "invoiceNumber": "Factuurnummer",
+    "purchasedDate": "Aankoopdatum",
+    "downloadInvoice": "Factuur downloaden"
+}

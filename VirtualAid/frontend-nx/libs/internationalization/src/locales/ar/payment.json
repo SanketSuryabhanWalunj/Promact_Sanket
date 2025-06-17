@@ -1,0 +1,14 @@
+{
+    "ohNo": "أوه لا!",
+    "errorInPayment": "حدث خطأ أثناء الدفع. ",
+    "success": "نجاح!",
+    "paymentSuccess": "كانت عملية الدفع ناجحة.",
+    "assigningCourses": "إسناد الدورات",
+    "purchasedCoursesActivated": "لقد تم تفعيل الدورات التي اشتريتها.",
+    "noPaymentsProcessed": "لم تتم معالجة أية مدفوعات.",
+    "paymentsWillBeHere": "هذا هو المكان الذي سترى فيه جميع المدفوعات.",
+    "recentPurchase": "المشتريات الأخيرة",
+    "invoiceNumber": "رقم الفاتورة",
+    "purchasedDate": "تاريخ الشراء",
+    "downloadInvoice": "تحميل فاتورة"
+  }

@@ -1,0 +1,29 @@
+version: '3'
+services:
+  fe_individual:
+    build: 
+      context: .
+      dockerfile: individual.Dockerfile
+    #Image name will be read from .env file which is present in dev EC2
+    #image: ${FE_INDIVIDUAL_IMAGE_NAME}
+      args:
+        NEXT_PUBLIC_API_BASE_URL_ARG: "http://localhost:8080"
+        NEXT_PUBLIC_REGISTER_EMAIL_ARG: "vaRegisterEmail"
+        NEXT_PUBLIC_USER_ARG: "vauser"
+        NEXT_PUBLIC_STRIPE_PUBLIC_KEY_ARG: "pk_test_51OBEvoGfyzKg5PP2PoCXl7hIjPonAGLDUITVeiBtjKOE0BbaiPWHUabrzPUIghYpjVij48hX6pYDHn8h6Y4uAFlR00J99G8lv7"
+    container_name: virtualaid-fe-individual-dev-container
+    restart: always
+    ports:
+      - "4200:4200"
+  fe_admin:
+    build: 
+      context: .
+      dockerfile: admin.Dockerfile
+    #Image name will be read from .env file which is present in dev EC2
+    #image: ${FE_ADMIN_IMAGE_NAME}
+      args:
+        NEXT_PUBLIC_API_BASE_URL_ARG: "http://localhost:8080"
+    container_name: virtualaid-fe-admin-dev-container
+    restart: always
+    ports:
+      - "4300:4300"

@@ -1,0 +1,114 @@
+name: Deploy Individualapp & Adminapp - Staging Environment
+
+on:
+  push:
+    branches: [staging]
+
+env:
+  AWS_REGION: eu-west-1
+  ECR_REPOSITORY: vaid-staging-repo
+  INDIVIDUAL_ECS_SERVICE: IndividualAppServiceStaging
+  ADMIN_ECS_SERVICE: AdminAppServiceStaging
+  ECS_CLUSTER: vaid-cluster-staging
+  INDIVIDUALAPP_TASK_DEFINITION: .aws/td-individualapp-stg.json
+  ADMINAPP_TASK_DEFINITION: .aws/td-adminapp-stg.json
+  CONTAINER_NAME_INDIVIDUALAPP: individualappstaging
+  CONTAINER_NAME_ADMINAPP: adminappstaging
+  INDIVIDUALAPP_FAMILY_NAME: TD-IndividualApp-Staging
+  ADMINAPP_FAMILY_NAME: TD-AdminApp-Staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      #This step checks out (loads) the repository code to the runner's workspace.
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Configuring AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # This step logs in to Amazon Elastic Container Registry (ECR) to authenticate Docker for pushing images.
+      - name: Log in to amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # This step builds individualapp docker image and pushes it to ECR repository
+      - name: Build, tag and push individualapp docker image to amazon ECR
+        id: build-individual-image-stg
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.STG_NEXT_PUBLIC_API_BASE_URL }}
+          NEXT_PUBLIC_REGISTER_EMAIL: ${{ secrets.STG_NEXT_PUBLIC_REGISTER_EMAIL }}
+          NEXT_PUBLIC_USER: ${{ secrets.STG_NEXT_PUBLIC_USER }}
+          NEXT_PUBLIC_STRIPE_PUBLIC_KEY: ${{ secrets.STG_NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
+        run: |
+          docker build \
+          --build-arg NEXT_PUBLIC_API_BASE_URL_ARG=$NEXT_PUBLIC_API_BASE_URL \
+          --build-arg NEXT_PUBLIC_REGISTER_EMAIL_ARG=$NEXT_PUBLIC_REGISTER_EMAIL \
+          --build-arg NEXT_PUBLIC_USER_ARG=$NEXT_PUBLIC_USER \
+          --build-arg NEXT_PUBLIC_STRIPE_PUBLIC_KEY_ARG=$NEXT_PUBLIC_STRIPE_PUBLIC_KEY \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:individual.$IMAGE_TAG -f individual.Dockerfile .
+
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:individual.$IMAGE_TAG
+          echo "individualimage=$ECR_REGISTRY/$ECR_REPOSITORY:individual.$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # This step builds and pushes adminapp docker image to ECR repository
+      - name: Build, tag and push admin docker image to amazon ECR
+        id: build-admin-image-stg
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.STG_NEXT_PUBLIC_API_BASE_URL }}
+        run: |
+          docker build \
+          --build-arg NEXT_PUBLIC_API_BASE_URL_ARG=$NEXT_PUBLIC_API_BASE_URL \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:admin.$IMAGE_TAG -f admin.Dockerfile .
+
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:admin.$IMAGE_TAG
+          echo "adminimage=$ECR_REGISTRY/$ECR_REPOSITORY:admin.$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # This step updates task definition of individualapp with new container image
+      - name: Update task definition of individualapp
+        id: td-individualapp
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.INDIVIDUALAPP_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME_INDIVIDUALAPP }}
+          image: ${{ steps.build-individual-image-stg.outputs.individualimage }}
+
+      # This step updates task definition of adminapp with new container image
+      - name: Update task definition of adminapp
+        id: td-adminapp
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ADMINAPP_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME_ADMINAPP }}
+          image: ${{ steps.build-admin-image-stg.outputs.adminimage }}
+
+      # This step updates IndividualApp ECS service with new task definition
+      - name: Update IndividualApp service in ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.td-individualapp.outputs.task-definition }}
+          service: ${{ env.INDIVIDUAL_ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      # This step updates AdminApp ECS service with new task definition
+      - name: Update AdminApp service in ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.td-adminapp.outputs.task-definition }}
+          service: ${{ env.ADMIN_ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

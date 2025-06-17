@@ -1,0 +1,151 @@
+
+name: Deploy Virtualaid Backend (Apihost & Dbmigrator & DownloadFeature) - Dev Environment
+
+on:
+  push: 
+    branches: [ dev ]
+
+env:
+  AWS_REGION: eu-west-1
+  ECR_REPOSITORY: vaid-dev-repo
+  ECS_SERVICE: ApiHostServiceDev
+  DOWNLOADFEATURE_ECS_SERVICE: DownloadFeatureServiceDev         
+  ECS_CLUSTER: vaid-cluster-dev
+  APIHOST_TASK_DEFINITION: .aws/td-apihost-dev.json
+  DBMIGRATOR_TASK_DEFINITION: .aws/td-dbmigrator-dev.json
+  DOWNLOADFEATURE_TASK_DEFINITION: .aws/td-downloadfeature-dev.json
+  CONTAINER_NAME_APIHOST: apihostdev
+  CONTAINER_NAME_DBMIGRATOR: dbmigratordev
+  CONTAINER_NAME_DOWNLOADFEATURE: downloadfeaturedev
+  DBMIGRATOR_FAMILY_NAME: TD-DbMigrator-Dev
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    #This step checks out (downloads) the repository code to the runner's workspace.
+    - name: Checkout Code 
+      uses: actions/checkout@v4
+    
+
+    # Setting up the .NET environment for the project
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4 
+      with:
+        dotnet-version: '7.0.x'
+    
+         
+    # Setting up Docker for use in your workflow and specifies the path to Dockerfile  
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+       
+
+    # Configuring AWS credentials
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+
+    # This step logs in to Amazon Elastic Container Registry (ECR) to authenticate Docker for pushing images.  
+    - name: Log in to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    
+    # This step builds and pushes dbmigrator docker image into ecr repository
+    - name: Build and Push DbMigrator Image
+      id: build-dbmigrator
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mig.$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:mig.latest --target migrator -f aspnet-core/Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:mig.$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:mig.latest
+        echo "dbmigratorimage=$ECR_REGISTRY/$ECR_REPOSITORY:mig.$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+
+    # This step builds and pushes apihost docker image into ecr repository
+    - name: Build and Push ApiHost Image
+      id: build-apihost
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:apihost.$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:apihost.latest --target host -f aspnet-core/Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:apihost.$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:apihost.latest
+        echo "apihostimage=$ECR_REGISTRY/$ECR_REPOSITORY:apihost.$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    # This step builds and pushes downloadfeature docker image into ecr repository
+    - name: Build and Push DownloadFeature Image
+      id: build-downloadfeature
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:downloadfeature.$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:downloadfeature.latest -f download-feature/downloadfeature.Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:downloadfeature.$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:downloadfeature.latest
+        echo "downloadfeatureimage=$ECR_REGISTRY/$ECR_REPOSITORY:downloadfeature.$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+
+    # This step updates task definition of DbMigrator with new container image
+    - name: Update Task Definition DbMigrator
+      id: td-dbmigrator
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+          task-definition: ${{ env.DBMIGRATOR_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME_DBMIGRATOR }}
+          image: ${{ steps.build-dbmigrator.outputs.dbmigratorimage }}
+
+    # This step updates task definition of ApiHost with new container image
+    - name: Update Task Definition ApiHost
+      id: td-apihost
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+          task-definition: ${{ env.APIHOST_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME_APIHOST }}
+          image: ${{ steps.build-apihost.outputs.apihostimage }}
+
+    # This step updates task definition of DownloadFeature with new container image
+    - name: Update Task Definition DownloadFeature
+      id: td-downloadfeature
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+          task-definition: ${{ env.DOWNLOADFEATURE_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME_DOWNLOADFEATURE }}
+          image: ${{ steps.build-downloadfeature.outputs.downloadfeatureimage }}
+
+    
+    # This step runs dbmigrator task with updated container image in ECS
+    # When network mode 'bridge' is used then use this- aws ecs run-task --cluster ${{ env.ECS_CLUSTER }} --task-definition ${{ env.DBMIGRATOR_FAMILY_NAME }}
+    # But when network mode 'awsvpc' is used then network configuration is required as mentioned below
+    - name: Start DbMigrator Task    
+      run:  |
+        aws ecs register-task-definition --family ${{ env.DBMIGRATOR_FAMILY_NAME }} --cli-input-json file://${{ steps.td-dbmigrator.outputs.task-definition }}
+        aws ecs run-task --cluster ${{ env.ECS_CLUSTER }} --task-definition ${{ env.DBMIGRATOR_FAMILY_NAME }} --capacity-provider-strategy capacityProvider=FARGATE_SPOT,weight=1,base=1 --network-configuration "awsvpcConfiguration={subnets=[subnet-0ae089ce0dbb0f87c,subnet-0df471a3a05bfe0b3],securityGroups=[sg-0c7a6674f41f61975],assignPublicIp=ENABLED}"
+
+    
+    # This step updates ECS Service ApiHost with new task definition
+    - name: Update ApiHost Service in ECS
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.td-apihost.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
+
+    # This step updates ECS Service DownloadFeature with new task definition
+    - name: Update DownloadFeature Service in ECS
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.td-downloadfeature.outputs.task-definition }}
+        service: ${{ env.DOWNLOADFEATURE_ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true

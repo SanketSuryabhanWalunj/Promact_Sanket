@@ -1,0 +1,10 @@
+{
+    "stripeNotOpen": "غير قادر على فتح صفحة الدفع.",
+    "emptyCart": "عربة التسوق فارغة!",
+    "shoppingCartTitle": "عربة التسوق",
+    "total": "المجموع",
+    "buyNow": "اشتري الآن",
+    "costForOneEmp": "€ {{cost}}  لكل موظف.",
+    "subTotal_one": "المجموع الفرعي ({{count}} موظف)",
+    "subTotal_other": "المجموع الفرعي ({{count}} موظفين)"
+  }

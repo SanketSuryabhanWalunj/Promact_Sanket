@@ -1,0 +1,16 @@
+{
+    "stripeNotOpen": "Не вдається відкрити сторінку оплати.",
+    "emptyCart": "Ваш кошик порожній!",
+    "shoppingCartTitle": "Магазинний візок",
+    "total": "Всього",
+    "buyNow": "Купити зараз",
+    "costForOneEmp": "€ {{cost}}  на одного працівника.",
+    "cartTotalCourse_one": "У вас всього {{count}} курс.",
+    "cartTotalCourse_few": "У вас всього {{count}} Курси.",
+    "cartTotalCourse_many": "У вас всього {{count}} Курси.",
+    "cartTotalCourse_other": "У вас всього {{count}} Курси.",
+    "subTotal_one": "Проміжний підсумок ({{count}} працівник)",
+    "subTotal_few": "Проміжний підсумок ({{count}} співробітники)",
+    "subTotal_many": "Проміжний підсумок ({{count}} співробітники)",
+    "subTotal_other": "Проміжний підсумок ({{count}} співробітники)"     
+}

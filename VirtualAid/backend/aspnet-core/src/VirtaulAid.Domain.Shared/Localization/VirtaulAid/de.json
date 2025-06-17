@@ -1,0 +1,71 @@
+{
+  "culture": "de",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Willkommen",
+    "LongWelcomeMessage": "Willkommen bei der Anwendung. Dies ist ein Startup-Projekt, das auf dem ABP-Framework basiert. Weitere Informationen finden Sie unter abp.io.",
+
+    
+    "AdminNotExist": "Administrator existiert nicht.",
+    "UserNotExist": "Dieser Benutzer existiert nicht.",
+    "UserExist": "Dieser Benutzer existiert bereits.",
+    "UserCourseEnrollmentNotFound": "Benutzer ist nicht in diesem Kurs eingeschrieben.",
+    "SomeUserNotExist": "Einige Benutzer existieren nicht.",
+    "UserDeleted": "Benutzer erfolgreich gelöscht.",
+    "UserNotInOrganization": "Benutzer ist kein Teil Ihrer Organisation.",
+    "UserNotSubscribedCourse": "Benutzer hat diesen Kurs nicht abonniert.",
+    "CompanyNotExist": "Firma existiert nicht.",
+    "CompanyAlreadyRejected": "Die Registrierung der Firma wurde bereits abgelehnt.",
+    "CompanyAlreadyAccepted": "Die Registrierung der Firma wurde bereits akzeptiert.",
+    "CourseNotExist": "Kurs existiert nicht.",
+    "CourseNotPurchased": "Sie haben den Kurs noch nicht gekauft.",
+    "CourseIdCourseCountEmpty": "KursId oder Kursanzahl ist leer.",
+    "CourseSubscriptionIdNotExist": "Kursabonnement-ID existiert nicht.",
+    "CourseSubscriptionExist": "Kursabonnement existiert bereits für diesen Kurs.",
+    "ContentNull": "Inhalt ist leer.",
+    "LessonNotExist": "Lektion existiert nicht.",
+    "ModuleNotExist": "Modul existiert nicht.",
+    "CartNotExist": "Warenkorb existiert nicht.",
+    "CartDeleted": "Warenkorb erfolgreich gelöscht.",
+    "InvalidCartCount": "Kursanzahl muss größer als Null sein.",
+    "CompanyIdUserIdEmpty": "FirmenID oder BenutzerID darf nicht leer sein.",
+    "ExamExist": "Prüfungsdetails existieren bereits für diesen Kurs.",
+    "ExamNotExist": "Prüfungsdetails existieren nicht für diesen Kurs.",
+    "ContentNotExist": "Inhalt existiert nicht.",
+    "ExamConducted": "Prüfung wurde bereits durchgeführt.",
+    "ExamDeleted": "Warenkorb erfolgreich gelöscht.",
+    "LiveExamNotExist": "Details zur Live-Prüfung existieren nicht.",
+    "LiveExamExist": "Details zur Live-Prüfung existieren bereits mit diesem Datum und demselben Kurs.",
+    "LiveExamSeatsNotValid": "Anzahl der Plätze für die Live-Prüfung ist ungültig.",
+    "LiveExamSeatsFull": "Plätze für die Live-Prüfung sind voll.",
+    "QuestionNotExist": "Frage existiert nicht.",
+    "QuestionDeleted": "Frage erfolgreich gelöscht.",
+    "QuestionUpdated": "Frage erfolgreich aktualisiert.",
+    "PhotoFormatSupported": "Bitte verwenden Sie das .JPEG oder .JPG Format.",
+    "ImageFormatNotSupported": "Bitte verwenden Sie das .JPEG, .JPG oder .PNG Format.",
+    "NoRoleAdded": "Benutzer wurde ohne Rolle hinzugefügt!",
+    "SomethingWentWrong": "Etwas ist schiefgelaufen!",
+    "FeedbackNotFound": "Dieses Feedback existiert nicht.",
+    "CourseSavedSuccess": "Kurs erfolgreich gespeichert.",
+    "ModuleAddedSuccess": "Modul erfolgreich hinzugefügt.",
+
+    // Auth
+    "AuthorizatioError": "Autorisierungsfehler.",
+    "EamilIdNotExist": "E-Mail-ID existiert nicht.",
+    "EmailExist": "Diese E-Mail-ID wird bereits verwendet.",
+    "AccountLock": "Konto ist gesperrt.",
+    "OtpNotFound": "OTP wurde nicht gefunden oder ist abgelaufen.",
+    "ResultDetailsIssue": "Es gibt ein Problem mit den Ergebnissen.",
+    "OtpNotMatched": "OTP stimmt nicht überein.",
+    "AccountDisabled": "Ihr Konto ist deaktiviert, bitte wenden Sie sich an den Kundensupport.",
+    "CertificateContentIsNotAppropriate": "Zertifikatsinhalt ist nicht angemessen.",
+    "RequestNotExists": "Anfrage existiert nicht.",
+
+    // Virtual reality
+    "TokenNotValid": "Zugriff verweigert aufgrund eines ungültigen Tokens.",
+    "TokenUnauthorized": "Zugriff verweigert aufgrund eines ungültigen Tokens.",
+    "CountMisMatched": "Verbleibende Anzahl ist geringer als die angegebene Anzahl zur Aktualisierung."
+    
+
+  }
+}

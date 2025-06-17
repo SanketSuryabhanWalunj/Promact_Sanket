@@ -1,0 +1,71 @@
+﻿{
+  "culture": "uk",
+  "texts": {
+    "Menu:Home": "додому",
+    "Welcome": "Ласкаво просимо",
+    "LongWelcomeMessage": "Ласкаво просимо до програми. Це стартап-проект, заснований на фреймворку ABP. Для отримання додаткової інформації відвідайте abp.io.",
+
+    
+    "AdminNotExist": "Адміністратор не існує.",
+    "UserNotExist": "Цей користувач не існує.",
+    "UserExist": "Цей користувач вже існує.",
+    "UserCourseEnrollmentNotFound": "Користувач не зареєстрований на цей курс.",
+    "SomeUserNotExist": "Деякі користувачі не існують.",
+    "UserDeleted": "Користувача успішно видалено.",
+    "UserNotInOrganization": "Користувач не є частиною вашої організації.",
+    "UserNotSubscribedCourse": "Користувач не підписався на цей курс.",
+    "CompanyNotExist": "Компанія не існує.",
+    "CompanyAlreadyRejected": "Реєстрацію компанії вже відхилено.",
+    "CompanyAlreadyAccepted": "Реєстрацію компанії вже прийнято.",
+    "CourseNotExist": "Курс не існує.",
+    "CourseNotPurchased": "Ви ще не придбали курс.",
+    "CourseIdCourseCountEmpty": "CourseId або CourseCount порожні.",
+    "CourseSubscriptionIdNotExist": "Ідентифікатор підписки на курс не існує.",
+    "CourseSubscriptionExist": "Підписка на курс вже існує для цього курсу.",
+    "ContentNull": "Вміст відсутній.",
+    "LessonNotExist": "Урок не існує.",
+    "ModuleNotExist": "Модуль не існує.",
+    "CartNotExist": "Кошик не існує.",
+    "CartDeleted": "Кошик успішно видалено.",
+    "InvalidCartCount": "Кількість курсів повинна бути більшою за нуль.",
+    "CompanyIdUserIdEmpty": "CompanyId або UserId не повинні бути порожніми.",
+    "ExamExist": "Деталі іспиту вже існують для цього курсу.",
+    "ExamNotExist": "Деталі іспиту не існують для цього курсу.",
+    "ContentNotExist": "Вміст не існує.",
+    "ExamConducted": "Іспит вже проведено.",
+    "ExamDeleted": "Кошик успішно видалено.",
+    "LiveExamNotExist": "Деталі живого іспиту не існують.",
+    "LiveExamExist": "Деталі живого іспиту вже існують для цієї дати та курсу.",
+    "LiveExamSeatsNotValid": "Кількість місць на живому іспиті недійсна.",
+    "LiveExamSeatsFull": "Місця на живому іспиті заповнені.",
+    "QuestionNotExist": "Питання не існує.",
+    "QuestionDeleted": "Питання успішно видалено.",
+    "QuestionUpdated": "Питання успішно оновлено.",
+    "PhotoFormatSupported": "Будь ласка, використовуйте формат .JPEG або .JPG.",
+    "ImageFormatNotSupported": "Будь ласка, використовуйте формат .JPEG, .JPG або .PNG.",
+    "NoRoleAdded": "Користувач доданий без будь-якої ролі!",
+    "SomethingWentWrong": "Щось пішло не так!",
+    "FeedbackNotFound": "Цей відгук не існує.",
+    "CourseSavedSuccess": "Курс успішно збережено.",
+    "ModuleAddedSuccess": "Модуль успішно додано.",
+
+    // Auth
+    "AuthorizatioError": "Помилка авторизації.",
+    "EamilIdNotExist": "Електронна адреса не існує.",
+    "EmailExist": "Ця електронна адреса вже використовується.",
+    "AccountLock": "Обліковий запис заблоковано.",
+    "OtpNotFound": "OTP не знайдено або термін його дії закінчився.",
+    "ResultDetailsIssue": "Є проблема з результатами.",
+    "OtpNotMatched": "OTP не співпадає.",
+    "AccountDisabled": "Ваш обліковий запис відключено, будь ласка, зв'яжіться з підтримкою клієнтів.",
+    "CertificateContentIsNotAppropriate": "Зміст сертифіката не є відповідним.",
+    "RequestNotExists": "Запит не існує.",
+
+    // Virtual reality
+    "TokenNotValid": "Доступ заборонено через недійсний маркер.",
+    "TokenUnauthorized": "Доступ заборонено через недійсний маркер.",
+    "CountMisMatched": "Залишок менший за вказану кількість для оновлення."
+    
+
+  }
+}

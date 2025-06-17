@@ -1,0 +1,16 @@
+{
+    "addressLine1Label": "Adres",
+    "addressLine1ReqMsg": "Adres vereist.",
+    "addressLine2Label": "Adres",
+    "addressLine3Label": "Adres",
+    "countryLabel": "Land",
+    "countryReqMsg": "Land is vereist.",
+    "stateLabel": "Land / Provincie / Regio",
+    "stateReqMsg": "Staat / provincie / regio is vereist.",
+    "cityLabel": "Stad / gemeente",
+    "cityReqMsg": "Stad/plaats is vereist.",
+    "postalLabel": "Postcode",
+    "postalReqMsg": "Postcode is vereist.",
+    "grantLocationPermission": "Geef locatietoestemming.",
+    "giveLocation": "Geef Locatie"
+}

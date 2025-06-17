@@ -1,0 +1,12 @@
+{
+    "stripeNotOpen": "Zahlungsseite kann nicht geöffnet werden.",
+    "emptyCart": "Ihr Warenkorb ist leer!",
+    "shoppingCartTitle": "Einkaufswagen",
+    "cartTotalCourse_one": "Du hast total {{count}} Kurs.",
+    "cartTotalCourse_other": "Du hast total {{count}} Kurse.",
+    "total": "Gesamt",
+    "buyNow": "Kaufe jetzt",
+    "costForOneEmp": "€ {{cost}}  pro Mitarbeiter.",
+    "subTotal_one": "Zwischensumme ({{count}} Mitarbeiter)",
+    "subTotal_other": "Zwischensumme ({{count}} Mitarbeiter)"
+}

@@ -1,0 +1,71 @@
+{
+  "culture": "nl",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Welkom",
+    "LongWelcomeMessage": "Welkom bij de applicatie. Dit is een startup-project gebaseerd op het ABP-framework. Bezoek abp.io voor meer informatie.",
+
+    
+    "AdminNotExist": "Beheerder bestaat niet.",
+    "UserNotExist": "Deze gebruiker bestaat niet.",
+    "UserExist": "Deze gebruiker bestaat al.",
+    "UserCourseEnrollmentNotFound": "Gebruiker is niet ingeschreven voor deze cursus.",
+    "SomeUserNotExist": "Sommige gebruiker bestaat niet.",
+    "UserDeleted": "Gebruiker succesvol verwijderd.",
+    "UserNotInOrganization": "Gebruiker maakt geen deel uit van uw organisatie.",
+    "UserNotSubscribedCourse": "Gebruiker heeft deze cursus niet geabonneerd.",
+    "CompanyNotExist": "Bedrijf bestaat niet.",
+    "CompanyAlreadyRejected": "Registratie van het bedrijf is al afgewezen.",
+    "CompanyAlreadyAccepted": "Registratie van het bedrijf is al geaccepteerd.",
+    "CourseNotExist": "Cursus bestaat niet.",
+    "CourseNotPurchased": "U heeft de cursus nog niet gekocht.",
+    "CourseIdCourseCountEmpty": "CursusId of CursusCount is leeg.",
+    "CourseSubscriptionIdNotExist": "Cursusabonnement Id bestaat niet.",
+    "CourseSubscriptionExist": "Cursusabonnement bestaat al voor deze cursus.",
+    "ContentNull": "Inhoud is leeg.",
+    "LessonNotExist": "Les bestaat niet.",
+    "ModuleNotExist": "Module bestaat niet.",
+    "CartNotExist": "Winkelwagen bestaat niet.",
+    "CartDeleted": "Winkelwagen succesvol verwijderd.",
+    "InvalidCartCount": "Cursus aantal moet groter zijn dan nul.",
+    "CompanyIdUserIdEmpty": "BedrijfId of GebruikerId mag niet leeg zijn.",
+    "ExamExist": "Examen details bestaan al voor deze cursus.",
+    "ExamNotExist": "Examen details bestaan niet voor deze cursus.",
+    "ContentNotExist": "Inhoud bestaat niet.",
+    "ExamConducted": "Examen is al afgenomen.",
+    "ExamDeleted": "Winkelwagen succesvol verwijderd.",
+    "LiveExamNotExist": "Live examen details bestaan niet.",
+    "LiveExamExist": "Live examen details bestaan al met deze datum en dezelfde cursus.",
+    "LiveExamSeatsNotValid": "Aantal plaatsen voor live examen is niet geldig.",
+    "LiveExamSeatsFull": "Plaatsen voor live examen zijn vol.",
+    "QuestionNotExist": "Vraag bestaat niet.",
+    "QuestionDeleted": "Vraag succesvol verwijderd.",
+    "QuestionUpdated": "Vraag succesvol bijgewerkt.",
+    "PhotoFormatSupported": "Gebruik alstublieft .JPEG of .JPG formaat.",
+    "ImageFormatNotSupported": "Gebruik alstublieft .JPEG, .JPG of .PNG formaat.",
+    "NoRoleAdded": "Gebruiker is toegevoegd zonder enige rol!",
+    "SomethingWentWrong": "Er is iets misgegaan!",
+    "FeedbackNotFound": "Deze feedback bestaat niet.",
+    "CourseSavedSuccess": "Cursus succesvol opgeslagen.",
+    "ModuleAddedSuccess": "Module succesvol toegevoegd.",
+
+    // Auth
+    "AuthorizatioError": "Autorisatie fout.",
+    "EamilIdNotExist": "E-mail ID bestaat niet.",
+    "EmailExist": "Dit e-mail ID is al in gebruik.",
+    "AccountLock": "Account is vergrendeld.",
+    "OtpNotFound": "OTP niet gevonden of is verlopen.",
+    "ResultDetailsIssue": "Er is een probleem met de resultaten.",
+    "OtpNotMatched": "OTP komt niet overeen.",
+    "AccountDisabled": "Uw account is uitgeschakeld, neem contact op met de klantenservice.",
+    "CertificateContentIsNotAppropriate": "Certificaatinhoud is niet gepast.",
+    "RequestNotExists": "Verzoek bestaat niet.",
+
+    // Virtual reality
+    "TokenNotValid": "Verboden toegang vanwege ongeldig token.",
+    "TokenUnauthorized": "Toegang geweigerd vanwege ongeldig token.",
+    "CountMisMatched": "Resterende aantal is minder dan het opgegeven aantal om bij te werken."
+    
+
+  }
+}
