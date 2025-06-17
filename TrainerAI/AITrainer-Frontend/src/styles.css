@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.bg-blue{
+  background-color: #2F73A3;
+}
+.bg-blue:hover{
+  background-color: #2f73a3b7;
+}
+.text-blue{
+  color: #2F73A3;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

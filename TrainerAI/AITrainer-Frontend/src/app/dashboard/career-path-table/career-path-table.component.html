@@ -1,0 +1,192 @@
+<div class="table-header">
+  <h3 class="text-blue">Career Path:</h3>
+  <button
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#add-careerPath"
+  >
+    Add <i class="fa-solid fa-plus"></i>
+  </button>
+</div>
+<hr />
+<div class="table-responsive small">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col" class="col-8">
+          <p class="text-blue" style="padding-left: 10px">Career Path</p>
+        </th>
+        <th scope="col" class="col-4">
+          <p class="text-blue text-center">Actions</p>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let path of pageWiseCareerPaths; index as i">
+        <td class="careerPathName align-middle" style="padding-left: 10px">
+          {{ path.name }}
+        </td>
+        <td class="text-center">
+          <button
+            class="btn btn-primary btn-small m-1"
+            data-bs-toggle="modal"
+            data-bs-target="#add-careerPath"
+            (click)="selectEditCareerPath(path)"
+          >
+            <i class="fa-solid fa-pencil text-light"></i>
+          </button>
+          <button
+            class="btn btn-danger btn-small m-1"
+            data-bs-toggle="modal"
+            data-bs-target="#delete-careerPath"
+            (click)="selectDeleteCareerPath(path)"
+          >
+            <i class="fa-solid fa-trash text-light"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="careerPaths.length <= 0">
+        <td class="text-center" colspan="10" style="padding: 20px">
+          No Career Path to Show
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add/Edit Career Path Modal -->
+<div class="modal fade" id="add-careerPath" (hidden.bs.modal)="closeModal()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="careerPathForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">
+            {{ editMode ? "Edit Career Path Details" : "Add Career Path" }}
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="name" class="form-label fw-semibold"
+              >Career Path Name: <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              placeholder="Enter Career Path Name"
+              [ngClass]="{
+                'is-invalid':
+                  careerPathForm.get('name')?.errors &&
+                  careerPathForm.get('name')?.touched
+              }"
+              [ngClass]="{
+                'is-valid':
+                  !careerPathForm.get('name')?.errors &&
+                  careerPathForm.get('name')?.touched
+              }"
+              required
+            />
+            <small
+              *ngIf="
+                careerPathForm.get('name')?.errors &&
+                careerPathForm.get('name')?.touched
+              "
+              class="text-danger"
+              >Career Path Name is required.</small
+            >
+            <small *ngIf="careerPathExists" class="text-danger"
+              >Career Path name already exists.</small
+            >
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button
+            [disabled]="careerPathForm.invalid"
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="
+              editMode
+                ? editCareerPath(careerPathForm.value.name)
+                : addCareerPath(careerPathForm.value.name)
+            "
+            [disabled]="careerPathForm.invalid || careerPathExists"
+          >
+            Save changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Organizationmodal -->
+
+<div class="modal fade" id="delete-careerPath">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Delete Career Path</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to Delete?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          (click)="deleteCareerPath()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add Pagination -->
+
+<nav
+  aria-label="Page navigation example"
+  *ngIf="totalPages > 1 || careerPaths.length > 10"
+>
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <button class="page-link" (click)="previous()">Previous</button>
+    </li>
+    <ng-container *ngFor="let pageNumber of pageNumbers">
+      <li class="page-item" [class.active]="pageNumber === currentPageNo">
+        <button class="page-link" (click)="goToPage(pageNumber)">
+          {{ pageNumber }}
+        </button>
+      </li>
+    </ng-container>
+    <li class="page-item">
+      <button class="page-link" (click)="next()">Next</button>
+    </li>
+  </ul>
+</nav>

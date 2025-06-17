@@ -1,0 +1,263 @@
+<div class="intern-table-header d-flex justify-content-between">
+  <h3 class="text-blue">
+    <button
+      class="btn btn-small bg-blue text-light rounded-circle"
+      (click)="handleBack()"
+    >
+      <i class="fa-solid fa-arrow-left text-small"></i>
+    </button>
+    History:
+  </h3>
+  <div>
+    <div class="dropdown">
+      <button
+        class="btn btn-sm bg-blue text-light dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Behaviour Feedback
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li *ngFor="let template of behaviouralTemplates">
+          <a
+            class="dropdown-item"
+            [routerLink]="['../../behaviour-feedback']"
+            [queryParams]="{
+              internshipId: internshipId,
+              templateId: template.id
+            }"
+          >
+            <span>{{ template.templateName }}</span>
+            <span class="badge text-bg-success" *ngIf="template.isPublished"
+              >Published</span
+            >
+            <span class="badge text-bg-danger" *ngIf="!template.isPublished"
+              >Unpublished</span
+            >
+          </a>
+        </li>
+      </ul>
+
+      <button
+        class="btn btn-sm bg-blue text-light ms-2"
+        [routerLink]="['/dashboard/feedback']"
+        [queryParams]="{ internshipId: internshipId }"
+      >
+        Feedback History
+      </button>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<div class="history bhistory-wrapper d-flex justify-content-between">
+  <div>
+    <strong
+      >{{ internCourseDetails.firstName }}
+      {{ internCourseDetails.lastName }}</strong
+    >
+  </div>
+  <div>
+    <strong>{{ internCourseDetails.courseName }}</strong>
+  </div>
+</div>
+
+<div *ngIf="historyData.length == 0">
+  <h3>No History Found</h3>
+</div>
+
+<div class="history-wrapper" *ngFor="let history of historyData; let i = index">
+  <div class="history d-flex flex-column gap-1 py-2 pb-3" aria-current="true">
+    <div
+      class="history-header flex-fill d-flex justify-content-between align-items-center"
+    >
+      <div class="show-date">
+        {{ history.startDate | date : "dd-MM-yyyy" }}
+        <span *ngIf="history.endDate != history.startDate">
+          to {{ history.endDate | date : "dd-MM-yyyy" }}
+        </span>
+      </div>
+      <button
+        class="btn bg-blue text-light m-2 infomation"
+        data-bs-toggle="modal"
+        data-bs-target="#show-Topics"
+        (click)="openToggle(i)"
+      >
+        <i class="fa-solid fa-info"></i>
+      </button>
+    </div>
+    <div class="d-flex gap-2 w-100">
+      <div
+        class="quiz-container card"
+        style="width: 33%"
+        *ngIf="
+          history &&
+          history.topic &&
+          history.topic.quizLink !== null &&
+          history.topic.quizLink !== ''
+        "
+      >
+        <div class="fs-5 text-center card-header">Quiz</div>
+        <div class="card-body">
+          <ng-container>
+            <div class="quiz d-flex justify-content-between p-1">
+              <div
+                class="quiz-title cursor-pointer"
+                [routerLink]="
+                  history.quiz ? ['/dashboard/history/details'] : null
+                "
+                [queryParams]="{
+                  id: history.quiz ? history.quiz.id : null,
+                  topicId: history.topic.id,
+                  internshipId: internshipId
+                }"
+                fragment="quiz"
+              >
+                {{ history.topic.topicName }}
+              </div>
+              <div class="quiz-status">
+                <span class="badge text-bg-success" *ngIf="history.quiz"
+                  >Submitted</span
+                >
+                <span class="badge text-bg-danger" *ngIf="!history.quiz"
+                  >Pending</span
+                >
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="assignment-container card"
+        style="width: 33%"
+        *ngIf="history.assginment"
+      >
+        <div class="fs-5 text-center card-header">Assignment</div>
+        <div class="card-body">
+          <!-- Implement assignment for-loop here -->
+          <ng-container
+            *ngFor="let assignment of history.assginment; index as i"
+          >
+            <div class="assignment d-flex justify-content-between p-1">
+              <!-- <div class="assignment-title cursor-pointer"  [routerLink]="assignment.submissionId ? ['/dashboard/history/details'] : null"
+              [queryParams]="{ id:assignment.assignmentId, topicId: history.topic.id, assignmentSubmisionId: assignment.submissionId ? assignment.submissionId : null, internshipId:internshipId }" fragment="assignment"> -->
+              <div
+                class="assignment-title cursor-pointer"
+                [routerLink]="
+                  assignment.submissionId || courseEndDate < today
+                    ? ['/dashboard/history/details']
+                    : null
+                "
+                [queryParams]="{
+                  id: assignment.assignmentId,
+                  topicId: history.topic.id,
+                  assignmentSubmisionId: assignment.submissionId
+                    ? assignment.submissionId
+                    : null,
+                  internshipId: internshipId
+                }"
+                fragment="assignment"
+              >
+                <!-- <span> {{assignment.assignmentTitle}} </span> -->
+                <div
+                  style="
+                    width: 200px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                  "
+                >
+                  {{ i + 1 }}.{{ assignment.assignmentTitle }}
+                </div>
+
+                <!-- <span *ngIf="!assignment.assignmentId">No Assignment Found</span> -->
+              </div>
+              <div class="assignment-status">
+                <span
+                  class="badge text-bg-success"
+                  *ngIf="assignment.submissionId"
+                  >Submitted</span
+                >
+                <span
+                  class="badge text-bg-danger"
+                  *ngIf="!assignment.submissionId"
+                  >Pending</span
+                >
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="journal-container card"
+        style="width: 33%"
+        *ngIf="templateStatus"
+      >
+        <div class="fs-5 text-center card-header">Journal</div>
+        <div class="card-body">
+          <!-- Implement journal for-loop here -->
+          <ng-container>
+            <div class="journal d-flex justify-content-between p-1">
+              <div
+                class="journal-title cursor-pointer"
+                [routerLink]="
+                  history.journal || courseEndDate < today
+                    ? ['/dashboard/history/details']
+                    : null
+                "
+                [queryParams]="{
+                  id: history.journal ? history.journal.id : null,
+                  topicId: history.topic.id,
+                  internshipId: internshipId
+                }"
+                fragment="journal"
+              >
+                Journal
+              </div>
+              <div class="journal-status">
+                <span class="badge text-bg-success" *ngIf="history.journal"
+                  >Submitted</span
+                >
+                <span class="badge text-bg-danger" *ngIf="!history.journal"
+                  >Pending</span
+                >
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="show-Topics">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Topics</h1>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <ul *ngFor="let topicName of topicNames">
+            <li>{{ topicName }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="!historyData"
+  class="d-flex justify-content-between align-items-center"
+>
+  <h3>Not Found any History</h3>
+</div>

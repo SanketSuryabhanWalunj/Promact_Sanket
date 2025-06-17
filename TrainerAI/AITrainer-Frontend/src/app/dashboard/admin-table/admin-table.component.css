@@ -1,0 +1,38 @@
+.admin-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.adminlist {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 20px;
+}
+.pop-up {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.card1-footer {
+  display: flex;
+  justify-content: flex-end;
+  color: white;
+}
+
+.fixed-height {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 7px;
+}
+.form-check-label {
+  font-weight: normal;
+}
+
+.fixed-dropdown-height {
+  height: 100px;
+  overflow-y: auto;
+}

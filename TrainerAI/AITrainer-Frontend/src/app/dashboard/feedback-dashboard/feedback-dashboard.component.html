@@ -1,0 +1,205 @@
+<!--Header section with name and batch select-->
+<div class="d-flex align-items-center justify-content-center">
+  <div class="feedback-header col-10">
+    <h3 class="text-blue"> Feedback Dashboard: </h3>
+    <div class="d-flex ms-auto align-items-center mx-1 ">
+      <button class="btn bg-blue text-light mx-1" *ngIf="feedbacks.length" (click)="PublishAllFeedbacks()">Publish
+        All</button>
+      <button class="btn bg-blue text-light" (click)="navigateToDetails()">Detailed Feedback</button>
+    </div>
+  </div>
+  <!--Select Batch-->
+  <div class="col-2">
+    <form [formGroup]="selectbatchform">
+      <select class="form-select" id="batch" formControlName="batch" (change)="Select(selectbatchform.value)">
+        <ng-container>
+          <option [ngValue]="null" disabled selected>Select Batch</option>
+          <option *ngFor="let batch of batches" [value]="batch.id">{{ batch.batchName }}</option>
+        </ng-container>
+      </select>
+    </form>
+  </div>
+</div>
+<hr>
+
+<!--Display all interns in the selected batch with their overall feedback-->
+
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+
+        <th scope="col" class="col-1">
+          <p class="text-blue"> Intern Name </p>
+        </th>
+
+        <th scope="col">
+          <p class="text-blue"> Career Path </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Course </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Overall Feedback </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Action </p>
+        </th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of feedbacks">
+        <td class="align-middle">{{ item.name }}</td>
+        <td class="align-middle">{{item.careerPath}}</td>
+        <td class="align-middle">{{ item.courses }}</td>
+        <td class="" *ngIf="item.overallFeedback">
+          <div>
+            <div class="d-flex justify-content-end">
+              <div class="d-flex align-items-center dropdown-toggle dropdown-toggle-icon text-blue change" role="button"
+                id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false" (click)="GetTotalFeedback(item.id)">
+                <div class="dropdown-text">Previous Feedbacks</div>
+              </div>
+              <span class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-end scrollable-menu" aria-labelledby="courseDropdown">
+                  <li *ngFor="let name of totalFeedbacks">
+                    <a class="dropdown-item" (click)="UpdateOverallFeedbackView(name,item.id)">
+                      Feedback of {{name.createdDate|date}}
+                    </a>
+                  </li>
+                </ul>
+              </span>
+            </div>
+            <div class="align-middle">
+              {{item.overallFeedback.detailedFeedback }}
+            </div>
+
+          </div>
+        </td>
+        <td class="align-middle" *ngIf="!item.overallFeedback">
+          <div mat-raised-button matTooltip="Intern not have mentor feedback." matTooltipPosition="left"
+            [matTooltipDisabled]="!feedbackStatus[item.id]">
+            <button [disabled]="feedbackStatus[item.id]" class="btn bg-blue text-light"
+              [ngClass]="{'disabled-button':feedbackStatus[item.id] }"
+              (click)="GenerateOverallFeedback(item.id)">Generate
+              overall feedback</button>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="">
+            <button class="btn bg-blue text-light m-1" data-bs-toggle="modal" data-bs-target="#edit-feedback"
+              (click)="patchFeeedback(item.id,true)" *ngIf="item.overallFeedback" title="Edit">
+              <i class="fa-solid fa-pencil text-light"></i>
+            </button>
+            <button class="btn bg-blue text-light m-1 " (click)="PublishFeedback(item.id, item.overallFeedback.id)"
+              *ngIf="item.overallFeedback && !item.overallFeedback.isPublished" title="Publish">
+              <i class="fa-regular fa-share-from-square"></i></button>
+            <button class="btn bg-blue text-light m-1 published"
+              *ngIf="item.overallFeedback && item.overallFeedback.isPublished" title="Published">
+              <i class="fa-regular fa-share-from-square"></i></button>
+            <button class="btn bg-blue text-light m-1" (click)="GenerateOverallFeedback(item.id)"
+              *ngIf="item.overallFeedback" title="Regenerate">
+              <i class="fa-solid fa-retweet"></i>
+            </button>
+            <button class="btn bg-blue text-light m-1" data-bs-toggle="modal" data-bs-target="#edit-feedback"
+              (click)="patchFeeedback(item.id,false)" *ngIf="item.overallFeedback" title="View">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </td>
+
+      </tr>
+      <tr *ngIf="feedbackLength === 0">
+        <td class="text-center" colspan="11">No Feedback Records Available</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="edit-feedback" (shown.bs.modal)="adjustTextareaHeight()">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form [formGroup]="editOverallFeedback">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">
+            {{ editMode ? "Edit feedback" : "Feedback detail" }}
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5 mb-3">
+              <label for="internBehaviourPerformance" class="form-label fw-semibold">Behaviour Performance: <span
+                  class="text-danger">*</span></label>
+              <textarea class="form-control " id="internBehaviourPerformance" formControlName="behaviourPerformance"
+                placeholder="Enter Behaviour Performance" #textareaRef (input)="adjustTextareaHeight()" [ngClass]="{
+                  'is-invalid':
+                    getControl('behaviourPerformance')?.errors &&
+                    getControl('behaviourPerformance')?.touched
+                }" [ngClass]="{
+                  'is-valid':
+                    !getControl('behaviourPerformance')?.errors &&
+                    getControl('behaviourPerformance')?.touched
+                }" required></textarea>
+              <small
+                *ngIf="getControl('behaviourPerformance')?.errors?.['required'] && getControl('behaviourPerformance')?.touched"
+                class="text-danger">Behaviour Performance is required.</small>
+            </div>
+            <div class="col-md-5 mb-3">
+              <label for="internTechnicalPerformance" class="form-label fw-semibold">Technical Performance: <span
+                  class="text-danger">*</span></label>
+              <textarea class="form-control" id="internTechnicalPerformance" formControlName="technicalPerformance"
+                placeholder="Enter Technical Performance" rows="4" #textareaRef (input)="adjustTextareaHeight()"
+                [ngClass]="{
+                  'is-invalid':
+                    getControl('technicalPerformance')?.errors &&
+                    getControl('technicalPerformance')?.touched
+                }" [ngClass]="{
+                  'is-valid':
+                    !getControl('technicalPerformance')?.errors &&
+                    getControl('technicalPerformance')?.touched
+                }" required></textarea>
+              <small
+                *ngIf="getControl('technicalPerformance')?.errors?.['required'] && getControl('technicalPerformance')?.touched"
+                class="text-danger">Technical Performance is required.</small>
+            </div>
+            <div class="col-md-5 mb-3">
+              <label for="rightFit" class="form-label fw-semibold">Right Fit: <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="rightFit" formControlName="rightFit" placeholder="Enter right Fit"
+                rows="4" #textareaRef (input)="adjustTextareaHeight()"
+                [ngClass]="{ 'is-invalid': (getControl('rightFit')?.errors && getControl('rightFit')?.touched && getControl('rightFit')?.errors?.['required']) }"
+                [ngClass]="{
+                  'is-valid':
+                    getControl('rightFit')?.touched && !getControl('rightFit')?.errors
+                }" required></textarea>
+              <small *ngIf="getControl('rightFit')?.errors?.['required'] && getControl('rightFit')?.touched"
+                class="text-danger">Right Fit is required.</small>
+            </div>
+            <div class="col-md-5 mb-3">
+              <label for="detailedFeedback" class="form-label fw-semibold">Detailed Feedback:</label>
+              <textarea class="form-control" id="detailedFeedback" formControlName="detailedFeedback"
+                placeholder="Enter Detailed Feedback" rows="4" #textareaRef (input)="adjustTextareaHeight()"
+                [ngClass]="{ 'is-invalid': (getControl('detailedFeedback')?.errors && getControl('detailedFeedback')?.touched && getControl('rightFit')?.errors?.['required']) }"
+                [ngClass]="{
+                  'is-valid':
+                    getControl('detailedFeedback')?.touched && !getControl('detailedFeedback')?.errors
+                }" required></textarea>
+              <small
+                *ngIf="getControl('detailedFeedback')?.errors?.['required'] && getControl('detailedFeedback')?.touched"
+                class="text-danger">Detailed Feedback is required.</small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" *ngIf="editMode">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="editOverallFeedback.invalid"
+            (click)="editFeedback(editOverallFeedback.value)">
+            Save changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

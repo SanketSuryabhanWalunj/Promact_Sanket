@@ -1,0 +1,78 @@
+<!-- Course table -->
+<div class="course-header">
+    <h3 class="text-blue">Internship Details: </h3>
+   
+  </div>
+  <hr>
+  
+  <div class="table-responsive small">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">
+            <p class="text-blue" style="padding-left: 10px;"> Course Name</p>
+          </th>
+          <th scope="col">
+            <p class="text-blue"> Mentor Name </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">  Start Date </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">  End Date </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">  Duration </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue"> Status</p>
+          </th>
+                  </tr>
+      </thead>
+      <tbody *ngIf="course">
+        <tr *ngFor="let list of course; index as i">
+          
+            <td class="align-middle"  style="padding-left: 10px;">{{ list.courseName }}</td>
+            <td class="align-middle col-2" >
+              <ng-container
+                *ngFor="let mentor of list.mentorsName; let last = last"
+              >
+                <span>{{ mentor.firstName | titlecase }}</span>
+                <span *ngIf="!last">, </span>
+              </ng-container>  
+            </td>
+            <td class="align-middle" >{{ list.startDate| date:'dd MMM yyyy'}} </td>
+            <td class="align-middle" >{{ list.endTime | date:'dd MMM yyyy'}}</td>
+            <td class="align-middle" >{{ list.duration}} Day(s)</td>
+            <td class="align-middle">{{ list.status ? 'Active' : 'Closed' }}</td>
+            <td class="text-center">
+             
+            </td>
+         
+        </tr>
+      </tbody>
+      <tbody *ngIf="course && course.length <= 0">
+        <tr>
+          <td class="text-center" colspan="10">No Course Details Found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+<!-- add Pagination -->
+
+<nav aria-label="Page navigation example" *ngIf="totalPage > 1 || courseLength>10">
+    <ul class="pagination justify-content-end">
+      <li class="page-item">
+        <button class="page-link" (click)="previous()">Previous</button>
+      </li>
+      <ng-container *ngFor="let pageNumber of pageNumbers">
+        <li class="page-item" [class.active]="pageNumber === currentPage">
+          <button class="page-link" (click)="goToPage(pageNumber)"> {{ pageNumber }} </button>
+        </li>
+      </ng-container>
+      <li class="page-item">
+        <button class="page-link" (click)="next()">Next</button>
+      </li>
+    </ul>
+  </nav>

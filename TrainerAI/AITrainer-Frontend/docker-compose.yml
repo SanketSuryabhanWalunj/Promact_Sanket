@@ -1,0 +1,12 @@
+#Frontend Docker-compose
+version: '3.8'
+
+services:
+  aitrainer-app:
+    env_file: .env
+    container_name: "${NAME}-app"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:80"

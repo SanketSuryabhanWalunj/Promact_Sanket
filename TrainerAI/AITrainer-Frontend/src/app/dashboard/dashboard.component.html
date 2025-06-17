@@ -1,0 +1,243 @@
+<main class="dashboard-wrapper">
+  <!-- sidebar -->
+  <aside class="sidebar-wrapper">
+    <div class="logo fs-3 text-blue">
+      <strong>
+        AI Trainer
+      </strong>
+    </div>
+    <div class="sidebar">
+      <ul class="sidebar-links">
+        <li class="link-item">
+          <a [routerLink]="'/dashboard/admin'" class="link-text" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}" *ngIf="this.role == 'SuperAdmin' ? true : false">
+            <i [class]="'fa-solid fa-house'"></i> Home</a>
+        </li>
+        <li class="link-item">
+          <a [routerLink]="'/dashboard/home'" class="link-text" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}" *ngIf=" this.role == 'Intern' ? true : false">
+            <i [class]="'fa-solid fa-house'"></i> Home</a>
+        </li>
+        <li class="link-item">
+          <a [routerLink]="'/dashboard/'" class="link-text" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}" *ngIf="this.role == 'Admin' ? true : false">
+            <i [class]="'fa-solid fa-house'"></i> Home</a>
+        </li>
+        <li class="link-item" *ngFor="let links of sidebarLinks">
+          <a [routerLink]="links.routerLink" class="link-text" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }" [ngClass]="{ 'active': isLinkActive(links.routerLink) }"
+            *ngIf="links.isVisible">
+            <i [class]="links.icon"></i> {{links.text}}</a>
+        </li>
+      </ul>
+    </div>
+
+  </aside>
+
+  <section class="main">
+    <!-- header -->
+    <header class="header">
+      <!-- Check In and Last In -->
+      <div class="col-md-6 d-flex justify-content-end align-items-center" *ngIf="this.role === Intern"></div>
+      <button class="btn btn-small bg-blue text-light me-2 punchIn" *ngIf="this.role === Intern" type="button"
+        (click)="punchIn()">
+        {{isPunchlog ? CheckOut : CheckIn}}
+      </button>
+      <div>
+        <ng-container *ngIf="isPunchlog">
+          <p class="d-inline mx-4">
+            Last In: <b>{{ getDate(isPunchLogInTime) }}</b>
+          </p>
+        </ng-container>
+        <ng-container *ngIf="!isPunchlog && isPunchLogInTime !== null">
+          <p class="d-inline mx-2">
+            Last Out: <b>{{ getDate(isPunchLogOutTime) }}</b>
+          </p>
+        </ng-container>
+      </div>
+      <!-- profile dropdown -->
+      <div class="profile">
+        <div class="profile-img"></div>
+        <div class="dropdown text-end">
+          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <img src="https://img.freepik.com/premium-vector/icon-mans-face-with-light-skin_238404-886.jpg" alt="mdo"
+              width="32" height="32" class="rounded-circle">
+            {{ userName }}
+          </a>
+          <ul class="dropdown-menu text-small">
+            <li *ngIf="role == 'Admin'">
+              <a class="dropdown-item cursor" data-bs-toggle="modal" data-bs-target="#update-profile-modal"
+                (click)="fetchDetailsToUpdate()">Edit Profile</a>
+            </li>
+            <li *ngIf="role == 'Intern'">
+              <a class="dropdown-item cursor" [routerLink]="'intern/'+ userId">Edit Profile</a>
+            </li>
+            <li *ngIf="role !== 'SuperAdmin'">
+              <a class="dropdown-item cursor" data-bs-toggle="modal" data-bs-target="#change-password-modal">
+                Change Password
+              </a>
+            </li>
+            <!-- <li>
+              <hr class="dropdown-divider">
+            </li> -->
+            <li>
+              <a class="dropdown-item cursor" (click)="logout()">Sign out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- main container -->
+    <section class="main-wrapper">
+      <div class="main-content">
+        <app-loader-table></app-loader-table>
+        <router-outlet></router-outlet>
+      </div>
+    </section>
+  </section>
+
+</main>
+
+<!-- update profile Modal -->
+<div class="modal fade" id="update-profile-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="updateProfileForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Update Profile</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="firstname" class="form-label fw-semibold">First Name: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="firstname" formControlName="firstname" [ngClass]="{ 'is-valid': getControl('firstname')?.touched && !getControl('firstname')?.errors,
+            'is-invalid': getControl('firstname')?.touched && getControl('firstname')?.errors?.['required'] }"
+              required />
+            <small *ngIf="getControl('firstname')?.errors && getControl('firstname')?.touched" class="text-danger">First
+              Name is required</small>
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label fw-semibold">Last Name: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="lastname" formControlName="lastname" [ngClass]="{ 'is-valid': getControl('lastname')?.touched && !getControl('lastname')?.errors,
+            'is-invalid': getControl('lastname')?.touched && getControl('lastname')?.errors?.['required'] }"
+              required />
+            <small *ngIf="getControl('lastname')?.errors && getControl('lastname')?.touched" class="text-danger">Last
+              Name is required</small>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">Email: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="email" formControlName="email" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="mobile" class="form-label fw-semibold">Contact Number:</label>
+            <input type="text" class="form-control" id="mobile" formControlName="mobile" placeholder="Enter Contact No."
+              [ngClass]="{ 'is-invalid' : (getControl('mobile')?.errors && getControl('mobile')?.touched)}">
+            <span *ngIf="getControl('mobile')?.errors?.['pattern']" class="text-danger">Please enter a valid Phone
+              Number.</span>
+          </div>
+
+          <div class="mb-3" *ngIf="role == 'Intern'">
+            <label for="college-name" class="form-label fw-semibold">College Name: <span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="college-name" formControlName="collegeName" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateDetails()">Save
+            changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Change password Modal -->
+<div class="modal fade" id="change-password-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="changePasswordForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Change Password</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="changePasswordForm.reset()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="oldPassword" class="form-label fw-semibold">Old Password: <span
+                class="text-danger">*</span></label>
+            <div class="d-flex">
+              <input [type]=" hidePass ? 'password': 'text'" class="form-control" id="oldPassword"
+                formControlName="oldPassword"
+                [ngClass]="{ 'is-valid': changePasswordForm.get('oldPassword')?.touched && !changePasswordForm.get('oldPassword')?.errors,
+                'is-invalid': changePasswordForm.get('oldPassword')?.touched && changePasswordForm.get('oldPassword')?.errors?.['required'] }"
+                required />
+              <button class="btn btn-secondary  text-light" (click)="togglePassword()">
+                <i class="fa-solid" [ngClass]="hidePass ? 'fa-eye': ' fa-eye-slash'"></i>
+              </button>
+            </div>
+            <small
+              *ngIf="changePasswordForm.get('oldPassword')?.errors && changePasswordForm.get('oldPassword')?.touched"
+              class="text-danger">Old Password is required</small>
+
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label fw-semibold">New Password: <span
+                class="text-danger">*</span></label>
+            <div class="d-flex">
+              <input [type]="hideNewPass ? 'password' : 'text'" class="form-control" id="newPassword"
+                formControlName="newPassword"
+                [ngClass]="{'is-invalid': changePasswordForm.get('newPassword')?.errors && changePasswordForm.get('newPassword')?.touched}">
+              <button class="btn btn-secondary text-light" (click)="toggleNewPassword()">
+                <i class="fa-solid" [ngClass]="hideNewPass ? 'fa-eye' : 'fa-eye-slash'"></i>
+              </button>
+            </div>
+            <span
+              *ngIf="changePasswordForm.get('newPassword')?.errors?.['required'] && changePasswordForm.get('newPassword')?.touched"
+              class="text-danger">New Password is required.</span>
+            <span *ngIf="changePasswordForm.hasError('passwordMatch')" class="text-danger">New password cannot be the
+              same as the old password.</span>
+            <span *ngIf="changePasswordForm.get('newPassword')?.errors?.['pattern']" class="text-danger">Password should
+              contain at least one capital letter, a number, and a special character.</span>
+          </div>
+
+
+
+          <div class="mb-3">
+            <label for="confirmNewPassword" class="form-label fw-semibold">Confirm New Password: <span
+                class="text-danger">*</span></label>
+            <div class="d-flex">
+              <input [type]="hideCnfNewPass ? 'password' : 'text'" class="form-control" id="confirmNewPassword"
+                formControlName="confirmNewPassword"
+                [ngClass]="{ 'is-valid': changePasswordForm.get('confirmNewPassword')?.valid && changePasswordForm.get('confirmNewPassword')?.touched, 'is-invalid': !changePasswordForm.get('confirmNewPassword')?.valid && changePasswordForm.get('confirmNewPassword')?.touched }" />
+              <button class="btn btn-secondary text-light" (click)="toggleCnfNewPassword()">
+                <i class="fa-solid" [ngClass]="hideCnfNewPass ? 'fa-eye' : ' fa-eye-slash'"></i>
+              </button>
+            </div>
+            <span
+              *ngIf="changePasswordForm.get('newPassword')?.value && !changePasswordForm.get('confirmNewPassword')?.value"
+              class="text-danger">Confirm New Password is required.</span>
+            <span
+              *ngIf="changePasswordForm.get('newPassword')?.value && changePasswordForm.get('confirmNewPassword')?.value && changePasswordForm.hasError('passwordMismatch')"
+              class="text-danger">New password and confirm password do not match.</span>
+          </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="changePasswordForm.reset()">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="changePassword(changePasswordForm.value)" [disabled]="!changePasswordForm.valid">Save
+            changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

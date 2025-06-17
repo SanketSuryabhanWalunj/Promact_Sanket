@@ -1,0 +1,114 @@
+.leave-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fixed-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hover-pointer {
+  cursor: pointer;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.cursor:hover {
+  text-decoration: underline;
+  color: #0099ff;
+}
+
+.name {
+  margin-right: 5px;
+}
+
+.dropdown {
+  margin-bottom: 10px;
+}
+
+.action {
+  margin-left: 22px;
+}
+
+.reason {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.custom-red-button {
+  background-color: #cd0d0d;
+  color: #fff;
+}
+
+.reset-btn {
+  font-size: 15px;
+  color: #fff;
+}
+
+.reset-btn:hover {
+  background-color: #0076f5;
+  color: #fff;
+}
+
+.approve-model {
+  width: 50px !important;
+  color: #2F73A3 !important;
+  font-size: 24px;
+  font-weight: 900px;
+}
+
+.reject-model {
+  width: 50px !important;
+  color: #cd0d0d !important;
+  font-size: 24px;
+  font-weight: 900px;
+}
+
+.admin-table {
+  min-height: 200px;
+}
+
+.comments-class {
+  color: #ce0d0d;
+}
+
+td.request-reason {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-place {
+  margin-left: 10px;
+}
+
+.attachment-button-display {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  width: 80px;
+  height: 40px;
+  font-size: 12px;
+  position: relative;
+}
+
+.attachment-container-display {
+  display: flex;
+  flex-wrap: nowrap;
+  max-height: 70px;
+  overflow-x: auto;
+  white-space: nowrap;
+}

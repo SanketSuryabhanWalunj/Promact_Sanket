@@ -1,0 +1,67 @@
+.history-wrapper {
+  margin-top: 25px;
+}
+.history {
+  position: relative;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+.history .show-date {
+  color: #2f73a3;
+  font-weight: bold;
+}
+.card {
+  background-color: #9ec3de26;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.infomation {
+  cursor: pointer;
+  border-radius: 50%;
+  height: 37px;
+  width: 37px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: #fff;
+  background-color: #2f73a3;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-menu a {
+  color: #000;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-menu a:hover {
+  background-color: #2f73a3;
+}
+
+.dropdown-toggle {
+  background-color: #2f73a3 !important;
+}
+
+.dropdown-toggle::after {
+  outline: none !important;
+}

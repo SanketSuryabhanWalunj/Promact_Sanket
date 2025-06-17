@@ -1,0 +1,123 @@
+<div class="attendance-container">
+
+  <div class="course-header d-flex">
+    <h3 class="text-blue">{{AttendanceDetails}}:</h3>
+    <button class="btn btn-primary requestcolor"
+      [routerLink]="['/dashboard/punch-records-details/intern-attendance-details']">
+      {{RequestAttendance}} <i class="fa fa-bars"></i>
+    </button>
+  </div>
+  <hr>
+  <div class="d-flex mb-3 calendar-bar">
+
+    <i class="fa fa-caret-left mt-1 arrowcolor" (click)="previousWeek()"></i>
+    <span class="datepadding"> {{ currentWeekStart.format('MMM DD, YYYY') }} - {{ currentWeekEnd.format('MMM DD, YYYY')
+      }}</span>
+    <i class="fa fa-caret-right mt-1 arrowcolor" (click)="nextWeek()"></i>
+  </div>
+  <!-- This is Attendance Body Part -->
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive small" *ngIf="weekDates">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr class="row">
+              <th class="col-3 alignCenter">
+                <p class="text-blue date">{{Date}}</p>
+              </th>
+              <th class="col-7 alignCenter">
+                <p class="text-blue">{{Punches}}</p>
+              </th>
+              <th class="col-2 alignCenter">
+                <p class="text-blue">{{TotalHours}}</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of weekDates" class="row">
+              <td class="col-3 alignCenter">{{ formatDate( record.punchDate) }}</td>
+              <td class="col-7 alignCenter">
+            <tr class="row">
+
+              <td class="col-12 processbarpad">
+                <div class="container">
+                  <div class="progress my-custom-progress">
+                    <div class="progress-bar" [ngClass]="isProgressBar(record)" role="progressbar" class="progess-bars">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <table class="table">
+              <ng-container *ngIf="record?.punchLogTime.length && isleaveCheck(record.punchDate)">
+                <tr class="row punch-in" *ngFor="let punchlog of record.punchLogTime">
+
+                  <td class="col-4 timeFont ">
+                    <div class="icon-text-wrapper d-flex  align-items-center">
+                      <i [ngClass]="!punchlog.isPunchLogin?'fa fa-globe':'fa-regular fa-circle-check'"
+                        aria-hidden="true"></i>
+                      <span class="gtransparent">{{getDate(punchlog.punchIn)}}</span>
+                    </div>
+                  </td>
+                  <td class="col-4 timeFont">
+                    <div class="icon-text-wrapper d-flex  align-items-center">
+                      <i *ngIf="punchlog.punchOut != null"
+                        [ngClass]="!punchlog.isPunchLogOut?'fa fa-globe':'fa-regular fa-circle-check'"
+                        aria-hidden="true"></i>
+                      <span class="gtransparent">{{getDate(punchlog.punchOut)}}</span>
+                      <span
+                        *ngIf="punchlog.punchOut === null && isTodayGreaterThan(record.punchDate) && !isToday(record.punchDate)">
+                        <a type="button" (click)="punchRequest(record)" class="request-color">{{RequestPunch}}
+                        </a>
+                        <span *ngIf="isStatusForRequest(record.requestStatus)"
+                          class="request-color">({{Requested}})</span>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="col-4 timeFont">{{parseTimeSpanToMinutes(punchlog.totalTimeSpan)}} </td>
+
+                </tr>
+              </ng-container>
+            </table>
+            </td>
+
+            <td class="col-2 alignCenter">
+              <ng-container
+                *ngIf="record.punchLogTime?.length!==0 && (record.requestStatus==null || record.requestStatus===Approved) && isleaveCheck(record.punchDate)">
+                <b>{{calculateTotalTimeSpan(record.punchLogTime)}}</b>
+              </ng-container>
+              <ng-container
+                *ngIf="isBatchleave(record.punchDate) && !isHoliday(record.punchDate) && record.leaveStatus!==Approved">
+                <ng-container
+                  *ngIf="((record.punchLogTime?.length===0 &&isTodayGreaterThan(record.punchDate) && !record.isStartDate && !isToday(record.punchDate)) || (isStatusForRequest(record)))">
+                  <div><a type="button" class="apply-punch-leave"
+                      [routerLink]="['/dashboard/punch-records-details/intern-attendance-details']"
+                      [queryParams]="{ date: record.punchDate }">{{RequestPunch}} <span
+                        *ngIf="isStatusForRequest(record.requestStatus)">({{Requested}})</span></a></div>
+                  <div><a type="button" class="apply-punch-leave"
+                      [routerLink]="['/dashboard/intern-leave-application/intern-leave-request']"
+                      [queryParams]="{ date: record.punchDate }">{{ApplyLeave}} <span
+                        *ngIf="record.isApplyLeave && record.leaveStatus !== Rejected">{{Applied}}</span></a>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <!-- Container for the if holiday then show the holiday name -->
+              <ng-container *ngIf="record.leaveStatus!==Approved isHoliday(record.punchDate)">
+                <div>
+                  <span>{{getHolidayName(record.punchDate)}}</span>
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="record.leaveStatus===Approved && !isHoliday(record.punchDate) && isBatchleave(record.punchDate)">
+                <div>
+                  <span>{{record.leaveType===WorkFromHome?Wfh:record.leaveType}}</span>
+                </div>
+              </ng-container>
+            </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

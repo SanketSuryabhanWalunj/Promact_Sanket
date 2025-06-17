@@ -1,0 +1,58 @@
+<div class="template-journal-header d-flex justify-content-start">
+  <button class="btn btn-small bg-blue text-light rounded-circle" routerLink="/dashboard/behaviour-table-template">
+    <i class="fa-solid fa-arrow-left text-small"></i>
+  </button>
+  <h3 class="text-blue px-2 m-0"> {{ IsEditMode ? 'Edit Template:' : 'Create Template:' }}</h3>
+</div>
+<hr>
+
+<div class="card ">
+  <form [formGroup]="templateBehaveForm" (ngSubmit)="createTemplate(templateBehaveForm.value)">
+    <div class="card-body">
+      <div class="template-title d-flex align-items-center mb-3">
+        <input type="text" formControlName="templateName" placeholder="Enter Template Name" class="no-border-input">
+        <div class="d-flex justify-content-end mt-auto">
+          <button type="submit" [disabled]="templateBehaveForm.invalid || saveEdit" class="btn btn-primary">
+            {{ IsEditMode ? 'Save changes' :'Create template'}}
+          </button>
+        </div>
+      </div>
+      <hr>
+
+      <div class="options" formArrayName="options">
+        <div *ngFor="let option of optionsArray.controls; let i = index" [formGroupName]="i" class="mb-1">
+          <div class="rounded-border p-3">
+            <div class="align-items-start position-relative">
+
+              <!-- Delete Button -->
+              <button type="button" class="btn position-absolute top-0 end-0" (click)="removeOption(i)">
+                <i class="fa-solid fa-xmark text-danger"></i>
+              </button>
+
+              <div class="justify-content-between">
+                <div class="mb-8 mt-3" style="flex: 2;">
+                  <label for="topicName{{i}}"><strong>Category Name:</strong></label>
+                  <textarea id="categoryName{{i}}" #textareaRef formControlName="categoryName" 
+                    placeholder="Enter Category name" class="no-border-input w-100 custom-width-input"
+                    (input)="checkValue(option.get('categoryName')?.value); adjustTextareaHeight()">
+                  </textarea>
+                </div>
+                <div class="md-2">
+                  <label for="totalMarks{{i}}"><strong>Total Marks:</strong></label>
+                  <input type="number" id="totalMarks{{i}}" formControlName="totalMarks" placeholder="Enter total marks"
+                    class="no-border-input w-100" (input)="checkValue(option.get('totalMarks')?.value)">
+                </div>
+              </div>
+              
+
+              <hr>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="addOption()" [disabled]="templateBehaveForm.invalid">Add
+        Category</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,19 @@
+.alert-dialog-container {
+  text-align: center;
+  padding: 20px;
+  width: 300px;
+}
+
+.alert-message {
+  font-size: 16px;
+  color: #666666;
+  margin: 10px 0 20px;
+}
+
+.alert-button {
+  background-color: #f8a539;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 5px 15px;
+}

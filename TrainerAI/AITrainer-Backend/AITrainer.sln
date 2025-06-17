@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AITrainer", "AITrainer\AITrainer.csproj", "{D5CDA5F1-39EC-49CC-9884-F2F6582C55AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5CDA5F1-39EC-49CC-9884-F2F6582C55AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5CDA5F1-39EC-49CC-9884-F2F6582C55AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5CDA5F1-39EC-49CC-9884-F2F6582C55AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5CDA5F1-39EC-49CC-9884-F2F6582C55AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C16A5AA2-D0D5-437D-AD2A-42111841014C}
+	EndGlobalSection
+EndGlobal

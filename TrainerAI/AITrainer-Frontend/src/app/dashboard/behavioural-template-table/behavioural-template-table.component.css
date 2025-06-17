@@ -1,0 +1,16 @@
+.template-table-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .templateName{
+    padding-top: 16px;
+    padding-left: 10px;
+  }
+  
+  .page-item.active {
+    background-color: #2F73A3 !important;
+    color: white;
+  }
+  

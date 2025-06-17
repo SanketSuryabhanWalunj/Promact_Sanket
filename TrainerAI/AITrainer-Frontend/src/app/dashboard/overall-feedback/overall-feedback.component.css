@@ -1,0 +1,117 @@
+.main {
+    display: flex;
+    flex-direction: column;
+  }
+  .feedback {
+    padding: 5px 20px 5px 20px;
+    border-radius: 15px;
+    max-width: 65%;
+    background-color: #f5f5f5;
+    margin-bottom: 15px;
+  }
+  .no-feedback {
+    padding: 5px 20px 5px 20px;
+    border-radius: 15px;
+    background-color: #f5f5f5;
+  }
+  .fixed-input {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+  }
+  
+  .flexible-area {
+    flex: 1;
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    margin-bottom: 50px;
+  }
+  
+  .name {
+    color: #2f73a3;
+  }
+  .type-center {
+    background-color: #def2fc;
+    border-radius: 20px;
+    padding: 0 8px;
+  }
+  .sender {
+    background-color: #fff;
+    box-shadow: 1px 1px 2px 1px #ccc, 0px 0px 2px 1px #ccc inset;
+  }
+  
+  .receiver {
+    background-color: #f5f5f5;
+  }
+  .date {
+    font-size: 15px;
+    color: #afadad;
+  }
+  .search {
+    margin-top: 20px;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    padding: 20px;
+    align-items: flex-end;
+  }
+  
+  .search input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search button[type="submit"] {
+    background-color: #4e99e9;
+    height: 50px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: 0.9s ease;
+  }
+  
+  .search button[type="submit"]:hover {
+    transform: scale(1.1);
+    color: rgb(255, 255, 255);
+    background-color: #2f73a3;
+  }
+  
+  .textarea-display {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    resize: none;
+    width: 750px;
+  }
+  
+  .textarea-input {
+    background-color: transparent;
+    width: 750px;
+  }
+  
+  .textarea-message {
+    resize: none;
+    width: 95%;
+  }
+  
+  .feedback-item {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  
+  .dropdown-item:hover {
+    cursor: pointer;
+  }
+
+  .selected-feedback{
+    background-color: rgb(123, 123, 133);
+  }

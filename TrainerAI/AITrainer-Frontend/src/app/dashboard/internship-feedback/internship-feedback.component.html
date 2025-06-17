@@ -1,0 +1,102 @@
+<div class="main">
+    <div class="flexible-area ">
+        <div class="d-flex justify-content-start ">
+            <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Admin'"
+                routerLink="/dashboard/internships/{{internshipId}}">
+                <i class="fa-solid fa-arrow-left text-small"></i>
+            </button>
+            <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Intern'"
+                [routerLink]="['/dashboard/history']" [queryParams]="{internshipId: internshipId}">
+                <i class="fa-solid fa-arrow-left text-small"></i>
+            </button>
+            <h3 class="text-blue px-2 m-0"> Feedback: </h3>
+        </div>
+        <hr>
+        <div class="col-auto d-flex flex-column ">
+            <div class=" list-unstyled" *ngFor="let feedback of backupFeedback; let i = index">
+                <div class="list-inline-item feedback "
+                    [ngClass]="{'sender': userId === feedback.reviewerId, 'receiver': userId !== feedback.reviewerId, 'selected-feedback': feedback === selectedFeedback}">
+                    <div class="d-flex justify-content-between ">
+                        <div class="text-left ">
+                            <small class="name pe-3">{{ feedback.reviewerName }}</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <small class="type-center ">{{ feedback.type }}</small>
+                            <div class="dropdown-toggle"
+                                *ngIf="feedback.type !== 'Behaviour' && feedback.reviewerId === userId && !isfeedbackEditing"
+                                data-bs-toggle="dropdown">
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-item" (click)="selectEditFeedback(feedback)">Edit</div>
+                                    <div *ngIf="feedback.type === 'General' && role!=='Intern'" class="dropdown-item"
+                                        (click)="selectDeleteFeedback(feedback)" data-bs-toggle="modal"
+                                        data-bs-target="#delete-feedback">Delete</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback-item" *ngIf="feedback.message.feedback"><strong> Feedback:</strong> <textarea
+                            [(ngModel)]="ngFeedbackMessage[i].feedback"
+                            [ngClass]="{'textarea-input': feedback.isEditing, 'textarea-display': !feedback.isEditing}"
+                            [disabled]="!feedback.isEditing" #textareaRef (input)="adjustTextareaHeight()"></textarea>
+                    </div>
+                    <div class="feedback-item" *ngIf="feedback.message.improvementArea"><strong>Improvement
+                            Area:</strong> <textarea [(ngModel)]="ngFeedbackMessage[i].improvementArea"
+                            [ngClass]="{'textarea-input': feedback.isEditing, 'textarea-display': !feedback.isEditing}"
+                            [disabled]="!feedback.isEditing" #textareaRef (input)="adjustTextareaHeight()"></textarea>
+                    </div>
+                    <div class="feedback-item" *ngIf="feedback.message.rating||feedback.message.rating==0">
+                        <strong>Rating:</strong> <input [(ngModel)]="ngFeedbackMessage[i].rating"
+                            class="textarea-display" disabled />
+                    </div>
+                    <div class="feedback-item" *ngIf="feedback.message.score"><strong>Score: </strong> <input
+                            [(ngModel)]="ngFeedbackMessage[i].score" class="textarea-display" disabled /> </div>
+                    <div class="feedback-item" *ngIf="feedback.message.comment"><strong> Comment: </strong> <textarea
+                            [(ngModel)]="ngFeedbackMessage[i].comment"
+                            [ngClass]="{'textarea-input': feedback.isEditing, 'textarea-display': !feedback.isEditing}"
+                            [disabled]="!feedback.isEditing" #textareaRef (input)="adjustTextareaHeight()"></textarea>
+                    </div>
+                    <div *ngIf="feedback.isEditing" class="d-flex gap-2 py-2">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="cancelEdit(i)">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            (click)="saveEditFeedback(ngFeedbackMessage[i], i)">Save</button>
+                    </div>
+                    <div class="d-flex justify-content-end date gap-2">
+                        <small *ngIf="feedback.isEdited">Edited</small>
+                        <small>{{ formatDate(feedback.updatedDate) }}</small>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="overallFeedback">
+                <div class="list-inline-item d-flex justify-content-center no-feedback "
+                    *ngIf="overallFeedback.length==0">No Feedback Found</div>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="sendMessage" class="search gap-2">
+        <textarea type="text" class="form-control textarea-message" formControlName="comment"
+            placeholder="Enter  Message..." (input)="adjustSendTextareaHeight()" #textareaRef2 required></textarea>
+        <button type="submit" (click)="SendGeneralFeedback(sendMessage.value.comment)"
+            [disabled]="isfeedbackEditing">Send</button>
+    </form>
+
+    <!-- Delete Admin modal -->
+    <div class="modal fade" id="delete-feedback" (hidden.bs.modal)="closeModal()">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal-heading">Delete Admin </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to Delete?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                        (click)="deleteFeedback()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

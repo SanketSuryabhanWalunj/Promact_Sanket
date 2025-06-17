@@ -1,0 +1,32 @@
+<div class="main">
+    <div class="flexible-area ">
+        <div class="d-flex justify-content-start ">
+            <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Intern'"
+                [routerLink]="['/dashboard/history']" [queryParams]="{internshipId: internshipId}">
+                <i class="fa-solid fa-arrow-left text-small"></i>
+            </button>
+            <h3 class="text-blue px-2 m-0"> Overall Feedback: </h3>
+        </div>
+        <hr>
+        <div class="col-auto d-flex flex-column ">
+            <div class=" list-unstyled" *ngFor="let feedback of overallFeedback; let i = index">
+                <div class="list-inline-item feedback ">
+                    <div class="d-flex justify-content-between ">
+                        <div class="text-left ">
+                            <small class="name pe-3">{{ feedback.createdByName}}</small>
+                        </div>
+                    </div>
+                    <div class="feedback-item" *ngIf="feedback.detailedFeedback"><strong> Feedback:</strong>
+                        <div>{{feedback.detailedFeedback}}</div>
+                    </div>
+                    <div class="d-flex justify-content-end date gap-2">
+                        <small>{{ formatDate(feedback.createdDate) }}</small>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="overallFeedback">
+                <div class="list-inline-item d-flex justify-content-center no-feedback "
+                    *ngIf="overallFeedback.length==0">No Feedback Found</div>
+            </div>
+        </div>
+    </div>

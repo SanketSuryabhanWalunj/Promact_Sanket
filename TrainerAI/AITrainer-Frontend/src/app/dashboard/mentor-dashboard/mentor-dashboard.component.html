@@ -1,0 +1,242 @@
+<ng-container *ngIf="showMentorSection || adminDetail.type === 'Mentor'">
+  <div *ngIf="adminDetail.type === 'Technical Administrator'">
+    <div class="row">
+      <div class="col-md-1">
+        <button class="btn btn-small bg-blue text-light rounded-circle" (click)="goBack()">
+          <i class="fa-solid fa-arrow-left text-small"></i>
+        </button>
+      </div>
+      <div class="col-md-3"></div> <!-- Spacer -->
+      <h3 class="text-blue col-md-5"> Mentor Dashboard: </h3>
+    </div>
+  </div>
+  <br />
+  <div class="d-flex justify-content-between">
+    <button class="btn btn-primary dropdown-toggle col-3" role="button" id="batchDropdownMenu" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      {{ batchFilterButtonText }}
+    </button>
+    <ul class="dropdown-menu col-3 fixed-height" aria-labelledby="batchDropdownMenu">
+      <li *ngFor="let batch of batches" class="px-1">
+        <a class="dropdown-item" (click)="setBatchName(batch.batchName, batch.id)">{{ batch.batchName }}</a>
+      </li>
+    </ul>
+
+    <button class="btn btn-primary dropdown-toggle col-3" role="button" id="courseDropdownMenu"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      Courses
+    </button>
+    <ul class="dropdown-menu col-3 fixed-height" aria-labelledby="courseDropdownMenu">
+      <form [formGroup]="searchCourseForm">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="search" class="form-control" formControlName="searchCourse" (input)="
+                setSearchCourse(searchCourseForm.get('searchCourse')?.value)
+              " placeholder="Search..." />
+          </div>
+        </div>
+      </form>
+      <div *ngIf="!courses">Loading courses...</div>
+      <div>
+        <div *ngFor="let course of courses" class="px-3 py-1">
+          <div class="form-check">
+            <input type="checkbox" [checked]="isCourseChecked(course)" class="form-check-input"
+              id="{{ 'courseCheckbox_' + course.id }}" [value]="course.id"
+              (change)="handleCourseCheckboxChange($event, course)" name="courses" />
+            <label class="form-check-label" for="{{ 'courseCheckbox_' + course.id }}">
+              {{ course.name }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </ul>
+
+    <button class="btn btn-primary dropdown-toggle col-3" role="button" id="mentorDropdownMenu"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      Mentors
+    </button>
+    <ul class="dropdown-menu col-3 fixed-height" aria-labelledby="mentorDropdownMenu">
+      <form [formGroup]="searchMentorForm">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="search" class="form-control" formControlName="searchMentor" (input)="
+                setSearchMentor(searchMentorForm.get('searchMentor')?.value)
+              " placeholder="Search..." />
+          </div>
+        </div>
+      </form>
+      <div *ngFor="let mentor of mentorList" class="px-3 py-1">
+        <div class="form-check">
+          <input type="checkbox" [checked]="isMentorsSelected(mentor)" class="form-check-input"
+            id="{{ 'mentorCheckbox_' + mentor.mentorId }}" [value]="mentor.mentorId"
+            (change)="handleMentorCheckboxChange($event, mentor)" name="mentors" />
+          <label class="form-check-label" for="{{ 'mentorCheckbox_' + mentor.mentorId }}">
+            {{ mentor.firstName }} {{ mentor.lastName }}
+          </label>
+        </div>
+      </div>
+    </ul>
+
+    <div>
+      <button class="btn btn-primary mentor-assignment-reset" (click)="resetMentorAssignmentDashbord()">
+        <i class="fa fa-refresh"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="p-5 col-12">
+    <div class="p-2 d-flex justify-content-between border">
+      <p>Internship Count: {{ detail_fields.internshipCount }}</p>
+      <p>Submission Count: {{ detail_fields.submissionCount }}</p>
+      <p>Unsubmitted Count: {{ detail_fields.unSubmittedCount }}</p>
+      <p>Published Count: {{ detail_fields.publishedCount }}</p>
+      <p>Unpublished Count: {{ detail_fields.unpublishedCount }}</p>
+    </div>
+
+    <ng-container *ngIf="selectedCourses && selectedMentors">
+      <div class="list-inline-item d-flex justify-content-center no-feedback"
+        *ngIf="detail_fields.internshipCount === 0">
+        No Internship Found
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="assignment-container card mt-3 col-10" *ngFor="let intern of internDetails">
+      <div class="fs-6 card-header">
+        <div class="d-flex justify-content-between">
+          <div><b>Intern Name: &nbsp;</b>{{ intern.internName }}</div>
+          <div><b>Mentor Name: &nbsp;</b> {{ intern.mentorName }}</div>
+          <div><b>Course Name:&nbsp;</b> {{ intern.courseName }}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ng-container>
+          <div class="assignment p-1">
+            <div *ngFor="let submission of intern.submissions" class="d-flex justify-content-between">
+              <div>
+                {{ submission.name }}
+                <span class="badge text-bg-success" *ngIf="submission.isAssignment">Assignment</span>
+                <span class="badge text-bg-success" *ngIf="!submission.isAssignment">Journal</span>
+              </div>
+              <div class="d-flex justify-content-between col-4">
+                <div class="assignment-status">
+                  <span class="badge text-bg-success" *ngIf="submission.isSubmitted">Submitted</span>
+                  <span class="badge text-bg-danger" *ngIf="!submission.isSubmitted">Pending</span>
+                </div>
+                <div class="assignment-status">
+                  <div *ngIf="submission.isPublished">
+                    <span class="badge text-bg-success">Published By:&nbsp;{{ submission.publisherName }}</span>
+                  </div>
+                  <div *ngIf="!submission.isPublished&&submission.isSaved">
+                    <span class="badge text-bg-danger">Saved</span>
+                  </div>
+                  <div *ngIf="!submission.isPublished">
+                    <span class="badge text-bg-danger">Unpublished</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="adminDetail.type === 'Technical Administrator'&& showOrginalDashboardSection ">
+  <div class="admin-table-header">
+    <div class="d-flex justify-content-between">
+      <h3 class="text-blue"> Mentor Dashboard: </h3>
+      <button class="btn btn-primary" (click)="toggleCodeDisplay()">
+        Check Pending Assignments
+      </button>
+    </div>
+    <div class="row mt-4 mb-4">
+      <div class="col-10">
+        <form [formGroup]="filterForm">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="search" class="form-control" formControlName="search" placeholder="Search...">
+              <button class="btn btn-primary" (click)="search(filterForm.value)">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <br />
+      <br />
+      <br />
+      <hr>
+      <div class="table-responsive small scrollable-container">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">
+                <p class="text-blue" style="padding-left: 10px;">First Name</p>
+              </th>
+              <th scope="col">
+                <p class="text-blue" style="padding-left: 20px;">Last Name</p>
+              </th>
+              <th scope="col">
+                <p class="text-blue" style="padding-left: 80px;">Email</p>
+              </th>
+              <th scope="col" class="text-center">
+                <p class="text-blue" style="padding-left: 20px;">Tech Stack</p>
+              </th>
+              <th scope="col" class="text-center">
+                <p class="text-blue" style="padding-left: 20px;">Career Path</p>
+              </th>
+              <th scope="col" class="text-center">
+                <p class="text-blue" style="padding-left: 10px;">Assigned Project Manager</p>
+              </th>
+              <th scope="col" style="padding-left: 20px;">
+                <p class="text-blue">PM EMail Id</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="users">
+            <app-loader-table></app-loader-table>
+            <tr *ngFor="let user of users; index as i">
+              <ng-container *ngIf="!user.isDeleted">
+                <td class="align-middle" style="padding-left: 10px;">{{ user.firstName }}</td>
+                <td class="align-middle" style="padding-left: 30px;">{{ user.lastName }}</td>
+                <td class="align-middle" style="padding-left: 30px;">{{ user.email }}</td>
+                <td class="align-middle" style="padding-left: 40px;">{{ user.techStacks }}</td>
+                <td class="align-middle" style="padding-left: 40px;">{{ user.careerPath?.name }}</td>
+                <td class="align-middle" style="padding-left: 50px;">
+                  <ng-container *ngFor="let manager of user.projectManagersNames">
+                    <div>{{ manager }}</div>
+                  </ng-container>
+                </td>
+                <td class="align-middle" style="padding-left: 20px;">
+                  <ng-container *ngFor="let email of user.projectManagersEmails">
+                    <div>{{ email }}</div>
+                  </ng-container>
+                </td>
+              </ng-container>
+            </tr>
+            <tr *ngIf="users.length <= 0">
+              <td class="text-center" colspan="10" style="padding: 20px;">No Admin to Show</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <nav aria-label="Page navigation" *ngIf="totalPage>1">
+    <ul class="pagination justify-content-end">
+      <li class="page-item">
+        <button class="page-link" (click)="previous()">Previous</button>
+      </li>
+      <ng-container *ngFor="let pageNumber of pageNumbers">
+        <li class="page-item" [class.active]="pageNumber === currentPage">
+          <button class="page-link" (click)="goToPage(pageNumber)"> {{ pageNumber }} </button>
+        </li>
+      </ng-container>
+      <li class="page-item">
+        <button class="page-link" (click)="next()">Next</button>
+      </li>
+    </ul>
+  </nav>
+</ng-container>

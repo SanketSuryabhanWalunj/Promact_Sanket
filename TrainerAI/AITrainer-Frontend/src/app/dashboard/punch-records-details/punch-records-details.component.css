@@ -1,0 +1,132 @@
+.attendance-container {
+  padding: 20px;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.processbarpad {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.timeFont {
+  font-size: 13px;
+}
+
+.gtransparent {
+  margin-left: 5px;
+}
+
+.table {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.iconstyle {
+  padding-right: 10%;
+}
+
+.attendanceview {
+  padding-left: 10px;
+}
+
+.my-custom-progress {
+  height: 7px;
+}
+
+.att-gpar {
+  background-color: #87b87f;
+}
+
+.att-wpar {
+  background-color: #acacacab;
+}
+
+.table > :not(caption) > * > * {
+  padding: 4px 4px !important;
+}
+
+.datepadding {
+  color: #2f73a3;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 14px !important;
+  font-weight: 700;
+}
+
+.arrowcolor {
+  color: #2f73a3;
+}
+
+.att-ppar {
+  background-color: #9585bf;
+}
+
+.att-rpar {
+  background-color: #d9534f;
+}
+
+.att-opar {
+  background-color: #f89406;
+}
+
+.att-bpar {
+  background-color: #2679b5;
+}
+
+.request-button {
+  margin-left: auto;
+}
+
+.course-header {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.requestcolor {
+  background-color: #2f73a3 !important;
+}
+
+.punch-in {
+  padding: 0 !important;
+  margin: 0;
+}
+
+.request-color {
+  color: blue;
+  background-color: transparent !important;
+  border: none;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  outline: none;
+}
+
+.apply-punch-leave {
+  color: #08c;
+  font-size: 12px;
+}
+
+.progess-bars {
+  width: 100%;
+}
+
+.date {
+  padding-left: 10px;
+}
+
+.calendar-bar {
+  width: 25%;
+}
+
+.icon-text-wrapper {
+  margin-right: 5px;
+  margin-left: 10px;
+  background-color: transparent;
+}
+.ng-Blue {
+  background-color: #0000ff;
+}

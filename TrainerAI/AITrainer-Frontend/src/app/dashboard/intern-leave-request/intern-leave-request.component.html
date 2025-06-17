@@ -1,0 +1,99 @@
+<!-- Request Leave Model-->
+<div class="leave-header d-flex justify-content-start">
+    <button type="button" class="btn btn-small bg-blue text-light rounded-circle bg-size"
+        routerLink="/dashboard/intern-leave-application">
+        <i class="fa-solid fa-arrow-left text-small "></i>
+    </button>
+    <h3 class="text-blue px-2 m-0">{{LeaveRequest}}: </h3>
+</div>
+<hr>
+<div id="requestLeave">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form [formGroup]="requestLeaveForm">
+                <div class="modal-body mb-3">
+                    <div class="col-4 mb-3">
+                        <label for="leaveType" class="form-label fw-semibold">{{LeaveType}}: <span
+                                class="text-danger">*</span></label>
+                        <select class="form-select" id="leaveType" formControlName="leaveType"
+                            [ngClass]="{'is-invalid': requestLeaveForm.get('leaveType')?.invalid && (requestLeaveForm.get('leaveType')?.dirty || requestLeaveForm.get('leaveType')?.touched)}"
+                            (change)="checkToday()">
+                            <option [ngValue]="null" disabled selected>{{SelectLeaveType}}</option>
+                            <option *ngFor="let type of getLeaveTypeValues()" [ngValue]="type">{{ type }}</option>
+                        </select>
+                        <span
+                            *ngIf="requestLeaveForm.get('leaveType')?.invalid && (requestLeaveForm.get('leaveType')?.dirty || requestLeaveForm.get('leaveType')?.touched)"
+                            class="text-danger">{{LeaveTypeIsRequired}}</span>
+                    </div>
+                    <div class="mb-3" *ngIf="isSickLeaveSelected()">
+                        <label for="attachment" class="form-label fw-semibold">{{Attachment}}:</label>
+                        <button class="btn btn-primary attachment offset-lg-1 mb-3" type="button"
+                            (click)="openFileInput()" accept=".pdf,.png,.jpeg,.jpg">{{AddAttachment}}</button>
+                        <div class="d-flex flex-nowrap overflow-auto attachment-container">
+                            <div *ngFor="let attachment of attachments; let i = index" class="attachment-item mr-2">
+                                <button
+                                    class="attachment-button justify-content-center align-items-center d-inline-flex text-center cursor-pointer position-relative text-break">
+                                    <i class="fa fa-paperclip clip-icon"></i>
+                                    <span class="button-text text-truncate">{{ attachment.name }}</span>
+                                    <i class="fa fa-close close-icon text-danger" aria-label="Close"
+                                        (click)="removeAttachment(i)"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" *ngIf="isCheckleaveSelected()">
+                        <input class="form-check-input" type="checkbox" id="HalfDayCheckbox" formControlName="isHalfDay"
+                            (change)="onCheckHalfDayChange($event);checkEnddate();checkToday()">&nbsp;
+                        <label class="form-check-label" for="HalfDayCheckbox">
+                            {{HalfDayLeave}}
+                        </label>
+                    </div>
+                    <div>
+                        <label for="LeavePeriod" class="form-label fw-semibold">{{LeavePeriod}}: <span
+                                class="text-danger">*</span></label>
+                        <div class="row" style="margin-bottom: 0px !important;">
+                            <div class="col-4">
+                                <input type="date" id="startdate" formControlName="startdate" class="form-control"
+                                    (input)="checkToday();checkEnddate()" [min]="minDate"> &nbsp;
+                            </div>
+                            <div class="col-4">
+                                <select class="form-select" id="leaveCategory" formControlName="leaveCategory"
+                                    *ngIf="isCheckHalfDay"
+                                    [ngClass]="{'is-invalid': requestLeaveForm.get('leaveCategory')?.invalid && (requestLeaveForm.get('leaveCategory')?.dirty || requestLeaveForm.get('leaveCategory')?.touched)}"
+                                    (change)="checkToday()">
+                                    <option [ngValue]="null" disabled selected>Select Leave Category</option>
+                                    <option *ngFor="let type of getLeaveCategoryValues()" [ngValue]="type">{{ type }}
+                                    </option>
+                                </select>
+                                <input type="date" id="enddate" formControlName="enddate" class="form-control"
+                                    (input)="checkEnddate();checkToday()" *ngIf="!isCheckHalfDay" [min]="minDate">
+                            </div>
+                        </div>
+                        <span *ngIf="invalidDate" class="text-danger"> {{EndDateShouldBeGreaterThanStartDate}}</span>
+                        <span *ngIf="setAlreadyApplied"
+                            class="text-danger">{{LeaveHasAlreadyBeenAppliedForSimilarPeriod}}</span>
+                        <span *ngIf="isLeaveOnHoliday" class="text-danger">{{leaveCanNotAppliedOnHoliday}}</span>
+                    </div>
+                    <div class="col-4">
+                        <label for="reason" class="form-label fw-semibold"> {{Reason}}: <span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control" id="reason" formControlName="reason"
+                            placeholder="Enter a valid reason"
+                            [ngClass]="{'is-invalid': requestLeaveForm.get('reason')?.invalid && (requestLeaveForm.get('reason')?.dirty || requestLeaveForm.get('reason')?.touched)}"
+                            (input)="checkToday(); adjustTextareaHeight(); checkEnddate()" #textareaRef></textarea>
+                        <span
+                            *ngIf="requestLeaveForm.get('reason')?.invalid && (requestLeaveForm.get('reason')?.dirty || requestLeaveForm.get('reason')?.touched)"
+                            class="text-danger">{{EnterValidReason}}</span>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-secondary offset-md-1"
+                        routerLink="/dashboard/intern-leave-application">Cancel</button>
+                    <button type="button" class="btn btn-primary save-button" data-bs-dismiss="modal"
+                        [disabled]="invalidDate||requestLeaveForm.invalid||setAlreadyApplied || isLeaveOnHoliday"
+                        (click)="applyLeave()">{{SaveChanges}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,295 @@
+<div class="internship-table-header">
+  <h3 class="text-blue">Internships:</h3>
+</div>
+
+<div class="row mt-4 mb-4">
+  <div class="col-11">
+    <form [formGroup]="filterForm">
+      <div class="form-group">
+        <div class="input-group">
+          <input type="search" class="form-control" formControlName="search" placeholder="Search..." />
+          <button class="btn btn-primary" style="margin-right: -27px" (click)="search(filterForm.value)">
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-1">
+    <div style="margin-left: 15px">
+      <button class="btn btn-primary" style="font-size: 15px" (click)="reset()">
+        <i class="fa fa-refresh"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<hr />
+<div class="table-responsive small">
+
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col" style="display: flex; align-items: center">
+          <p>
+            <span class="dropdown-toggle dropdown-toggle-icon text-blue" role="button" id="batchDropdown"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Batch
+            </span>
+            <span class="dropdown">
+              <ul class="dropdown-menu scrollable-menu" aria-labelledby="batchDropdown">
+                <li *ngFor="let batch of batches">
+                  <a class="dropdown-item" (click)="selectBatchFilter(batch.batchName)">
+                    {{ batch.batchName }}
+                  </a>
+                </li>
+              </ul>
+            </span>
+          </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">First Name</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">Last Name</p>
+        </th>
+
+        <th scope="col">
+          <p>
+            <span class="dropdown-toggle dropdown-toggle-icon text-blue" role="button" id="careerPathDropdown"
+              data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
+              Career Path
+            </span>
+            <span class="dropdown">
+              <ul class="dropdown-menu scrollable-menu" aria-labelledby="careerPathDropdown">
+                <li *ngFor="let careerPath of careerPaths">
+                  <a class="dropdown-item" (click)="selectCareerPathFilter(careerPath)">
+                    {{ careerPath.name }}
+                  </a>
+                </li>
+              </ul>
+            </span>
+          </p>
+        </th>
+
+        <th scope="col">
+          <p>
+            <span class="dropdown-toggle dropdown-toggle-icon text-blue" role="button" id="courseDropdown"
+              data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
+              Course
+            </span>
+            <span class="dropdown">
+              <ul class="dropdown-menu scrollable-menu" aria-labelledby="courseDropdown"
+                style="position: absolute; top: 100%; left: 0; z-index: 1000">
+                <li *ngFor="let course of courses">
+                  <a class="dropdown-item" (click)="selectCourseNameFilter(course.name)">
+                    {{ course.name }}
+                  </a>
+                </li>
+              </ul>
+            </span>
+          </p>
+        </th>
+
+        <th scope="col">
+          <p class="text-blue">Mentor Name</p>
+        </th>
+
+        <th scope="col">
+          <p class="text-blue">Course Duration</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">Start Date</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">End Date</p>
+        </th>
+        <th scope="col">
+          <p>
+            <span class="dropdown-toggle dropdown-toggle-icon text-blue" role="button" id="statusDropdown"
+              data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 5px">
+              Status
+            </span>
+            <span class="dropdown">
+              <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                <li>
+                  <a class="dropdown-item" (click)="selectStatusFilter(null)">All</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="selectStatusFilter(true)">Active</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="selectStatusFilter(false)">Closed</a>
+                </li>
+              </ul>
+            </span>
+          </p>
+        </th>
+
+        <th scope="col">
+          <p class="text-blue text-center">Action</p>
+        </th>
+      </tr>
+    </thead>
+
+
+    <tbody *ngIf="!isAllDeleted" class="cursor">
+      <tr *ngFor="let internship of internships; index as i">
+        <td class="align-middle py-3  col-1" [routerLink]="'' + internship.id" style="padding-left: 5px">
+          {{ internship.batchName | titlecase }}
+        </td>
+        <td class="align-middle py-3  col-1" [routerLink]="'' + internship.id" style="padding-left: 10px">
+          {{ internship.firstName | titlecase }}
+        </td>
+        <td class="align-middle  col-1" [routerLink]="'' + internship.id">
+          {{ internship.lastName | titlecase }}
+        </td>
+        <td class="align-middle  col-1" [routerLink]="'' + internship.id">
+          {{ internship.careerPath?.name | titlecase }}
+        </td>
+
+        <td class="align-middle  col-" [routerLink]="'' + internship.id">
+          {{ internship.courseName | titlecase }}
+        </td>
+
+        <td class="align-middle  col-2" [routerLink]="'' + internship.id">
+          <ng-container *ngFor="let mentor of internship.mentors; let last = last">
+            <span>{{ mentor.firstName | titlecase }}</span>
+            <span *ngIf="!last">, </span>
+          </ng-container>
+        </td>
+
+        <td class="align-middle  col-1" [routerLink]="'' + internship.id">
+          {{ internship.duration }} Day<span *ngIf="internship.duration != 1">s</span>
+        </td>
+        <td class="align-middle  col-1" [routerLink]="'' + internship.id">
+          {{ internship.startDate | date }}
+        </td>
+        <td class="align-middle  col-1" [routerLink]="'' + internship.id">
+          {{ internship.endTime | date }}
+        </td>
+        <td class="align-middle " [routerLink]="'' + internship.id">
+          {{ internship.status ? "Active" : "Closed" }}
+        </td>
+        <td class="text-center">
+          <button class="btn btn-primary btn-small m-1" (click)="selectToEdit(internship)" data-bs-toggle="modal"
+            data-bs-target="#edit-internship-modal" [disabled]="!internship.status">
+            <i class="fa-solid fa-pen text-light"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <!-- if internship list is empty -->
+    <tbody *ngIf="isAllDeleted" style="min-height: 300px">
+      <tr>
+        <td class="text-center py-3" colspan="12">No Internships to Show</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <nav aria-label="Page navigation example" *ngIf="totalPage > 1">
+    <ul class="pagination justify-content-end">
+      <li class="page-item">
+        <button class="page-link" (click)="previous()">Previous</button>
+      </li>
+      <ng-container *ngFor="let pageNumber of pageNumbers">
+        <li class="page-item" [class.active]="pageNumber === currentPageNo">
+          <button class="page-link" (click)="goToPage(pageNumber)">
+            {{ pageNumber }}
+          </button>
+        </li>
+      </ng-container>
+      <li class="page-item">
+        <button class="page-link" (click)="next()">Next</button>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="modal fade" id="edit-internship-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="editInternshipForm">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modal-heading">Edit Internship</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeEditForm()"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="internship" class="form-label fw-semibold" *ngIf="selectedInternship">
+                {{
+                selectedInternship.firstName +
+                " " +
+                selectedInternship.lastName +
+                " - " +
+                selectedInternship.courseName
+                }}</label>
+            </div>
+            <div class="mb-3" *ngIf="isDateVisible">
+              <label for="date" class="form-label fw-semibold">Start Date :</label>
+              <input type="date" id="date" formControlName="startDate"
+                [ngClass]="{ 'is-invalid': editInternshipForm.get('date')?.errors?.['required'] && editInternshipForm.get('date')?.touched }"
+                required />
+              <br />
+              <small
+                *ngIf="editInternshipForm.get('date')?.errors?.['required'] && editInternshipForm.get('date')?.touched"
+                style="color: red">Start Date is required.</small>
+            </div>
+
+            <div class="mb-3">
+              <label for="mentor" class="form-label fw-semibold">Mentor :</label>
+              <div class="container">
+                <div class="row">
+                  <div *ngFor="let mentor of mentorList" class="col-md-4">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="{{ 'mentorCheckbox_' + mentor.mentorId }}"
+                        [value]="mentor.mentorId" (change)="onCheckboxChange($event, mentor)" checked />
+                      <label class="form-check-label" for="{{ 'mentorCheckbox_' + mentor.mentorId }}">
+                        {{ mentor.firstName }} {{ mentor.lastName }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <form [formGroup]="searchMentorForm">
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="search" class="form-control" formControlName="searchMentorKeyword" (input)="
+                      setSearchMentor(
+                        searchMentorForm.get('searchMentorKeyword')?.value
+                      )
+                    " placeholder="Search..." />
+                </div>
+              </div>
+            </form>
+
+            <div *ngFor="let mentor of searchedMentorList" class="px-3 py-1">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="{{ 'mentorCheckbox_' + mentor.mentorId }}"
+                  [value]="mentor.mentorId" [checked]="isSelectedMentor(mentor.mentorId)"
+                  (change)="handleMentorCheckboxChange($event, mentor)" name="mentors" />
+                <label class="form-check-label" for="{{ 'mentorCheckbox_' + mentor.mentorId }}">
+                  {{ mentor.firstName }} {{ mentor.lastName }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeEditForm()">
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="editInternship()"
+              [disabled]="!editInternshipForm.valid || mentorList.length === 0">
+              Save changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="template-journal-header d-flex justify-content-start">
+  <button class="btn btn-small bg-blue text-light rounded-circle" routerLink="/dashboard/template">
+    <i class="fa-solid fa-arrow-left text-small"></i>
+  </button>
+  <h3 class="text-blue px-2 m-0"> {{ IsEditMode ? 'Edit Template:' : 'Create Template:' }}</h3>
+</div>
+<hr>
+
+<div class="card">
+  <form [formGroup]="templateJournalForm" (ngSubmit)="createTemplate(templateJournalForm.value)">
+    <div class="card-body">
+      <div class="template-title d-flex align-items-center mb-3">
+        <input type="text" formControlName="templateName" placeholder="Enter Template Name">
+        <button type="submit" [disabled]="templateJournalForm.invalid || saveEdit" class="btn btn-primary">
+          {{ IsEditMode ? 'Save changes' :'Create template'}}
+        </button>
+      </div>
+      <hr>
+
+      <div class="options" formArrayName="options">
+        <div *ngFor="let option of optionsArray.controls; let i = index" [formGroupName]="i" class="mb-1">
+          <div class="d-flex align-items-center ">
+            <textarea formControlName="topicName" #textareaRef placeholder="Enter Topic name" class="flex-fill topic" (input)="checkValue(option.get('topicName')?.value); adjustTextareaHeight()"></textarea>
+            <button type="button" class="btn" (click)="removeOption(i)">
+              <i class="fa-solid fa-xmark text-danger "></i>
+            </button>
+          </div>
+          <textarea type="text" class="w-100 mt-3 mb-3 description" #textareaRef formControlName="description" placeholder="Enter Topic description" (input)="checkValue(option.get('description')?.value) ; adjustTextareaHeight()"></textarea>
+           <textarea class="textarea px-3" formControlName="notes" hidden placeholder="Type here..."
+            (input)="adjustTextareaHeight()"></textarea>
+          </div>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="addOption()" [disabled]="templateJournalForm.invalid ">Add topics</button>
+    </div>
+  </form>
+</div>

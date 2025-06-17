@@ -1,0 +1,185 @@
+<!--Header Section-->
+<div class="leave-header">
+  <h3 class="text-blue">Leave/Dayoff Details: </h3>
+  <button type="button" class="btn btn-primary"
+    routerLink="/dashboard/intern-leave-application/intern-leave-request">Request Leave
+    <i class="fa-solid fa-plus"></i></button>
+</div>
+<hr>
+<!--Table to Display Attendence-->
+<div class="table-responsive small" style="min-height: 200px;">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">
+          <p class="text-blue" style="padding-left: 10px;"> Leave Type</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Leave Description </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> {{LeaveAttachments}} </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Start Date</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> End Date</p>
+        </th>
+
+        <th scope="col">
+          <p class="text-blue"> Total Days</p>
+        </th>
+        <th scope="col ">
+          <div class="d-flex align-items-center">
+            <p class="text-blue ">Approval Status </p>
+            <div class="dropdown " style="margin-bottom: 10px;">
+              <button class="text-blue btn btn-link btn-sm dropdown-toggle" type="button" id="approvalStatusDropdown"
+                data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+              </button>
+              <div class="dropdown-menu " aria-labelledby="approvalStatusDropdown">
+                <a class="dropdown-item" (click)="filterByStatus('Pending')">Pending</a>
+                <a class="dropdown-item" (click)="filterByStatus('Rejected')">Rejected</a>
+                <a class="dropdown-item" (click)="filterByStatus('Approved')">Approved</a>
+                <a class="dropdown-item" (click)="filterByStatus('')">All</a>
+              </div>
+            </div>
+          </div>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Approved/Rejected Date</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Approved By</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Admin Comments</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue text-center"> Actions</p>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="leaves">
+      <tr *ngFor="let list of leaves; index as i">
+        <ng-container *ngIf="!list.isDeleted">
+          <td class="align-middle" style="padding-left: 10px;">{{ list.leaveType }}</td>
+          <td class="align-middle text-break">{{ list.leaveReason }} </td>
+          <td class="align-middle fixed-cell" [ngClass]="{'cursor': !!list.comments}"
+            (click)="list.attachments && openAttachmentModal(list.attachments)"> <span
+              *ngIf="list.attachments && list.attachments.length > 0">
+              <i class="fa fa-paperclip"></i> {{ list.attachments.length }} {{ list.attachments.length
+              === 1 ? SmallAttachment : SmallAttachments }}
+            </span></td>
+          <td class="align-middle ">{{ list.leaveStartDate | date }}</td>
+          <td class="align-middle td-class">{{ list.leaveEndDate ? (list.leaveEndDate | date) :
+            list.leaveStartDate | date }}
+          </td>
+          <td class="align-middle">{{internDayCount(list.totalDay,list.leaveCategory)}}</td>
+          <td class="align-middle ">{{list.leaveStatus}}</td>
+          <td class="align-middle">{{ list.approvedDate | date}}
+          </td>
+          <td class="align-middle">{{
+            list.approvedBy}}
+          </td>
+          <td class="align-middle">{{list.comments }}</td>
+          <td class="text-center">
+            <ng-container *ngIf="list.leaveStatus===Pending">
+              <button class="btn btn-danger btn-small m-1" data-bs-toggle="modal" data-bs-target="#delete"
+                (click)="selectToDelete(i)">
+                <i class="fa-solid fa-trash text-light"></i>
+              </button>
+            </ng-container>
+
+          </td>
+        </ng-container>
+      </tr>
+    </tbody>
+    <tbody *ngIf="leaves && leaves.length <= 0">
+      <tr>
+        <td class="text-center" colspan="10">No Leave Records</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Delete Record modal -->
+<div class="modal fade" id="delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Delete Leave Record </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{AreYouSureYouWantToDelete}}?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="deleteRecord(this.selectedLeave)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Pagination -->
+
+<nav aria-label="Page navigation example" *ngIf="totalPage > 1 || this.length >10">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <button class="page-link" (click)="previous()">Previous</button>
+    </li>
+    <ng-container *ngFor="let pageNumber of pageNumbers">
+      <li class="page-item" [class.active]="pageNumber === currentPage">
+        <button class="page-link" (click)="goToPage(pageNumber)"> {{ pageNumber }} </button>
+      </li>
+    </ng-container>
+    <li class="page-item">
+      <button class="page-link" (click)="next()">Next</button>
+    </li>
+  </ul>
+</nav>
+
+<!--Reason for rejection-->
+<div class="modal fade" id="show-Reasons">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{LeaveDetails}}</h1>
+      </div>
+      <div class="modal-Requestbody">
+        <div class="mb-3">
+          <p style="margin-left: 10px; margin-top: 10px;">{{ selectedListItemReason.comments }}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- This is a attachment popup -->
+<div class="modal fade" id="show-Attachment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{AttachmentDetails}}</h1>
+      </div>
+      <div class="flex-grow-1">
+        <div class="attachment-container-display">
+          <div *ngFor="let list of leaveAttachment; let i = index" class="attachment-item">
+            <button class="attachment-button-display" type="button" (click)="getImage(list)">
+              <span class="button-text fixed-cell">{{ list.fileName }}</span>
+              <i class="fa fa-paperclip"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="closeAttachmentModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

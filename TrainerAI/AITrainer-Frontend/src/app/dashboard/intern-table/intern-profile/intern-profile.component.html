@@ -1,0 +1,79 @@
+<div class="course-header d-flex justify-content-start ">
+  <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Intern'" routerLink="/dashboard/home">
+    <i class="fa-solid fa-arrow-left text-small"></i>
+  </button>
+  <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Admin'" (click)="handleBack()">
+    <i class="fa-solid fa-arrow-left text-small"></i>
+  </button>
+  <h3 class="text-blue px-4 m-0">Intern Profile : </h3>
+</div>
+<hr>
+<form [formGroup]="internProfile">
+  <div class="form-row d-flex gap-2">
+    <div class="col">
+      <label for="firstName" class="form-label fw-semibold">First Name</label>
+      <input type="text" class="form-control text-blue border-2" id="firstName" formControlName="firstName">
+    </div>
+    <div class="col">
+      <label for="lastName" class="form-label fw-semibold">Last Name</label>
+      <input type="text" class="form-control text-blue border-2" id="lastName" formControlName="lastName">
+    </div>
+  </div>
+  <div class="form-row d-flex gap-2">
+    <div class="form-group col">
+      <label for="email" class="form-label fw-semibold">Email</label>
+      <input type="email" class="form-control text-blue border-2" id="email" formControlName="email">
+    </div>
+
+    <div class="form-group col">
+      <label for="contactNo" class="form-label fw-semibold">Mobile Number</label>
+      <input type="text" class="form-control text-blue border-2" id="contactNo"
+        [placeholder]="role !== 'Admin' ? 'Enter Contact Info' : ''" formControlName="contactNo">
+      <span *ngIf="getControl('contactNo')?.errors?.['pattern']" style="color: red;">Please enter a valid Phone
+        Number.</span>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col">
+      <label for="collegeName" class="form-label fw-semibold">College Name</label>
+      <input type="email" class="form-control text-blue border-2" id="collegeName"
+        [placeholder]="role !== 'Admin'  ? 'Enter College Name' : ''" formControlName="collegeName">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col">
+      <label for="careerPath" class="form-label fw-semibold">Career Path</label>
+      <input type="text" class="form-control text-blue border-2" id="careerPath"
+         formControlName="careerPath">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputAddress" class="form-label fw-semibold">Address Line1</label>
+    <input type="text" class="form-control text-blue border-2" id="inputAddress"
+      [placeholder]="role !== 'Admin' ? 'Enter Flat No.1234 Main Streat' : ''" formControlName="address1">
+  </div>
+  <div class="form-group">
+    <label for="inputAddress2" class="form-label fw-semibold">Address Line2</label>
+    <input type="text" class="form-control text-blue border-2" id="inputAddress2"
+      [placeholder]="role !== 'Admin' ? 'Enter Apartment, studio, or floor' : ''" formControlName="address2">
+  </div>
+  <div class="form-row d-flex gap-2">
+    <div class="form-group col">
+      <label for="inputCity" class="form-label fw-semibold">City</label>
+      <input type="text" class="form-control text-blue border-2" id="inputCity"
+        [placeholder]="role !== 'Admin' ? 'Enter your city' : ''" formControlName="city">
+    </div>
+    <div class="form-group col">
+      <label for="inputState" class="form-label fw-semibold">State</label>
+      <input type="text" class="form-control text-blue border-2" id="inputState"
+        [placeholder]="role !== 'Admin' ? 'Enter your state' : ''" formControlName="state">
+    </div>
+    <div class="form-group col">
+      <label for="inputZip" class="form-label fw-semibold">Zip</label>
+      <input type="text" class="form-control text-blue border-2" id="inputZip"
+        [placeholder]="role !== 'Admin' ? 'Enter Zip code' : ''" formControlName="zip">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary my-2"
+    (click)="editDetails(internProfile.value)">Save</button>
+</form>

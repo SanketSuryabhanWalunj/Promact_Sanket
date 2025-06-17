@@ -1,0 +1,19 @@
+.feedback-heading{
+  margin-right: 5px;
+}
+.status {
+  display: flex;
+  align-items: center;
+}
+
+.score-details {
+  margin-left: 10px;
+}
+
+.feedback-text-area {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  resize: none;
+}
+

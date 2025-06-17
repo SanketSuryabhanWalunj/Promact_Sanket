@@ -1,0 +1,498 @@
+<ng-container *ngIf="!showDetails">
+  <div class="intern-table-header" *ngIf="adminDetail">
+    <h3 class="text-blue">Interns:</h3>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-interns"
+      *ngIf="adminDetail.type == 'Technical Administrator'" (click)="setEditMode(false, '', '')">
+      Add <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="row mt-4 mb-4">
+    <div class="col-10">
+      <form [formGroup]="filterForm">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="search" class="form-control" formControlName="search" placeholder="Search..." />
+            <button class="btn btn-primary" (click)="search(filterForm.value)">
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-2">
+      <div class="d-flex align-center justify-content-center">
+        <div class="dropdown show">
+          <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {{ filterButtonText | titlecase }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li>
+              <a class="dropdown-item" href="javascript:void(0)" (click)="selectFilter('inprogress')">In Progress</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="javascript:void(0)" (click)="selectFilter('upcoming')">Upcoming</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="javascript:void(0)" (click)="setNone()">None</a>
+            </li>
+          </ul>
+        </div>
+        <div style="margin-left: 10px">
+          <button class="btn btn-primary" style="font-size: 15px" (click)="reset()">
+            <i class="fa fa-refresh"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-1"></div>
+  </div>
+
+  <hr />
+  <div class="table-responsive small" *ngIf="adminDetail">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">
+            <p class="text-blue" style="padding-left: 10px">First Name</p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">Last Name</p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">Email</p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">Assigned Courses</p>
+          </th>
+
+          <th scope="col">
+            <p class="text-blue">Career Path</p>
+          </th>
+          <th scope="col">
+            <p class="text-blue">Batch</p>
+          </th>
+          <th scope="col" *ngIf="adminDetail.type === 'Technical Administrator'">
+            <p class="text-blue text-center">Assign Course</p>
+          </th>
+          <th scope="col" *ngIf="adminDetail.type === 'Technical Administrator'">
+            <p class="text-blue text-center">Dismiss Course</p>
+          </th>
+          <th scope="col" *ngIf="adminDetail.type === 'Technical Administrator'">
+            <p class="text-blue text-center">Action</p>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="users" class="cursor">
+        <tr *ngFor="let user of users; index as i">
+          <ng-container *ngIf="!user.isDeleted">
+            <td class="align-middle" style="padding-left: 10px" [routerLink]="'intern/' + user.id">
+              {{ user.firstName }}
+            </td>
+            <td class="align-middle " [routerLink]="'intern/' + user.id" (click)="getIntern(user.id)">
+              {{ user.lastName }}
+            </td>
+            <td class="align-middle " [routerLink]="'intern/' + user.id" (click)="getIntern(user.id)">
+              {{ user.email }}
+            </td>
+            <td class="align-middle col-6" *ngIf="adminDetail.type == 'Mentor'">
+              <div *ngIf="
+                  user.inProgressCourses && user.inProgressCourses.length > 0
+                ">
+                <div class="course-list text-wrap">
+                  <span class="title">In Progress :</span>
+                  <ng-container *ngFor="
+                      let course of user.inProgressCourses;
+                      let last = last
+                    ">
+                    {{ course.name }}
+                    <span *ngIf="!last"> ,&nbsp; </span>
+                    <!-- Space between courses -->
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Display Upcoming Courses -->
+              <div *ngIf="user.upcomingCourses && user.upcomingCourses.length > 0">
+                <div class="course-list text-wrap">
+                  <span class="title">Upcoming :</span>
+                  <ng-container *ngFor="let course of user.upcomingCourses; let last = last">
+                    {{ course.name }}
+                    <span *ngIf="!last">,&nbsp; </span>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+            <td class="align-middle col-3" *ngIf="adminDetail.type == 'Technical Administrator'">
+              <div *ngIf="
+                  user.inProgressCourses && user.inProgressCourses.length > 0
+                ">
+                <div class="course-list text-wrap">
+                  <span class="title">In Progress :</span>
+                  <ng-container *ngFor="
+                      let course of user.inProgressCourses;
+                      let last = last
+                    ">
+                    {{ course.name }}
+                    <span *ngIf="!last"> ,&nbsp; </span>
+                    <!-- Space between courses -->
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Display Upcoming Courses -->
+              <div *ngIf="user.upcomingCourses && user.upcomingCourses.length > 0">
+                <div class="course-list text-wrap">
+                  <span class="title">Upcoming :</span>
+                  <ng-container *ngFor="let course of user.upcomingCourses; let last = last">
+                    {{ course.name }}
+                    <span *ngIf="!last">,&nbsp; </span>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+            <td class="align-middle" [routerLink]="'intern/' + user.id" (click)="getIntern(user.id)">
+              {{ user.careerPath?.name }}
+            </td>
+            <td class="align-middle" style="padding-left: 10px" [routerLink]="'intern/' + user.id">
+              {{ user.batchName }}
+            </td>
+            <td class="align-middle text-center" (click)="selectToAssigncourse(i, user)"
+              *ngIf="adminDetail.type == 'Technical Administrator'">
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assign-course">
+                Assign <i class="fa-solid fa-plus"></i>
+              </button>
+            </td>
+            <td class="align-middle text-center" *ngIf="adminDetail.type == 'Technical Administrator'">
+              <button class="btn btn-primary" *ngIf="
+                  user.inProgressCourses.length > 0 ||
+                  user.upcomingCourses.length > 0
+                " data-bs-toggle="modal" data-bs-target="#dismiss-course" (click)="selectToDismissCourse(i)">
+                Dismiss <i class="fa-solid fa-minus"></i>
+              </button>
+            </td>
+            <td class="align-middle text-center" *ngIf="adminDetail.type == 'Technical Administrator'">
+              <button class="btn btn-primary btn-small m-1" data-bs-toggle="modal" data-bs-target="#add-interns"
+                (click)="setEditMode(true, user.firstName, user.id)">
+                <i class="fa-solid fa-pencil text-light"></i>
+              </button>
+              <button class="btn btn-danger btn-small m-1" data-bs-toggle="modal" data-bs-target="#delete-intern"
+                (click)="selectToDelete(i)">
+                <i class="fa-solid fa-trash text-light"></i>
+              </button>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+
+      <!-- if users list is empty -->
+      <tbody *ngIf="users.length <= 0">
+        <tr>
+          <td class="text-center" colspan="10">No Interns to Show</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+
+<!-- Intern Profile Details -->
+<ng-container *ngIf="showDetails">
+  <app-intern-profile [userList]="users"></app-intern-profile>
+</ng-container>
+
+<!-- Add Interns Modal -->
+<div class="modal fade" id="add-interns">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="addInternForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">
+            {{ editMode ? "Edit Interns Details" : "Add Interns" }}
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetForm(addInternForm)"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="internfirstname" class="form-label fw-semibold">First Name: <span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="internfirstname" formControlName="firstName"
+              placeholder="Enter FirstName" [ngClass]="{
+                'is-invalid':
+                  getControl('firstName')?.errors &&
+                  getControl('firstName')?.touched
+              }" [ngClass]="{
+                'is-valid':
+                  !getControl('firstName')?.errors &&
+                  getControl('firstName')?.touched
+              }" required />
+            <small *ngIf="getControl('firstName')?.errors?.['required'] && getControl('firstName')?.touched"
+              class="text-danger">First Name is required.</small>
+          </div>
+          <div class="mb-3">
+            <label for="internlastname" class="form-label fw-semibold">Last Name: <span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="internlastname" formControlName="lastName"
+              placeholder="Enter LastName" [ngClass]="{
+                'is-invalid':
+                  getControl('lastName')?.errors &&
+                  getControl('lastName')?.touched
+              }" [ngClass]="{
+                'is-valid':
+                  !getControl('lastName')?.errors &&
+                  getControl('lastName')?.touched
+              }" required />
+            <small *ngIf="getControl('lastName')?.errors?.['required'] && getControl('lastName')?.touched"
+              class="text-danger">Last Name is required.</small>
+          </div>
+          <div class="mb-3">
+            <label for="emailAddress" class="form-label fw-semibold">Email: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="emailAddress" formControlName="email" placeholder="Enter Email"
+              [ngClass]="{ 'is-invalid': (getControl('email')?.errors && getControl('email')?.touched && getControl('email')?.errors?.['required']) }"
+              [ngClass]="{
+                'is-valid':
+                  getControl('email')?.touched && !getControl('email')?.errors
+              }" required />
+            <small *ngIf="getControl('email')?.errors?.['required'] && getControl('email')?.touched"
+              class="text-danger">Email is required.</small>
+            <small *ngIf="getControl('email')?.errors?.['pattern'] && getControl('email')?.touched"
+              class="text-danger">Enter a valid Email.</small>
+          </div>
+          <div class="mb-3">
+            <label for="batch" class="form-label fw-semibold">Batch: <span class="text-danger">*</span></label>
+            <select class="form-select" id="batch" formControlName="batch"
+              [ngClass]="{ 'is-invalid': getControl('batch')?.errors && getControl('batch')?.touched }" required>
+              <option [ngValue]="null" disabled selected>Select Batch</option>
+              <option *ngFor="let batch of batches" [value]="batch.id">
+                {{ batch.batchName }}
+              </option>
+            </select>
+            <small *ngIf="getControl('batch')?.errors?.['required'] && getControl('batch')?.touched"
+              class="text-danger">Batch is required.</small>
+          </div>
+          <div class="mb-3">
+            <label for="careerPathField" class="form-label fw-semibold">Career Path:</label>
+            <div>
+              <select class="form-select" id="careerPath" formControlName="careerPathField"
+                [ngClass]="{ 'is-invalid': (getControl('careerPathField')?.errors && getControl('careerPathField')?.touched) }">
+                <option [ngValue]="null" selected>Select Career Path</option>
+                <option *ngFor="let careerPath of careerPaths" [value]="editMode ? careerPath.name : careerPath.id">
+                  {{ careerPath.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetForm(addInternForm)">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="
+              editMode
+                ? editDetails(addInternForm.value)
+                : addIntern(addInternForm.value)
+            " [disabled]="addInternForm.invalid">
+            Save changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Assign course modal -->
+<div class="modal fade" id="assign-course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="assignCourseForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Assign Course</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetForm(assignCourseForm)"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="course" class="form-label fw-semibold">Assign to : {{ selectedInternToAssignCourse }}</label>
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label fw-semibold">Start Date : <span class="text-danger">*</span></label>
+            &nbsp;
+            <input type="date" id="date" formControlName="date" [min]="minDate"
+              [ngClass]="{ 'is-invalid': getControls('date')?.errors?.['required'] && getControls('date')?.touched }"
+              required />
+            <br /><small *ngIf="getControls('date')?.errors?.['required'] && getControls('date')?.touched"
+              class="text-danger">Start Date is required.</small>
+          </div>
+          <div class="mb-3">
+            <label for="course" class="form-label fw-semibold">Course: <span class="text-danger">*</span></label>
+            <select class="form-select" id="course" formControlName="course" [ngClass]="{
+                'is-invalid':
+                  getControls('course')?.errors &&
+                  getControls('course')?.touched
+              }" required>
+              <option [ngValue]="null" disabled selected>Select course</option>
+              <option *ngFor="let course of courseList" [value]="course.id">
+                {{ course.name }}
+              </option>
+            </select>
+            <small *ngIf="getControls('course')?.errors?.['required']&& getControls('course')?.touched"
+              class="text-danger">Course name is required.</small>
+          </div>
+
+
+          <div class="mb-3">
+            <label for="template" class="form-label fw-semibold">Behavioural Template: <span
+                class="text-danger">*</span></label>
+            <button class="form-select" type="button" id="templateDropdown" data-bs-toggle="dropdown"
+              aria-expanded="false" style="text-align: left; ">
+              Select Template
+            </button>
+            <ul class="dropdown-menu w-94 fixed-height" aria-labelledby="templateDropdown">
+              <li *ngFor="let template of templates; let i = index" class="px-3 py-1">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" [id]="'template' + i" [value]="template.id"
+                    (change)="toggleSelection($event, template.id)" [checked]="
+                      assignCourseForm
+                        .get('template')
+                        ?.value?.includes(template.id)
+                    " name="templates" />
+                  <label [for]="'template' + id" class="form-check-label">
+                    {{ template.templateName }}
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-3">
+            <label for="mentor" class="form-label fw-semibold">Mentor: <span class="text-danger">*</span></label>
+            <div class="container">
+              <div class="row">
+                <div *ngFor="let admin of AdminList" class="col-md-4">
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="{{ 'mentorCheckbox_' + admin.id }}"
+                      [value]="admin.id" (change)="onCheckboxChange($event)" />
+                    <label class="form-check-label" for="{{ 'mentorCheckbox_' + admin.id }}">
+                      {{ admin.firstName }} {{ admin.lastName }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <small *ngIf="isMentorSelected" class="text-danger">Mentor is required.</small>
+            <small *ngIf="courseAvailability !== true" class="text-danger">The intern is already committed in the
+              selected date.</small>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetForm(assignCourseForm)">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="setCourse(assignCourseForm.value)" [disabled]="
+              assignCourseForm.invalid ||
+              courseAvailability !== true ||
+              isMentorSelected
+            ">
+            Assign
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="dismiss-course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Dismiss Course</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="course" class="form-label fw-semibold">Course :</label>
+          <select class="form-select" id="course" [(ngModel)]="selectedValueToDismiss">
+            <option value="null" diables selected>Choose course</option>
+            <option *ngFor="let courses of assignedCourse" [value]="courses.courseId">
+              {{ courses.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+          (click)="removeCourse(selectedValueToDismiss)" [disabled]="!selectedValueToDismiss">
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete intern modal -->
+<div class="modal fade" id="delete-intern">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Delete Intern</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="deleteInterns(this.selectedInternToDelete)">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add Pagination -->
+
+<nav aria-label="Page navigation example" *ngIf="totalPage > 1 || users.length > 10">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <button class="page-link" (click)="previous()">Previous</button>
+    </li>
+
+    <ng-container *ngFor="let pageNumber of pageNumbers">
+      <li class="page-item" [class.active]="pageNumber === currentPageNo">
+        <button class="page-link" (click)="goToPage(pageNumber)">
+          {{ pageNumber }}
+        </button>
+      </li>
+    </ng-container>
+    <li class="page-item">
+      <button class="page-link" (click)="next()">Next</button>
+    </li>
+  </ul>
+</nav>
+
+<!-- Enable Intern modal -->
+
+<div class="card pop-up" *ngIf="emailDeleted">
+  <div class="card-header">Enable</div>
+  <div class="card-body">
+    <p>Are you sure you want to Enable Intern ?</p>
+    <div class="card1-footer">
+      <button type="button" class="btn btn-secondary" style="margin-right: 25px" (click)="close()">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary" (click)="Update()">
+        Update
+      </button>
+    </div>
+  </div>
+</div>

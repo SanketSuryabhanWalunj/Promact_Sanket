@@ -1,0 +1,1093 @@
+<ng-container *ngIf="selectedCourseDetails">
+  <div class="course-header d-flex justify-content-start gap-1">
+    <button class="btn btn-small bg-blue text-light rounded-circle" (click)="handleBack()">
+      <i class="fa-solid fa-arrow-left text-small"></i>
+    </button>
+    <h3 class="text-blue px-2 m-0 flex-fill ">{{selectedCourseDetails.name}}</h3>
+    <button class="btn bg-blue text-light" type="button" (click)="toggleRearrange()">
+      {{rearrange ? 'Done' : 'Rearrange' }}
+    </button>
+    <button class="btn bg-blue text-light" title="View Course Details" type="button" data-bs-toggle="collapse"
+      data-bs-target="#course-details">About
+      <!-- <i class="fa-solid fa-ellipsis-vertical"></i> -->
+    </button>
+  </div>
+  <hr />
+
+  <div class="collapse mb-2" id="course-details">
+    <div class="card card-body px-4">
+      <div class="d-flex align-items-center">
+        <div class="w-50"><strong> Course Duration </strong></div>
+        <div class="w-50">
+          <span class="mx-2">:</span> {{ selectedCourseDetails.duration }} Days
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="w-50"><strong> Duration Type</strong></div>
+        <div class="w-50">
+          <span class="mx-2">:</span> {{ selectedCourseDetails.durationType }}
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="w-50"><strong> Level</strong></div>
+        <div class="w-50">
+          <span class="mx-2">:</span> {{ selectedCourseDetails.trainingLevel }}
+        </div>
+      </div>
+      <ng-container *ngIf="!selectedCourseDetails.quiz">
+        <div class="d-flex align-items-center">
+          <div class="w-50"><strong> Quiz </strong></div>
+          <div class="w-50">
+            <span class="mx-2">:</span> No quiz included
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="selectedCourseDetails.quiz">
+        <div class="d-flex align-items-center">
+          <div class="w-50"><strong> Quiz Count </strong></div>
+          <div class="w-50">
+            <span class="mx-2">:</span> {{ selectedCourseDetails.quizCount }}
+
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="w-50"><strong> Quiz Duration </strong></div>
+          <div class="w-50">
+            <span class="mx-2">:</span> {{ selectedCourseDetails.quizTime }} Min<button
+              class="btn btn-primary btn-sm m-1" data-bs-toggle="modal" data-bs-target="#Edit-Course" (click)="
+            getCourseEdit(selectedCourseDetails.id)
+          "><i class="fa-solid fa-pencil text-light"></i></button>
+          </div>
+        </div>
+      </ng-container>
+      <div class="d-flex align-items-center">
+        <div class="w-50"><strong> Assigned Journal </strong></div>
+
+        <ng-container *ngIf="selectedCourseDetails.journalTemplateId">
+          <div>
+            <span class="mx-2">:</span> {{ selectedCourseDetails.templateName }}
+          </div>
+          <button class="btn btn-primary btn-sm m-1" data-bs-toggle="modal" data-bs-target="#Edit-journal" (click)="
+              getJournalTemplateEdit(selectedCourseDetails.journalTemplateId)
+            ">Add Journal Template
+            <i class="fa-solid fa-pencil text-light"></i>
+          </button>
+          <button class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#delete-journal">
+            <i class="fa-solid fa-trash text-light"></i>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="!selectedCourseDetails.journalTemplateId">
+          <div>
+            <span class="mx-2">:</span>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#assign-journal"
+              (click)="getJournalTemplate()">
+              Assign
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div cdkDropList class="accordion px-1" id="accordionPanelsStayOpenExample" *ngIf="selectedCourseDetails.topics"
+    (cdkDropListDropped)="drop($event)">
+    <div class="accordion-item mb-3" *ngFor="let topic of selectedCourseDetails.topics; index as i">
+
+      <!-- Accordion header -->
+      <div class="acc-header d-flex" cdkDrag [cdkDragDisabled]="!rearrange" cdkDragLockAxis="y">
+        <div class="acc-btn d-flex align-items-center p-1">
+          <div class="flex-fill" data-bs-toggle="collapse" [attr.data-bs-target]="'#panelsStayOpen-collapseOne' + i"> {{
+            topic.index }} of {{ selectedCourseDetails.name }}</div>
+          <div class="course-buttons d-flex justify-content-end gap-1">
+            <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#create-assignment"
+              (click)="toggleassignmentform(topic.id)">
+              Create Assignment By A.I
+            </button>
+            <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#add-assignment"
+              (click)="getTopicDetail(topic.id,topic.topicName, topic.duration)">
+              Create Assignment
+            </button>
+            <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#edit-topic"
+              (click)="getTopicDetail(topic.id,topic.topicName, topic.duration)">
+              Edit Topic
+            </button>
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete-topic"
+              (click)="getTopicId(topic.id,topic.duration,topic.index)">
+              Delete Topic
+            </button>
+          </div>
+          <button class="btn btn-link text-blue" type="button" data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#panelsStayOpen-collapseOne' + i"><i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+        <!-- drag icon -->
+        <div class="drag-btn" *ngIf="rearrange" cdkDragHandle>
+          <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+            </path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+          </svg>
+        </div>
+      </div>
+      <div [id]="'panelsStayOpen-collapseOne' + i" class="accordion-collapse collapse">
+        <div class="accordion-body">
+          <!-- <div class="course-buttons d-flex justify-content-end gap-1">
+            <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#create-assignment"
+              (click)="toggleassignmentform(topic.id)">
+              Create Assignment
+            </button>
+            <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#edit-topic"
+              (click)="getTopicDetail(topic.id,topic.topicName, topic.duration)">
+              Edit Topic
+            </button>
+          </div> -->
+          <div class="course-content mb-2 ">
+            <h6>
+              <div class="d-flex justify-content-between">
+
+                <strong>Course Content : </strong>
+
+                <!-- <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#add-assignment"
+                  (click)="getTopicIdforAddAssignment(topic.id)">
+                  Add Assignment
+                </button> -->
+              </div>
+            </h6>
+            <ul class="list-group">
+              <li class="list-group-item d-flex">
+                <div class="w-75">{{ topic.topicName }}</div>
+                <div class="w-25">
+                  <!-- <strong>Duration:</strong> {{ topic.duration }} Day(s) -->
+                  <strong>Duration:</strong> {{ topic.duration }} Day<span *ngIf="topic.duration != 1">s</span>
+
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="course-quiz mb-2" *ngIf="topic.assignment && topic.assignment.length > 0">
+            <h6>
+              <div class="d-flex justify-content-between">
+                <strong>Assignment : </strong>
+                <!-- <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#add-assignment"
+                (click)="getTopicIdforAddAssignment(topic.id)">
+                 Add Assignment
+                </button> -->
+              </div>
+            </h6>
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let assignment of topic.assignment;index as i">
+                <div class="d-flex mb-2">
+                  <div class="w-75">
+                    <strong>Name: {{ assignment.name }}</strong>
+                  </div>
+                  <div class="w-25 text-end">
+                    <strong>Marks: </strong>{{ assignment.marks }}
+                  </div>
+                </div>
+                <div class="content d-flex" *ngFor="let instruction of assignment.content.instructions;index as i">
+                  <div class="w-75">
+                    <p> {{ instruction.note }}</p>
+                  </div>
+                  <div class="w-25 text-end">
+                    <p>{{assignment.content.gradingCriteria[i].percentage}} </p>
+                  </div>
+                </div>
+                <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#edit-assignment"
+                  (click)="getAssignmentDetail(assignment)">
+                  Edit Assignment
+                </button>
+                <button class="btn btn-danger btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#delete-assignment"
+                  (click)="getAssignmentId(assignment.id)">
+                  Delete Assignment
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="course-quiz" *ngIf="topic.quiz && topic.quiz.length > 0">
+            <h6>
+              <div class="d-flex justify-content-between">
+                <strong>Quiz :<ng-container *ngIf="topic.quizLink">
+                    <span class="mt-2 ms-2">
+                      <a [href]="topic.quizLink" target="_blank" class="thin-italic">{{ topic.quizLink }}</a>
+                    </span>
+                  </ng-container></strong>
+
+                <div>
+
+                  <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#add-quiz"
+                    (click)="getTopicIdforAddQuiz(topic.id)">
+                    Add Question
+                  </button>
+                  <button class="btn bg-blue text-light btn-sm ms-2" (click)="getQuizLink(topic.id,topic.quizLink)">
+                    Get QuizLink
+                  </button>
+                </div>
+              </div>
+
+            </h6>
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let quiz of topic.quiz; let i = index">
+                <div class="question d-flex justify-content-between">
+                  <div class="quiz-details">
+                    <strong>Question {{i +1}}: {{ quiz.title }}</strong>
+                    <div class="questions">
+                      <ul>
+                        <li>{{ quiz.option1 }}</li>
+                        <li>{{ quiz.option2 }}</li>
+                        <li>{{ quiz.option3 }}</li>
+                        <li>{{ quiz.option4 }}</li>
+                      </ul>
+                    </div>
+                    <p><strong>Answer : </strong> {{ quiz.answer }}</p>
+                  </div>
+                  <div class="quiz-marks">
+                    <p><strong> Marks : </strong>{{ quiz.marks }}</p>
+                  </div>
+                </div>
+
+                <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#edit-quiz"
+                  (click)="getQuizDetail(quiz)">
+                  Edit Question
+                </button>
+                <button class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#delete-quiz"
+                  (click)="getQuizId(quiz)">
+                  Delete Question
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Assign course modal -->
+<div class="modal fade" id="assign-journal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="selectJournal">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Add Journal Template</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="template" class="form-label fw-semibold">Journal Template:</label>
+            <select class="form-select" id="template" formControlName="template" *ngIf="templateList">
+              <option *ngFor="let template of templateList" [value]="template.templateId">{{template.templateName}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="setTemplate(selectJournal.value)">
+            Select
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add Assignment Modal -->
+<div class="modal fade" id="create-assignment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="createAssignmentForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">
+            Generate Assignment
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closecreateAssignmentForm()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="courseduration" class="form-label fw-semibold">
+              Assignment Duration in Days:</label>
+            <input type="text" class="form-control" id="courseduration" formControlName="courseduration"
+              [ngClass]="{
+              'is-invalid': createAssignmentForm.get('courseduration')?.invalid && (createAssignmentForm.get('courseduration')?.dirty ||createAssignmentForm.get('courseduration')?.touched)}" />
+            <span
+              *ngIf="createAssignmentForm.get('courseduration')?.errors?.['required'] &&createAssignmentForm.get('courseduration')?.touched"
+              style="color: red;">
+              Assignment Duration is required.
+            </span>
+            <span
+              *ngIf="createAssignmentForm.get('courseduration')?.errors?.['pattern'] &&createAssignmentForm.get('courseduration')?.touched"
+              style="color: red;">
+              Please enter a valid duration.
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="marks" class="form-label fw-semibold"> Marks:</label>
+            <input type="text" class="form-control" id="marks" formControlName="marks"
+              [ngClass]="{
+              'is-invalid': createAssignmentForm.get('marks')?.invalid && (createAssignmentForm.get('marks')?.dirty ||createAssignmentForm.get('marks')?.touched)}" />
+            <span
+              *ngIf="createAssignmentForm.get('marks')?.errors?.['required'] &&createAssignmentForm.get('marks')?.touched"
+              style="color: red;">
+              Mark is required.
+            </span>
+            <span
+              *ngIf="createAssignmentForm.get('marks')?.errors?.['pattern'] &&createAssignmentForm.get('marks')?.touched"
+              style="color: red;">
+              Please enter a valid mark.
+            </span>
+
+          </div>
+          <div class="mb-3">
+            <label for="want-quiz" class="form-label fw-semibold">Do you want to add duration to course:
+            </label>
+            <div class="form-check form-check-inline mx-2" id="addduration">
+              <input class="form-check-input" type="radio" name="addduration" id="inlineRadio1" [value]="true"
+                formControlName="addduration" />
+              <label class="form-check-label" for="inlineRadio1">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="addduration" id="inlineRadio2" [value]="false"
+                formControlName="addduration" />
+              <label class="form-check-label" for="inlineRadio2">No</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closecreateAssignmentForm()">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="createNewAssignment()"
+            [disabled]="createAssignmentForm.invalid">
+            Save changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--Edit Journal-Template modal -->
+<div class="modal fade" id="Edit-journal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="editJournal">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading"> Journal Template</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="template" class="form-label fw-semibold"> Edit Journal Template:</label>
+            <select class="form-select" id="template" formControlName="template">
+              <option *ngFor="let template of templateList" [value]="template.templateId"
+                [selected]="template === template[0]">{{template.templateName}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="setTemplate(editJournal.value)">
+            Select
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Journal modal -->
+<div class="modal fade" id="delete-journal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{DeleteJournal}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{AreYousureText}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {{Close}}
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="deleteTemplate(selectedCourseDetails.journalTemplateId)">
+          {{Delete}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Topic Modal -->
+<div class="modal fade" id="edit-topic">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="EditTopicForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Edit Topic:</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="courseTopicName" class="form-label fw-semibold ">Topics Name</label>
+            <textarea class="form-control" rows="5" id="courseTopicName" formControlName="topicName"
+              placeholder="Enter Topic Name"
+              [ngClass]="{
+                'is-invalid': EditTopicForm.get('topicName')?.invalid && (EditTopicForm.get('topicName')?.dirty ||EditTopicForm.get('topicName')?.touched)}">
+       </textarea>
+            <span *ngIf="EditTopicForm.get('topicName')?.errors?.['required'] &&EditTopicForm.get('topicName')?.touched"
+              style="color: red;">
+              Topic name is required
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="courseDuration" class="form-label fw-semibold">Duration</label>
+            <input type="text" class="form-control" id="courseDuration" formControlName="duration"
+              placeholder="Enter Duration"
+              [ngClass]="{
+                'is-invalid': EditTopicForm.get('duration')?.invalid && (EditTopicForm.get('duration')?.dirty ||EditTopicForm.get('duration')?.touched)}" />
+            <span *ngIf="EditTopicForm.get('duration')?.errors?.['required'] &&EditTopicForm.get('duration')?.touched"
+              style="color: red;">
+              Assignment Duration is required.
+            </span>
+            <span *ngIf="EditTopicForm.get('duration')?.errors?.['pattern'] &&EditTopicForm.get('duration')?.touched"
+              style="color: red;">
+              Please enter a valid duration.
+            </span>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="editTopic(EditTopicForm.value)"
+            [disabled]="EditTopicForm.invalid">
+            Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Topic modal -->
+<div class="modal fade" id="delete-topic">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{DeleteTopic}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{AreYousureText}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {{Close}}
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteTopic()">
+          {{Delete}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Quiz Modal -->
+<div class="modal fade" id="edit-quiz">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="EditQuizForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Edit Question</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="quizQuestion" class="form-label fw-semibold">Question</label>
+            <textarea class="form-control" rows="2" id="quizQuestion" formControlName="question"
+              placeholder="Enter Quiz Question"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="option1" class="form-label fw-semibold">Option 1</label>
+            <input type="text" class="form-control" id="option1" formControlName="option1" placeholder="Enter Option 1">
+          </div>
+          <div class="mb-3">
+            <label for="option2" class="form-label fw-semibold">Option 2</label>
+            <input type="text" class="form-control" id="option2" formControlName="option2" placeholder="Enter Option 2">
+          </div>
+          <div class="mb-3">
+            <label for="option3" class="form-label fw-semibold">Option 3</label>
+            <input type="text" class="form-control" id="option3" formControlName="option3" placeholder="Enter Option 3">
+          </div>
+          <div class="mb-3">
+            <label for="option4" class="form-label fw-semibold">Option 4</label>
+            <input type="text" class="form-control" id="option4" formControlName="option4" placeholder="Enter Option 4">
+          </div>
+          <div class="mb-3">
+            <label for="answer" class="form-label fw-semibold">Answer</label>
+            <input type="text" class="form-control" id="answer" formControlName="answer" placeholder="Enter Answer">
+          </div>
+          <div class="mb-3">
+            <label for="editMarks" class="form-label fw-semibold">Marks</label>
+            <input type="text" class="form-control" id="editMarks" formControlName="editMarks"
+              placeholder="Enter Marks">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="editQuiz(EditQuizForm.value)">
+            Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Quiz modal -->
+<div class="modal fade" id="delete-quiz">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{DeleteQuestion}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{AreYousureText}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {{Close}}
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteQuiz()">
+          {{Delete}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Quiz Modal -->
+<div class="modal fade" id="add-quiz">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="AddQuizForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">{{constantString.course.addQuestion}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label for="addQuestion" class="form-label fw-semibold">Question</label>
+            <textarea class="form-control" rows="2" id="addQuestion" formControlName="addQuestion"
+              placeholder="Enter Quiz Question"></textarea>
+            <p *ngIf="getQuizControl('addQuestion')?.touched && getQuizControl('addQuestion')?.invalid"
+              class="text-danger">
+              {{constantString.course.questionRequired}}
+            </p>
+          </div>
+
+          <div class="mb-3">
+            <label for="addOption1" class="form-label fw-semibold">{{constantString.option1}}</label>
+            <input type="text" class="form-control" id="addOption1" formControlName="addOption1"
+              placeholder="Enter Option 1" [ngClass]="{
+                        'is-valid': getQuizControl('addOption1')?.touched && !getQuizControl('addOption1')?.invalid,
+                        'is-invalid': getQuizControl('addOption1')?.touched && getQuizControl('addOption1')?.invalid
+                    }">
+
+          </div>
+
+          <div class="mb-3">
+            <label for="addOption2" class="form-label fw-semibold">{{constantString.option2}}</label>
+            <input type="text" class="form-control" id="addOption2" formControlName="addOption2"
+              placeholder="Enter Option 2" [ngClass]="{
+                        'is-valid': getQuizControl('addOption2')?.touched && !getQuizControl('addOption2')?.invalid,
+                        'is-invalid': getQuizControl('addOption2')?.touched && getQuizControl('addOption2')?.invalid
+                    }">
+
+          </div>
+
+          <div class="mb-3">
+            <label for="addOption3" class="form-label fw-semibold">{{constantString.option3}}</label>
+            <input type="text" class="form-control" id="addOption3" formControlName="addOption3"
+              placeholder="Enter Option 3" [ngClass]="{
+                        'is-valid': getQuizControl('addOption3')?.touched && !getQuizControl('addOption3')?.invalid,
+                        'is-invalid': getQuizControl('addOption3')?.touched && getQuizControl('addOption3')?.invalid
+                    }">
+
+          </div>
+
+          <div class="mb-3">
+            <label for="addOption4" class="form-label fw-semibold">{{constantString.option4}}</label>
+            <input type="text" class="form-control" id="addOption4" formControlName="addOption4"
+              placeholder="Enter Option 4" [ngClass]="{
+                        'is-valid': getQuizControl('addOption4')?.touched && !getQuizControl('addOption4')?.invalid,
+                        'is-invalid': getQuizControl('addOption4')?.touched && getQuizControl('addOption4')?.invalid
+                    }">
+
+          </div>
+
+          <div class="mb-3">
+            <label for="addAnswer" class="form-label fw-semibold">{{constantString.answer}}</label>
+            <input type="text" class="form-control" id="addAnswer" formControlName="addAnswer"
+              placeholder="Enter Answer" [ngClass]="{
+                        'is-valid': getQuizControl('addAnswer')?.touched && !getQuizControl('addAnswer')?.invalid,
+                        'is-invalid': getQuizControl('addAnswer')?.touched && getQuizControl('addAnswer')?.invalid
+                    }">
+
+          </div>
+
+          <div class="mb-3">
+            <label for="addMarks" class="form-label fw-semibold">{{constantString.course.marks}}</label>
+            <input type="text" class="form-control" id="addMarks" formControlName="addMarks" placeholder="Enter Marks"
+              [ngClass]="{
+                        'is-valid': getQuizControl('addMarks')?.touched && !getQuizControl('addMarks')?.invalid,
+                        'is-invalid': getQuizControl('addMarks')?.touched && getQuizControl('addMarks')?.invalid
+                    }">
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="closeQuiz()">{{constantString.close}}</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="AddQuiz(AddQuizForm.value)"
+            [disabled]="AddQuizForm.invalid">
+            {{constantString.saveChanges}}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Edit Assignment Modal
+<div class="modal fade" id="edit-assignment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="EditAssignmentForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Edit Assignment</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetEditAssignment()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="assignmentName" class="form-label fw-semibold ">Assignment Name</label>
+            <input type="text" class="form-control" id="assignmentName" formControlName="assignmentName"
+              placeholder="Enter Assignment Name">
+          </div>
+          <div class="mb-3">
+            <label for="assignmentPoint" class="form-label fw-semibold">Assignment Part</label>
+            <div class="d-flex gap-2">
+              <select class="form-select" id="assignmentPoint" formControlName="assignmentPoint"
+                (change)="updateAssignmentPoint($event, EditAssignmentForm.value)">
+                <option *ngFor="let points of storeAssignmentPoints" [value]="points.part">Part {{points.part}}</option>
+              </select>
+              <button *ngIf="selectedAssignmentPart" type="button" class="btn btn btn-danger text-nowrap"
+                data-bs-dismiss="modal" data-bs-target="#edit-assignment"
+                (click)="deleteAssignmentPart(storeAssignmentId,selectedAssignmentPart)">Delete
+                Part {{selectedAssignmentPart}}</button>
+            </div>
+          </div>
+          <div class="mb-3" *ngIf="selectedAssignmentInstructions">
+            <label for="assignmentNote" class="form-label fw-semibold">Selected Part Instructions:</label>
+            <textarea class="form-control" id="assignmentNote" rows="4" [value]="selectedAssignmentInstructions"
+              formControlName="assignmentNote"></textarea>
+          </div>
+          <div class="mb-3" *ngIf="selectedAssignmentPercentage">
+            <label for="percentage" class="form-label fw-semibold">Selected Part Percentage</label>
+            <input type="text" class="form-control" id="percentage" [value]="selectedAssignmentPercentage"
+              formControlName="percentage" placeholder="Enter Percentage"
+              (blur)="validatePercentage(selectedAssignmentPart - 1, EditAssignmentForm.get('percentage')?.value)">
+            <div *ngIf="percentageLimit" class="text-danger">Total percentage should be 100.Adjust remaining Part %
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="assignmentMarks" class="form-label fw-semibold">Marks</label>
+            <input type="text" class="form-control" id="assignmentMarks" formControlName="assignmentMarks"
+              placeholder="Enter Marks">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="resetEditAssignment()">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="editAssignment(EditAssignmentForm.value)" [disabled]="percentageLimit">
+            Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>-->
+
+<!-- Delete assignment modal -->
+<div class="modal fade" id="delete-assignment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Delete Assignment</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <p>Are you sure you want to Delete.</p> -->
+        <div class="mb-3">
+          <label for="want-quiz" class="form-label">Do you want to remove duration from course:
+          </label>
+          <div class="form-check form-check-inline mx-2" id="addduration">
+            <input class="form-check-input" type="radio" name="addduration" id="inlineRadio1" [(ngModel)]="addduration"
+              [value]="true" />
+            <label class="form-check-label" for="inlineRadio1">Yes</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="addduration" id="inlineRadio2" [(ngModel)]="addduration"
+              [value]="false" />
+            <label class="form-check-label" for="inlineRadio2">No</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteAssignment(addduration)">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Assignment Modal-->
+<div class="modal fade" id="add-assignment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="AddAssignmentForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Add Assignment</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closeAssignmentForm()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="assignmentAddName" class="form-label fw-semibold ">Assignment Title <span
+                class="text-danger">*</span></label>
+
+            <input type="text" class="form-control" id="assignmentAddName" formControlName="assignmentName"
+              placeholder="Enter Assignment Name"
+              [ngClass]="{
+                'is-invalid': AddAssignmentForm.get('assignmentName')?.invalid && (AddAssignmentForm.get('assignmentName')?.dirty ||AddAssignmentForm.get('assignmentName')?.touched)}" />
+            <span
+              *ngIf="AddAssignmentForm.get('assignmentName')?.errors?.['required'] &&AddAssignmentForm.get('assignmentName')?.touched"
+              style="color: red;">
+              Assignment title is required
+            </span>
+
+
+          </div>
+          <div class="mb-3">
+            <label for="objective" class="form-label fw-semibold ">Assignment Objective <span
+                class="text-danger">*</span></label>
+            <textarea type="text" class="form-control" id="objective" rows="2" formControlName="objective"
+              placeholder="Enter Assignment Objective"
+              [ngClass]="{
+                'is-invalid': AddAssignmentForm.get('objective')?.invalid && (AddAssignmentForm.get('objective')?.dirty ||AddAssignmentForm.get('objective')?.touched)}"></textarea>
+
+            <span
+              *ngIf="AddAssignmentForm.get('objective')?.errors?.['required'] &&AddAssignmentForm.get('objective')?.touched"
+              style="color: red;">
+              Assignment objective is required</span>
+          </div>
+          <div class="mb-3 d-flex justify-content-between">
+            <label for="assignmentPart" class="form-label fw-semibold">Assignment Part <span
+                class="text-danger">*</span></label>
+            <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target="#add-part"
+              (click)="toggleMode()">Add
+              Part</button>
+          </div>
+          <!--Display The entered parts-->
+          <div class="table-responsive small" *ngIf="assignmentPartsArray.length > 0">
+            <table class="table  table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">
+                    <p class="text-blue"> Part No</p>
+                  </th>
+                  <th scope="col">
+                    <p class="text-blue"> Part Percentage </p>
+                  </th>
+                  <th scope="col">
+                    <p class="text-blue"> Part Notes </p>
+                  </th>
+                  <th scope="col">
+
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngIf="assignmentArrayPart.length > 0">
+                <tr *ngFor="let part of assignmentArrayPart;index as i">
+                  <ng-container *ngIf="!part.isDeleted">
+                    <td class="align-middle">{{part.partNo }}</td>
+                    <td class="align-middle">{{part.partPercentage}}%</td>
+                    <td class="align-middle overflow-hidden"
+                      style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      {{part.partNote}}</td>
+                    <td class="align-middle">
+                      <button type="button fixed" class="btn btn-danger" data-bs-target="#add-assignment"
+                        (click)="deletePart(i)">
+                        Delete
+                      </button>
+                    </td>
+                  </ng-container>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mb-3">
+            <label for="assignmentDuration" class="form-label fw-semibold ">Assignment Duration <span
+                class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="assignmentDuration" formControlName="assignmentDuration"
+              placeholder="Enter Assignment Duration in Days" [min]="0"
+              [ngClass]="{
+                'is-invalid': AddAssignmentForm.get('assignmentDuration')?.invalid && (AddAssignmentForm.get('assignmentDuration')?.dirty ||AddAssignmentForm.get('assignmentDuration')?.touched)}" />
+            <span
+              *ngIf="AddAssignmentForm.get('assignmentDuration')?.errors?.['required'] &&AddAssignmentForm.get('assignmentDuration')?.touched"
+              style="color: red;">
+              Assignment duration is required
+            </span>
+          </div>
+
+          <div class="mb-3">
+            <label for="assignmentAddMarks" class="form-label fw-semibold">Marks <span
+                class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="assignmentAddMarks" formControlName="assignmentMarks"
+              placeholder="Enter Marks"
+              [ngClass]="{
+                'is-invalid': AddAssignmentForm.get('assignmentMarks')?.invalid && (AddAssignmentForm.get('assignmentMarks')?.dirty ||AddAssignmentForm.get('assignmentMarks')?.touched)}" />
+            <span
+              *ngIf="AddAssignmentForm.get('assignmentMarks')?.errors?.['required'] &&AddAssignmentForm.get('assignmentMarks')?.touched"
+              style="color: red;">
+              Assignment marks is required
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="want-quiz" class="form-label fw-semibold">Do you want to add duration to course:
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-check form-check-inline mx-2" id="adddurations">
+              <input class="form-check-input" type="radio" name="adddurations" id="inlineRadio1" [value]="true"
+                formControlName="adddurations" />
+              <label class="form-check-label" for="inlineRadio1">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="adddurations" id="inlineRadio2" [value]="false"
+                formControlName="adddurations" />
+              <label class="form-check-label" for="inlineRadio2">No</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="closeAssignmentForm()">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            [disabled]="AddAssignmentForm.invalid || assignmentArrayPart.length === 0 "
+            (click)="addUserAssignment(AddAssignmentForm.value)">
+            Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!--Add Part model-->
+<div class="modal fade" id="add-part">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="AddPartForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Add Part</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="modal"
+            [attr.data-bs-target]="editAssignmentMode ? '#edit-assignment' : '#add-assignment'" aria-label="Close"
+            (click)="closeAddPart()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="partNo" class="form-label fw-semibold">Part Number <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="partNo" formControlName="partNo"
+              placeholder="Enter Part Number" [min]="editAssignmentMode ? getNextAvailablePartNo() : null"
+              (input)="editAssignmentMode && checkMin(AddPartForm.get('partNo')?.value)">
+            <div class="text-danger" *ngIf="show "> Part number already exists.</div>
+            <div class="mb-3" *ngIf="AddPartForm.get('partNo')?.hasError('notUnique')">
+              <div class="text-danger">Part number already exists.</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="partPercentage" class="form-label fw-semibold">Part Percentage <span
+                class="text-danger">*</span></label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="partPercentage" formControlName="partPercentage"
+                placeholder="Enter Part Percentage" [min]="0" [max]="100">
+              <span class="input-group-text">%</span>
+            </div>
+            <div class="text-danger" *ngIf="AddPartForm.get('partPercentage')?.hasError('totalPercentageExceeded')">
+              Total percentage exceeded 100%.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="partNote" class="form-label fw-semibold">Part Notes <span class="text-danger">*</span></label>
+            <textarea type="text" class="form-control" rows="5" id="partNote" formControlName="partNote"
+              placeholder="Enter Part Notes"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal"
+            [attr.data-bs-target]="editAssignmentMode ? '#edit-assignment' : '#add-assignment'"
+            (click)="closeAddPart()">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            [attr.data-bs-target]="editAssignmentMode ? '#edit-assignment' : '#add-assignment'" data-bs-dismiss="modal"
+            (click)="savePart(AddPartForm.value)"
+            [disabled]="(AddPartForm.invalid && editAssignmentMode == false) || show">
+            Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--Confirm  modal -->
+
+<div class="card pop-up" *ngIf="showQuizLinkConfirmationModel">
+  <div class="card-header">
+    <strong>Recreate Link</strong>
+  </div>
+  <div class="card-body">
+    <p>A quiz link already exist. Do you want to replace it?</p>
+    <div class="card1-footer">
+      <button type="button" class="btn btn-secondary" style="margin-right: 25px;" (click)="close()">Close</button>
+      <button type="button" class="btn btn-primary" (click)="Update()">Update</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Assignment Modal -->
+<div class="modal fade" id="edit-assignment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="EditAssignmentForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Edit Assignment</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetEditAssignment()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="assignmentName" class="form-label fw-semibold ">Assignment Name</label>
+            <input type="text" class="form-control" id="assignmentName" formControlName="assignmentName"
+              placeholder="Enter Assignment Name">
+          </div>
+          <div class="mb-3">
+            <label for="assignmentPoint" class="form-label fw-semibold">Assignment Part</label>
+            <!-- <button class="btn bg-blue text-light btn-sm" data-bs-toggle="modal" data-bs-target=#add-part style="margin-left: 270px;">Add Part</button> -->
+            <div class="d-flex gap-2">
+
+              <select class="form-select " id="assignmentPoint" formControlName="assignmentPoint"
+                (change)="updateAssignmentPoint($event, EditAssignmentForm.value)">
+                <option [ngValue]=null disabled selected>Select a part</option>
+                <option *ngFor="let points of storeAssignmentPoints" [value]="points.part">Part {{points.part}}</option>
+              </select>
+              <!-- <input type="text" hidden formControlName="editPartForm" /> -->
+              <button *ngIf="selectedAssignmentPart" class="btn bg-blue text-light btn-sm" data-bs-toggle="modal"
+                data-bs-target=#add-part><i class="fas fa-plus-circle"></i>
+              </button>
+              <button *ngIf="selectedAssignmentPart" type="button" class="btn btn-sm btn-danger text-nowrap"
+                data-bs-dismiss="modal" data-bs-target="#edit-assignment"
+                (click)="deleteAssignmentPart(storeAssignmentId,selectedAssignmentPart)"> <i
+                  class="fa-solid fa-trash text-light"></i></button>
+            </div>
+          </div>
+          <div class="mb-3" *ngIf="selectedAssignmentInstructions">
+            <label for="assignmentNote" class="form-label fw-semibold">Selected Part Instructions:</label>
+            <textarea class="form-control" id="assignmentNote" rows="4" [value]="selectedAssignmentInstructions"
+              formControlName="assignmentNote"
+              (change)="updatePartDetails(selectedAssignmentPart, EditAssignmentForm.get('assignmentNote')?.value, EditAssignmentForm.get('percentage')?.value)"></textarea>
+          </div>
+          <div class="mb-3" *ngIf="selectedAssignmentPercentage">
+            <label for="percentage" class="form-label fw-semibold">Selected Part Percentage</label>
+            <input type="text" class="form-control" id="percentage" [value]="selectedAssignmentPercentage"
+              formControlName="percentage" placeholder="Enter Percentage"
+              (change)="updatePartDetails(selectedAssignmentPart, EditAssignmentForm.get('assignmentNote')?.value, EditAssignmentForm.get('percentage')?.value)">
+            <div *ngIf="percentageLimit" class="text-danger">Total percentage should be 100.Adjust remaining Part %
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="assignmentMarks" class="form-label fw-semibold">Marks</label>
+            <input type="number" class="form-control" id="assignmentMarks" formControlName="assignmentMarks"
+              placeholder="Enter Marks">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="resetEditAssignment()">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="editAssignmentNew(EditAssignmentForm.value)" [disabled]="percentageLimit ">
+            Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!--Edit Course modal <Currently for Quiz duration>-->
+<div class="modal fade" id="Edit-Course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="editQuizDuration">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">Edit Quiz duration</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+
+            <div class="mb-3">
+              <label for="quizDurations" class="form-label fw-semibold ">Quiz Duration</label>
+              <input type="number" class="form-control" rows="5" id="quizDurations" formControlName="quizDurations"
+                placeholder="Enter Duration"
+                [ngClass]="{
+                  'is-invalid': editQuizDuration.get('quizDurations')?.invalid && (editQuizDuration.get('quizDurations')?.dirty ||editQuizDuration.get('quizDurations')?.touched)}">
+
+              <span
+                *ngIf="editQuizDuration.get('quizDurations')?.errors?.['required'] &&editQuizDuration.get('quizDurations')?.touched"
+                style="color: red;">
+                Enter a value
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="editQuizDetails(editQuizDuration.value)">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

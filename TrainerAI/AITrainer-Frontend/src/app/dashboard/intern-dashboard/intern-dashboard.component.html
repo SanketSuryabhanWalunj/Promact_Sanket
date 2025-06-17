@@ -1,0 +1,117 @@
+<div class="card pop-up" *ngIf="dropDown">
+  <div class="card-header">
+    Update
+  </div>
+  <div class="card-body">
+    <p>Are you sure you want to Update your assignment submission?</p>
+    <div class="card1-footer">
+      <button type="button" class="btn btn-secondary" style="margin-right: 25px;" (click)="close()">Close</button>
+      <button type="button" class="btn btn-primary" (click)="Update()">Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="intern-dashboard-header d-flex align-items-center justify-content-between" *ngIf="topicList">
+  <div>
+    <h3 class="text-blue mb-4"> Course Name: {{ courseName }} </h3>
+    <h5 class="text-blue"> Task for: {{ topicList.topicStartDate | date:'dd-MM-yyyy' }} <span
+      *ngIf="topicList.topicEndDate"> to {{ topicList.topicEndDate | date:'dd-MM-yyyy' }} </span>
+    </h5>
+  </div>
+  <div>
+
+  </div>
+  <div class="px-4">
+    <form [formGroup]="selectInternship">
+      <select class="form-select mb-4"  style="font-size: 15px;" name="courseSelect"
+        id="courseSelect" formControlName="InternshipId" (change)="SelectedInternship(selectInternship.value.InternshipId)" >
+        <option *ngFor="let course of courseInfo" [value]="course.internshipId">
+          {{ course.courseName}}</option>
+      </select>
+    </form>
+    <h6 class="text-blue"> End Date: {{ courseEndDate | date:'dd-MM-yyyy' }} </h6>
+  </div>
+</div>
+<hr>
+
+<div class="card mb-2" *ngIf="topicList">
+  <div class="card-header">
+    <div class="fs-4 ">Topic</div>
+  </div>
+  <div class="card-body">
+    <ul *ngFor="let topic of topicName">
+      <li>{{topic}}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card mb-2" *ngFor="let assignment of assignments">
+  <div class="card-header">
+    <div class="fs-4 d-flex justify-content-between">
+      <h5> Assignment: {{ assignment.name }} </h5>
+      <h5> Marks: {{assignment.marks}} </h5>
+
+    </div>
+  </div>
+  <div class="card-body">
+    <ul class="d-flex justify-content-between" *ngFor="let task of assignment.content.instructions;index as i">
+      <li>{{ task.note }}</li>
+      <span>{{ assignment.content.gradingCriteria[i]?.percentage }}</span>
+    </ul>
+    <span *ngIf="assignment.submissionLink">
+      Submitted Link: <a href={{assignment.submissionLink}}> {{assignment.submissionLink}} </a>
+    </span>
+     </div>
+</div>
+
+<div class="card-buttons d-flex justify-content-end gap-1" *ngIf="topicList">
+  <!-- <button type="button" class="btn btn-sm btn-primary" (click)="goToQuiz()" *ngIf="todaysQuizLink!==null && hideQuizButtons == false">Start Quiz</button> -->
+  <!-- <div class="card-buttons d-flex justify-content-end gap-1"  *ngIf="todaysQuizLink!==null || todaysQuizLink!==null && hideQuizButtons == false"> -->
+  <div class="card-buttons d-flex justify-content-end gap-1"
+    *ngIf="(todaysQuizLink !== null && todaysQuizLink !== '') && hideQuizButtons === false">
+
+    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+      data-bs-target="#show-InstructionQuiz">Start Quiz</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="getResult()">Confirm My
+      Quiz Completion</button>
+  </div>
+  <button type="button" class="btn btn-sm btn-success" *ngIf="assignments.length > 0 && unPublishedAssignments.length>0 "
+    data-bs-toggle="modal" data-bs-target="#submit-assignment-modal" (click)="clearSubmit()">Submit Assignment </button>
+  <button type="button" class="btn btn-sm btn-danger" (click)="navigateJournals()"
+    *ngIf="journalId != null && journalPublished ==false">Journals</button>
+</div>
+
+<!-- Submit Assignment Modal -->
+<app-assignmnet-submission-model [modelId]="'#submit-assignment-modal'" [assignment]="assignmentOptionsList"
+(assignmentFromData)="submitAssignmentForm($event)"
+></app-assignmnet-submission-model>
+
+<div *ngIf="!topicList">
+  <h3>No course has been assigned to you. Contact your admin for further details. </h3>
+</div>
+<!--Quiz Instruction-->
+<div class="modal fade" id="show-InstructionQuiz" tabindex="-1" role="dialog" aria-labelledby="show-InstructionQuiz"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="show-InstructionQuiz">Quiz Instructions</h5>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <ul>
+            <li>Once you have completed the quiz, kindly confirm by clicking Confirm My Quiz Completion.</li>
+            <li>Do NOT use any other navigation controls</li>
+            <li>Do NOT close your browser tab</li>
+            <li>Do NOT exit full screen mode until you finish</li>
+            <li>Do NOT refresh your browser</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="goToQuiz()">Proceed</button>
+      </div>
+    </div>
+  </div>
+</div>

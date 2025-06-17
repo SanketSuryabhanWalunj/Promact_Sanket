@@ -1,0 +1,22 @@
+.save-button {
+  margin-left: 10px;
+}
+
+.attachment {
+  margin-left: 174px;
+}
+
+.attachment-container {
+  max-height: 70px;
+}
+
+.attachment-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 2px;
+  margin: 5px;
+  width: 125px;
+  height: 30px;
+  font-size: 12px;
+  border-radius: 7px;
+}

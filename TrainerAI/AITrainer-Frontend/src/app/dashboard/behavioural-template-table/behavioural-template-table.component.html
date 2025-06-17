@@ -1,0 +1,81 @@
+
+<div class="template-table-header">
+    <h3 class="text-blue"> Behavioural Templates: </h3>
+    <button (click)="addtemplate()" class="btn btn-primary">Add <i class="fa-solid fa-plus"></i></button>
+  </div>
+  <hr>
+  <div class="table-responsive small">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">
+            <p class="text-blue" style="padding-left: 10px;"> Template Name </p>
+          </th>
+          <th scope="col" class="text-end" style="padding-right: 25px;">
+            <p class="text-blue" style="padding-right: 30px;"> Action </p>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="lists">
+        <tr *ngFor="let list of lists index as i">
+          <ng-container *ngIf="!list.isDeleted">
+            <td class="templateName" style="padding-left: 10px;">{{ list.templateName }}</td>
+            <td class="text-end" style="padding-right: 25px;">
+              <button class="btn btn-primary btn-small m-1" (click)="editDetails(list.id)">
+                <i class="fa-solid fa-pencil text-light"></i>
+              </button>
+              <button class="btn btn-danger btn-small m-1" data-bs-toggle="modal" data-bs-target="#delete-template"
+                (click)="selectToDelete(i)">
+                <i class="fa-solid fa-trash text-light"></i>
+              </button>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+      <tbody *ngIf="listLength === 0 || isAllDeleted == true">
+        <tr>
+          <td class="text-center" colspan="10">No Template Available</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  <!-- Delete template modal -->
+  <div class="modal fade" id="delete-template">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">{{DeleteTemplate}} </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{AreYousureText}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{Close}}</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+            (click)="deleteTemplate(this.selectedTemplateToDelete)">{{Delete}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- add Pagination -->
+  
+  <nav aria-label="Page navigation example" *ngIf="totalPage > 1">
+    <ul class="pagination justify-content-end">
+      <li class="page-item">
+        <button class="page-link" (click)="previous()">Previous</button>
+      </li>
+      <ng-container *ngFor="let pageNumber of pageNumbers">
+        <li class="page-item" [class.active]="pageNumber === currentPage">
+          <button class="page-link" (click)="goToPage(pageNumber)"> {{ pageNumber }} </button>
+        </li>
+      </ng-container>
+      <li class="page-item">
+        <button class="page-link" (click)="next()">Next</button>
+      </li>
+    </ul>
+  </nav>
+  

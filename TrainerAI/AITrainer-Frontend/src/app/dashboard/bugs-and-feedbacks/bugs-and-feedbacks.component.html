@@ -1,0 +1,441 @@
+<!--Header section with name -->
+<div class="row">
+    <div class="feedback-header">
+        <h3 class="text-blue"> Bugs & Feedback Report: </h3>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-bug" (click)="clearForm()"
+            *ngIf="isIntern" title="Report a feedback/Bug">
+            Report Bug/ Feedback <i class="fa-solid fa-plus"></i>
+        </button>
+
+
+    </div>
+</div>
+<hr>
+
+<!--Displaying the Bugs and Feedbacks in Tabular form-->
+<div class="table-responsive small">
+    <table class="table table-striped table-sm" id="fixed-header-table">
+        <thead>
+            <tr>
+                <th scope="col" *ngIf="!isIntern">
+                    <p class="text-blue ms-2">Intern Name</p>
+
+                </th>
+                <th scope="col">
+                    <p class="text-blue">Type</p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue">Mentors</p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue details">Feedback/Bug Details</p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue">Status</p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue ">Created Date</p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue text-center">Action</p>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngIf="internFeedback && internFeedback.length > 0; else noFeedback">
+                <tr *ngFor="let feedback of internFeedback;index as i">
+                    <td *ngIf="!isIntern" class="align-middle cursor">
+                        {{ feedback.reporterInfo?.reporterName | titlecase }}
+                    </td>
+                    <td class="align-middle cursor type">
+                        {{ feedback.type }}
+
+                    <td class="align-middle cursor type">
+                        <ng-container *ngIf="feedback.admins && !feedback.showAllAdmins && feedback.admins.length > 3">
+                            <ng-container *ngFor="let mentor of feedback.admins.slice(0, 3); let i = index">
+                                {{ mentor?.firstName }} {{ mentor?.lastName }}
+                                <br>
+                            </ng-container>
+                            <button class="link-button" (click)="toggleShowAllAdmins(feedback)">Read More</button>
+                        </ng-container>
+
+                        <ng-container
+                            *ngIf="feedback.admins && (feedback.admins.length <= 3 || feedback.showAllAdmins)">
+                            <ng-container *ngFor="let mentor of feedback.admins; let i = index">
+                                {{ mentor?.firstName }} {{ mentor?.lastName }}
+                                <br>
+                            </ng-container>
+
+
+                            <button class="link-button" *ngIf="feedback.showAllAdmins"
+                                (click)="toggleShowAllAdmins(feedback)">Show Less</button>
+                        </ng-container>
+                    </td>
+
+
+
+                    <td class="largest-field ">
+                        <strong>{{ feedback.title }} : </strong>
+                        <span *ngIf="feedback.imageUrls && feedback.imageUrls.length > 0">
+                            <i class="fa fa-paperclip"></i> {{ feedback.imageUrls.length }} {{ feedback.imageUrls.length
+                            === 1 ? 'attachment' : 'attachments' }}
+                        </span><br>
+                        <span *ngIf="!feedback.showFullText && shouldDisplayReadMore(feedback.description)">
+                            {{ feedback.description.slice(0, 200) }}...
+                            <button class="link-button" (click)="toggleShowFullText(feedback)">Read More</button>
+                        </span>
+                        <span *ngIf="feedback.showFullText || !shouldDisplayReadMore(feedback.description)">
+                            {{ feedback.description }}
+                            <button class="link-button" *ngIf="feedback.showFullText"
+                                (click)="toggleShowFullText(feedback)">Show Less</button>
+                        </span>
+                        <span *ngIf="feedback.comments">
+                            <br>
+                            <strong>Resolved by {{feedback.commentedBy}}:</strong>
+                            <br>
+                            <span *ngIf="!feedback.showFullComments && shouldDisplayReadMore(feedback.comments)">
+                                {{ feedback.comments.slice(0, 200) }}...
+                                <button class="link-button" (click)="toggleShowFullComments(feedback)">Read
+                                    More</button>
+                            </span>
+                            <span *ngIf="feedback.showFullComments || !shouldDisplayReadMore(feedback.comments)">
+                                {{ feedback.comments }}
+                                <button class="link-button" *ngIf="feedback.showFullComments"
+                                    (click)="toggleShowFullComments(feedback)">Show Less</button>
+                            </span>
+                        </span>
+                    </td>
+                    <td class="align-middle cursor type">
+                        {{ feedback.status }}
+                    </td>
+                    <td class="align-middle cursor type">
+                        {{ feedback.createdDate|date }}
+                    </td>
+                    <td class="align-middle cursor text-center type">
+                        <div class="button-container d-flex justify-content-center align-items-center">
+                            <button class="btn bg-blue text-light infomation hover-effect"
+                                (click)="getFeedbackById(feedback.id)" data-bs-toggle="modal"
+                                data-bs-target="#show-Details" title="View">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+
+                            <button *ngIf="isIntern" [disabled]="feedback.status===FeedbackStatus.Resolved"
+                                class="btn btn-danger btn-small m-1 hover-effect" data-bs-toggle="modal"
+                                data-bs-target="#delete-feedback" (click)="selectToDelete(i)"
+                                title="Delete Feedback/Bug">
+                                <i class="fa-solid fa-trash text-light"></i>
+                            </button>
+
+                            <button class="btn bg-blue text-light infomationm-1 m-1 hover-effect" data-bs-toggle="modal"
+                                *ngIf="!isIntern" data-bs-target="#add-bug" (click)="setEditMode(true,i)"
+                                title="Resolve Bug/Feedback" [disabled]="feedback.status === FeedbackStatus.Resolved"
+                                [ngClass]="{'disabled-button': feedback.status === FeedbackStatus.Resolved}">
+                                <i class="fa fa-check"></i>
+                            </button>
+
+                            <button *ngIf="!isIntern" class="btn bg-blue text-light hover-effect" data-bs-toggle="modal"
+                                data-bs-target="#assign-reassign" (click)="assignReassignMentor(i)"
+                                title="Assign/Reassign Mentor" [disabled]="feedback.status === FeedbackStatus.Resolved"
+                                [ngClass]="{'disabled-button': feedback.status === FeedbackStatus.Resolved}">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            </button>
+
+                        </div>
+                    </td>
+
+                </tr>
+            </ng-container>
+            <ng-template #noFeedback>
+
+                <tr>
+                    <td class="text-center" colspan="6">No Bugs/Feedback Details Found</td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </table>
+</div>
+
+
+
+<!--Report a Bug or feedback -->
+
+<div class="modal fade" id="add-bug">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form [formGroup]="addBugForm">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal-heading">
+                        {{ isIntern ? 'Report Bug/Feedback' : 'Resolve Bug/Feedback' }}
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="feedbackType" class="form-label fw-semibold dropdown-label">Feedback Type: <span
+                                class="text-danger">*</span></label>
+                        <select class="form-select" id="feedbackType" formControlName="feedbackType" [ngClass]="{
+                                  'is-invalid':
+                                    getControl('feedbackType')?.errors &&
+                                    getControl('feedbackType')?.touched
+                                }" [ngClass]="{
+                                  'is-valid':
+                                    !getControl('feedbackType')?.errors &&
+                                    getControl('feedbackType')?.touched
+                                }" [attr.disabled]="editMode ? true : null" required>
+                            <option [ngValue]="null" [disabled]="editMode && !isIntern"
+                                [selected]="(editMode && !isIntern)||(!editMode) ">Select Feedback Type</option>
+
+                            <option *ngFor="let type of feedbackTypes" [value]="type">{{ type }}</option>
+
+                        </select>
+                        <small
+                            *ngIf="getControl('feedbackType')?.errors?.['required'] && getControl('feedbackType')?.touched"
+                            class="text-danger">Feedback Type is required.</small>
+                    </div>
+
+                    <div class="mb-3" *ngIf="isIntern">
+                        <label for="admins" class="form-label fw-semibold">Select Mentors:</label>
+                        <div class="dropdown">
+                            <button
+                                class="btn btn-transparent dropdown-toggle d-flex justify-content-between align-items-center"
+                                type="button" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                [ngClass]="{'border-danger': selectedAdminNames.length === 0 && adminsFieldTouched }">
+                                <span id="selectedAdmins"
+                                    [ngClass]="{'selected': selectedAdminNames.length > 0, 'default': selectedAdminNames.length === 0}">
+                                    {{ selectedAdminNames || 'Select Mentors' }}
+                                </span>
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+
+
+                            <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <div class="form-check" *ngFor="let admin of adminDetails">
+                                    <input class="form-check-input" type="checkbox" [id]="'adminCheckbox' + admin.id"
+                                        [value]="admin.id" [checked]="isAdminChecked(admin.id)"
+                                        (click)="updateAdmins($event, admin.id)">
+                                    <label class="form-check-label" [for]="'adminCheckbox' + admin.id">{{
+                                        admin.firstName }} {{ admin.lastName }}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="mb-3" *ngIf="!isIntern">
+                        <label for="admins" class="form-label fw-semibold">Selected Mentors:</label><br>
+                        <ng-container *ngFor="let mentor of internbug?.admins; let i = index">
+                            <p class="d-inline">{{ mentor?.firstName }} {{ mentor?.lastName }}{{ i <
+                                    (internbug?.admins?.length ?? 0) - 1 ? ', ' : '' }}</p>
+
+                        </ng-container>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label fw-semibold">Title:<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" formControlName="title"
+                            placeholder="Enter a title" [ngClass]="{
+                  'is-invalid':
+                    getControl('title')?.errors &&
+                    getControl('title')?.touched
+                }" [ngClass]="{
+                  'is-valid':
+                    !getControl('title')?.errors &&
+                    getControl('title')?.touched
+                }" [attr.disabled]="editMode && !isIntern" required />
+                        <small *ngIf="getControl('title')?.errors?.['required'] && getControl('title')?.touched"
+                            class="text-danger">A Title is required.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-semibold ">Description: <span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control description" id="description" formControlName="description"
+                            placeholder="Enter a description"
+                            [ngClass]="{ 'is-invalid': (getControl('description')?.errors && getControl('description')?.touched && getControl('description')?.errors?.['required']) }"
+                            [ngClass]="{ 'is-valid': getControl('description')?.touched && !getControl('description')?.errors }"
+                            [attr.disabled]="editMode && !isIntern" required></textarea>
+                        <small
+                            *ngIf="getControl('description')?.errors?.['required'] && getControl('description')?.touched"
+                            class="text-danger">A description is required.</small>
+                    </div>
+
+                    <div class="mb-3" *ngIf="!isIntern">
+                        <label for="description" class="form-label fw-semibold ">Comment: <span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control comment" id="comment" formControlName="comment"
+                            placeholder="Enter a comment"
+                            [ngClass]="{ 'is-invalid': (getControl('comment')?.errors && getControl('comment')?.touched && getControl('comment')?.errors?.['required']) }"
+                            [ngClass]="{ 'is-valid': getControl('comment')?.touched && !getControl('comment')?.errors }"
+                            required></textarea>
+                        <small *ngIf="getControl('comment')?.errors?.['required'] && getControl('comment')?.touched"
+                            class="text-danger">A comment is required.</small>
+                    </div>
+
+                    <div class="mb-3" *ngIf="!editMode">
+                        <label for="attachment" class="form-label fw-semibold">Attachment:</label>
+                        <button class="btn btn-primary attachment" (click)="openFileInput()">Add Attachment</button>
+                    </div>
+                    <p *ngIf="editMode"><strong>Attachments :</strong></p>
+                    <div class="flex-grow-1" *ngIf="editMode">
+                        <div class="attachment-container">
+                            <div *ngFor="let attachment of internbug?.imageUrls; let i = index" class="attachment-item">
+                                <button (click)="getImage(attachment.id)" class="attachment-button">
+                                    <span class="button-text">{{ attachment.fileName }}</span>
+                                    <i class="fa fa-paperclip"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attachment-container">
+                        <div *ngFor="let attachment of attachments; let i = index" class="attachment-item mr-2">
+                            <button class="attachment-button">
+                                <i class="fa fa-paperclip clip-icon"></i>
+                                <span class="button-text">{{ attachment.name }}</span>
+                                <i class="fa fa-close close-icon text-danger" aria-label="Close"
+                                    (click)="removeAttachment(i)"></i>
+
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        [disabled]="addBugForm.invalid" (click)="editMode && !isIntern ? replyToBug() : reportBug()">
+                        {{ editMode ? 'Resolve' : 'Save Changes' }}
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Detailed Intern Feedback in Pop Up View-->
+<div class="modal fade modal-xl" id="show-Details">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-heading">Feedback/ Bug Report</h1>
+            </div>
+            <div class="modal-body overflow-y-auto">
+                <div class="mb-3" *ngIf="internbug">
+                    <p><strong>Title:</strong> {{ internbug.title }}</p>
+                    <p><strong>Created Date:</strong> {{ internbug.createdDate|date}}</p>
+                    <p><strong>Reported To : </strong>
+
+                        <ng-container *ngFor="let mentor of internbug.admins; let i = index">
+                            <p class="d-inline">{{ mentor?.firstName }} {{ mentor?.lastName }}{{ i <
+                                    (internbug.admins?.length ?? 0) - 1 ? ', ' : '' }}</p>
+                        </ng-container>
+
+
+                    </p>
+                    <p><strong>Description:</strong></p>
+                    <textarea class="textarea" readonly [value]="internbug.description"></textarea>
+                    <div *ngIf="internbug.comments">
+                        <p><strong>Comment from {{internbug.commentedBy}}:</strong></p>
+                        <textarea class="textarea" readonly [value]="internbug.comments"></textarea>
+                    </div>
+                    <p><strong>Attachments :</strong></p>
+                    <div class="flex-grow-1">
+                        <div class="attachment-container">
+                            <div *ngFor="let attachment of internbug.imageUrls; let i = index" class="attachment-item">
+                                <button (click)="getImage(attachment.id)" class="attachment-button">
+                                    <span class="button-text">{{ attachment.fileName }}</span>
+                                    <i class="fa fa-paperclip"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Feedback modal -->
+<div class="modal fade" id="delete-feedback">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-heading">Delete Feedback/Bug </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the selected Feedback/Bug?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="deleteFeedback(this.selectedFeedbackToDelete)">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--Assign/Reassign Mentor-->
+
+<div class="modal fade" id="assign-reassign">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-heading">Assign/Reassign Mentors:</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label for="selectedAdmins" class="form-label fw-semibold">Selected Mentors:</label>
+                        {{ selectedEditAdminNames.join(', ') || 'No admins selected' }}
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="admins" class="form-label fw-semibold">Select Mentors:</label>
+                        <div class="dropdown">
+                            <button
+                                class="btn btn-transparent dropdown-toggle d-flex justify-content-between align-items-center"
+                                type="button" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                [ngClass]="{'border-danger': selectedEditAdminNames.length === 0 && adminsFieldTouched }">
+                                <span id="selectedEditAdminNames"
+                                    [ngClass]="{'selected': selectedEditAdminNames.length > 0, 'default': selectedEditAdminNames.length === 0}">
+                                    {{ selectedEditAdminNames.length > 0 ? selectedEditAdminNames.join(', ') : 'Select
+                                    to assign/reassign' }}
+                                </span>
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <div class="form-check" *ngFor="let admin of adminDetails">
+                                    <input class="form-check-input" type="checkbox" [id]="'adminCheckbox' + admin.id"
+                                        [value]="admin.id" [checked]="isAdminChecked(admin.id)"
+                                        (change)="updateAssignAdmins($event, admin.id)">
+                                    <label class="form-check-label" [for]="'adminCheckbox' + admin.id">{{
+                                        admin.firstName }} {{ admin.lastName }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!changesMade"
+                        (click)="reassignMentor()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>

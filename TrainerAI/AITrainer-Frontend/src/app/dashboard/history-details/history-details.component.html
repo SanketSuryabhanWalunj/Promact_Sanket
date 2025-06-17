@@ -1,0 +1,522 @@
+<div class="history-details-header d-flex justify-content-start">
+  <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Intern'" (click)="backToHistory()">
+    <i class="fa-solid fa-arrow-left text-small"></i>
+  </button>
+  <button class="btn btn-small bg-blue text-light rounded-circle" *ngIf="role == 'Admin'"
+    routerLink="/dashboard/internships/{{ internshipId }}">
+    <i class="fa-solid fa-arrow-left text-small"></i>
+  </button>
+  <h3 class="text-blue px-2 m-0">{{ pageType | titlecase }} {{constantString.history.details}}</h3>
+</div>
+<hr />
+<!-- Quiz details -->
+<ng-container *ngIf="pageType == 'quiz' && submittedQuiz == true">
+  <div class="card">
+    <div class="card-body">
+      <div class="quiz-title d-flex justify-content-between align-items-center px-2 mb-2">
+        <div class="title flex-fill fs-5">{{constantString.quiz.quizLabel}}</div>
+        <div class="status">
+          <div class="score-details" *ngFor="let quizinfo of SubmittedQuizDetails">
+            <span style="margin-right: 20px"><strong>{{constantString.score}}{{ quizinfo.scoreAchieved
+                }}</strong></span>
+            <span style="margin-right: 20px"><strong>{{constantString.percentage}} {{ quizinfo.percentage
+                }}</strong></span>
+          </div>
+          <span class="badge text-bg-success">{{constantString.submitted}}</span><br />
+        </div>
+      </div>
+      <ul class="list-group" *ngFor="let quizinfo of SubmittedQuizDetails">
+        <li class="list-group-item" *ngFor="
+            let quizDetails of quizinfo.singleMultipleQuestionACs;
+            index as i
+          ">
+          <strong>{{constantString.questionLabel}} {{ i + 1 }}: {{ quizDetails.questionDetail }}</strong>
+          <div class="questions" *ngFor="
+              let quizOptions of quizDetails.singleMultipleAnswerQuestionOption
+            ">
+            <ul>
+              <li [ngStyle]="{
+                  color: quizOptions.isAnswer ? 'green' : 'inherit'
+                }">
+                {{ quizOptions.option }}
+                <span *ngIf="quizOptions.isAnswer" style="margin-left: 5px">{{constantString.correctAnswerLabel}}</span>
+                <span *ngIf="checkAnswer(quizinfo.answeredOptionACs, quizOptions)" [ngStyle]="{
+                    color: checkAnswer(quizinfo.answeredOptionACs, quizOptions)
+                      ? 'green'
+                      : 'red'
+                  }">
+                  {{
+                  checkAnswer(quizinfo.answeredOptionACs, quizOptions)
+                  ? "&#10004;"
+                  : "(Incorrect)"
+                  }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="pageType == 'quiz' && attendQuiz == true">
+  <div>
+    <h6>{{constantString.quiz.quizInstructionLabel}}</h6>
+    <ul>
+      <li>
+        {{constantString.quiz.instruction1}}
+      </li>
+      <li>
+        {{constantString.quiz.instruction2}}
+      </li>
+      <li> {{constantString.quiz.instruction3}}
+      </li>
+      <li>{{constantString.quiz.instruction4}}</li>
+      <li>{{constantString.quiz.instruction5}}</li>
+      <li>{{constantString.quiz.instruction6}}</li>
+    </ul>
+  </div>
+
+  <div class="card-buttons d-flex justify-content-end gap-1" *ngIf="
+      linkForQuiz !== null && linkForQuiz !== '' && hideQuizButtons === false
+    ">
+    <button type="button" class="btn btn-sm btn-primary" (click)="goToQuiz()">
+      {{constantString.quiz.startQuiz}}
+    </button>
+    <button type="button" class="btn btn-sm btn-success" (click)="getResult()">
+      {{constantString.quiz.confirmQuiz}} </button>
+  </div>
+</ng-container>
+
+<!-- Assignment Details -->
+<ng-container *ngIf="pageType == 'assignment'">
+  <div class="card" *ngIf="assignment">
+    <div class="card-body">
+      <div class="mb-4">
+        <div class="card-body" *ngFor="let detail of content">
+          <div class="assignment-title d-flex justify-content-between align-items-center mb-2">
+            <h6 class="title">{{ assignment.assignmentTitle }}</h6>
+            <h6>Total Marks : {{ detail.marks }}</h6>
+          </div>
+          <ul class="d-flex justify-content-between" *ngFor="let task of detail.content.instructions; index as i">
+            <li>{{ task.note }}</li>
+            <span>{{ detail.content.gradingCriteria[i]?.percentage }}</span>
+          </ul>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div *ngIf="assignment.submissionLink">
+          <div>
+            Submission Date:
+            {{ assignment.submittedDate | date : "dd-MM-yyyy" }}
+          </div>
+          <span>
+            Submission Link:
+            <a href="{{ assignment.submissionLink }}">
+              {{ assignment.submissionLink }}
+            </a>
+          </span>
+        </div>
+        <div>
+          <div class="status">
+            <span class="badge text-bg-success" *ngIf="assignment.submissionLink">Submitted</span>
+          </div>
+          <button type="button" class="btn btn-sm btn-danger mt-1" (click)="deleteSubmission()"
+            *ngIf="role != 'Intern' && assignment.submissionLink">
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <span *ngIf="
+            !assignment.submissionLink && role != 'Admin' && endDate >= today
+          ">
+          <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+            data-bs-target="#submit-assignment-modal">
+            Submit Assignment
+          </button>
+        </span>
+        <div class="status">
+          <span class="badge text-bg-danger" *ngIf="!assignment.submissionLink">Pending</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-fill justify-content-end" *ngIf="role == 'Admin' && !feedbackAssignment">
+    <button type="button" class="btn btn-sm btn-success mt-3" data-bs-toggle="modal"
+      data-bs-target="#assignment-feedback-modal" (click)="setEvaluate()">
+      Evaluate
+    </button>
+  </div>
+</ng-container>
+
+<div *ngIf="feedbackAssignment">
+  <div *ngIf="role == 'Admin' || feedbackAssignment.isPublished">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+      <h3 class="text-blue px-2">Feedback</h3>
+      <div *ngIf="role == 'Admin' && feedbackAssignment" class="d-flex gap-2">
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+            data-bs-target="#assignment-feedback-modal" (click)="editAssignmentEvaluate()">
+            Edit Evaluate
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" *ngIf="!feedbackAssignment.isPublished"
+            (click)="PublishAssignmentEvaluation()">
+            Publish Evaluation
+          </button>
+          <button type="button" class="btn btn-sm btn-success" *ngIf="feedbackAssignment.isPublished">
+            Published
+          </button>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <ng-container>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-2">
+              <h6>Reviewer Name:</h6>
+            </div>
+            <div class="col-10">{{ feedbackAssignment.reviewerName }}</div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Feedback:</h6>
+            </div>
+            <div class="col-10" *ngIf="feedbackAssignment.feedback">
+              <textarea #textareaRef disabled class="feedback-text-area">{{ feedbackAssignment.feedback }}</textarea>
+            </div>
+            <div class="col-10" *ngIf="!feedbackAssignment.feedback">
+              No feedback
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Score:</h6>
+            </div>
+            <div class="col-10">
+              {{ feedbackAssignment.score }}/{{ feedbackAssignment.totalMarks }}
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Review Date:</h6>
+            </div>
+            <div class="col-10">
+              {{ feedbackAssignment.createdDate | date : "dd-MM-yyyy" }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Journal details -->
+<ng-container *ngIf="pageType == 'journal'">
+  <div class="card">
+    <div class="card-body">
+      <div class="template-title d-flex align-items-center justify-content-between mb-3">
+        <div class="title fs-3">Daily Journal</div>
+        <span class="badge text-bg-success" *ngIf="id">Submitted</span>
+        <span class="badge text-bg-danger" *ngIf="!id">Pending</span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="id">
+        <div class="date" *ngIf="journal">
+          Submission Date: {{ journal.date | date : "dd-MM-yyyy" }}
+        </div>
+        <div *ngIf="id && !feedback && role != 'Admin' && endDate >= today">
+          <button type="button" class="btn btn-sm btn-primary" (click)="navigateJournals()">
+            Edit Journal
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div *ngIf="!id && role != 'Admin' && endDate >= today">
+        <button type="button" class="btn btn-sm btn-primary" (click)="navigateJournals()">
+          Add Journal
+        </button>
+      </div>
+      <div class="options" *ngIf="id && journal">
+        <div class="mb-1" *ngFor="let opt of journal.options">
+          <div class="d-flex align-items-center fs-4">
+            <h5>{{ opt.topicName }}</h5>
+          </div>
+          <div class="px-3 text-justify mb-4">
+            {{ opt.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-fill justify-content-end" *ngIf="role == 'Admin' && !feedback">
+    <button type="button" class="btn btn-sm btn-success mt-3" data-bs-toggle="modal"
+      data-bs-target="#journal-feedback-modal">
+      Generate Feedback
+    </button>
+  </div>
+</ng-container>
+
+<div *ngIf="feedback">
+  <div *ngIf="role == 'Admin' || feedback.isPublished">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+      <h3 class="text-blue px-2">Feedback</h3>
+      <div *ngIf="role == 'Admin' && feedback" class="d-flex gap-2">
+        <div>
+          <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+            data-bs-target="#journal-feedback-modal">
+            Regenerate
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+            data-bs-target="#edit-journal-feedback-modal" (click)="PatchEditJournalFeedback()">
+            Edit Feedback
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" (click)="PublishJournalFeedback()"
+            *ngIf="!feedback.isPublished">
+            Publish Feedback
+          </button>
+          <button type="button" class="btn btn-sm btn-success" *ngIf="feedback.isPublished">
+            Published
+          </button>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <ng-container>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-2">
+              <h6>Reviewer Name:</h6>
+            </div>
+            <div class="col-10">{{ feedback.reviewerName }}</div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Feedback Points:</h6>
+            </div>
+            <div class="col-10">
+              <span *ngIf="feedback.feedbackPoints">
+                <textarea #textareaRef disabled class="feedback-text-area">{{feedback.feedbackPoints}}</textarea>
+              </span>
+              <span *ngIf="!feedback.feedbackPoints">No journal feedback</span>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Rating:</h6>
+            </div>
+            <div class="col-10">{{ feedback.rating }}</div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Review Date:</h6>
+            </div>
+            <div class="col-10">
+              {{ feedback.createdDate | date : "dd-MM-yyyy" }}
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-2">
+              <h6>Improvement Area:</h6>
+            </div>
+            <div class="col-10">
+              <span *ngIf="feedback.improvementArea">
+                <textarea #textareaRef disabled class="feedback-text-area">{{feedback.improvementArea}}</textarea>
+              </span>
+              <span *ngIf="!feedback.improvementArea">
+                No improvement area</span>
+            </div>
+          </div>
+
+          <div class="row mt-4" *ngIf="feedback.adminReview">
+            <div class="col-2">
+              <h6>Admin Review:</h6>
+            </div>
+            <div class="col-10"><textarea #textareaRef disabled
+                class="feedback-text-area">{{feedback.adminReview}}</textarea></div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Submit Assignment Modal -->
+
+<app-assignmnet-submission-model [modelId]="'#submit-assignment-modal'" [assignment]="assignmentOptionsList"
+(assignmentFromData)="submitAssignmentForm($event)"
+></app-assignmnet-submission-model>
+<!-- Genrate Journal Feedback Modal -->
+<div class="modal fade" id="journal-feedback-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" *ngIf="!feedback">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Genrate Journal Feedback
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-header" *ngIf="feedback">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Regenrate Journal Feedback
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="journalFeedback">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="AdminReview" class="form-label">Add Comment</label>
+            <textarea #textareaRef class="form-control" formControlName="AdminReview" placeholder="Add Any comment"
+              (input)="adjustTextareaHeight()"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" *ngIf="!feedback">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" (click)="GenreteJournalfeedback(journalFeedback.value)" class="btn btn-primary"
+            data-bs-dismiss="modal">
+            Generate From AI
+          </button>
+        </div>
+        <div class="modal-footer" *ngIf="feedback">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" (click)="GenreteJournalfeedback(journalFeedback.value)" class="btn btn-primary"
+            data-bs-dismiss="modal">
+            Regenerate From AI
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Assignment Feedback Modal -->
+
+<div class="modal fade" id="assignment-feedback-modal" (shown.bs.modal)="modalShown()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          {{constantString.history.assignmentFeedbackLabel}}
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="assignmentFeedback">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="Feedback" class="form-label">{{constantString.feedback}} <span
+                class="text-danger">*</span></label>
+            <textarea #textareaRef2 class="form-control" formControlName="Feedback" placeholder="Add Feedback"
+              [ngClass]="{ 'is-valid': getControl('Feedback')?.touched && !getControl('Feedback')?.errors,
+                           'is-invalid': getControl('Feedback')?.touched && getControl('Feedback')?.errors?.['required'] }"
+              (input)="adjustTextareaHeight()"></textarea>
+            <small *ngIf="getControl('Feedback')?.errors?.['required'] && getControl('Feedback')?.touched"
+              class="text-danger">{{constantString.requiredFeedback}}</small>
+          </div>
+
+          <div class="mb-3" *ngFor="let detail of content">
+            <label for="Score" class="form-label">{{constantString.score}} <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" formControlName="Score" [ngClass]="{
+                'is-invalid':
+                  getControl('Score')?.errors && getControl('Score')?.touched
+              }" placeholder="Add Score" min="0" [max]="detail.marks" pattern="[0-9]+" (input)="
+                checkMaxValue(
+                  detail.marks,
+                  assignmentFeedback.get('Score')?.value
+                )
+              " />
+            <div *ngIf="
+                getControl('Score')?.errors && getControl('Score')?.touched
+              ">
+              <div *ngIf="!getControl('Score')?.errors?.['max']">
+                <p class="text-danger">{{constantString.scoreRequired}}</p>
+              </div>
+            </div>
+            <div *ngIf="exceedsMaxValue">
+              <p class="text-danger">
+                {{constantString.scoreCustomValidation}} {{ detail.marks }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeEvaluateModel()">
+            {{constantString.close}}
+          </button>
+          <button type="button" (click)="CreateAssignmentFeedback(assignmentFeedback.value)" class="btn btn-primary"
+            data-bs-dismiss="modal" [disabled]="assignmentFeedback.invalid || exceedsMaxValue">
+            {{constantString.saveChanges}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Journal Feedback -->
+<div class="modal fade" id="edit-journal-feedback-modal" (shown.bs.modal)="modalShown()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="">Edit Journal Feedback</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="editJournalFeedback">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="FeedbackPoints" class="form-label">Feedback Points</label>
+            <textarea #textareaRef3 type="text" rows="3" class="form-control" id="FeedbackPoints"
+              formControlName="FeedbackPoints" placeholder="Add Feedback Points"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="Rating" class="form-label">Rating</label>
+            <input type="text" class="form-control" id="Rating" formControlName="Rating" placeholder="Add Rating" />
+          </div>
+
+          <div class="mb-3">
+            <label for="Improvement" class="form-label">improvement Area</label>
+            <textarea #textareaRef3 rows="3" class="form-control" id="Improvement" formControlName="ImprovementArea"
+              placeholder="Add Improvement Area"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="AdminReview" class="form-label">Add Comment</label>
+            <textarea #textareaRef3 class="form-control" id="AdminReview" formControlName="AdminReview"
+              placeholder="Add Any comment" (input)="adjustTextareaHeight()"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" (click)="EditJournalFeedback(editJournalFeedback.value)" class="btn btn-primary"
+            data-bs-dismiss="modal">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

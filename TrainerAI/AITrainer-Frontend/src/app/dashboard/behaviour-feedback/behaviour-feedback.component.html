@@ -1,0 +1,64 @@
+<div *ngIf="behaviourFeedback">
+  <div class="template-journal-header d-flex justify-content-start">
+    <button class="btn btn-small bg-blue text-light rounded-circle" [routerLink]="['../internships',internshipId]">
+      <i class="fa-solid fa-arrow-left text-small"></i>
+    </button>
+    <h3 class="text-blue px-2 m-0"> Behaviour Feedback</h3>
+  </div>
+  <hr>
+  
+  <div class="">
+    <div class=" d-flex justify-content-between mb-3 px-4">
+          <h3>
+            {{behaviourFeedback.templateName}}
+          </h3>
+          <div *ngIf="hasEmptyGeneralId()">
+            <button class="btn btn-primary"  (click)="CreateFeedback()">Save</button>
+          </div>
+        <div class="" *ngIf="!hasEmptyGeneralId()">
+            <button class="btn btn-primary"  (click)="UpdateBehaviourFeedback()">Save</button>
+            <button class="btn btn-danger ms-2"  (click)="DeleteBehaviourFeedback()">Delete</button>
+            <button class="btn btn-success ms-2"  (click)="PublishBehaviourFeedback()" [disabled]="isPublished">
+              {{ isPublished ? 'Published' : 'Publish' }}
+            </button>
+          </div>
+        </div>
+        <div *ngIf="behaviourFeedback.categoryWiseFeedback.length!=0">
+          <div class="card">
+            <div class="card-body">
+              <div *ngFor="let option of behaviourFeedback.categoryWiseFeedback; let i = index">
+                <div class="d-flex justify-content-between align-items-center px-2">
+                  <div class="m-2"><h5 class="m-0">{{option.categoryName}}</h5 ></div>
+                    <div class="d-flex gap-1 align-items-center" >
+                      <label for="marks">Marks:</label>
+                      <input class="my-1"  type="number" id="marks" min="0" max={{option.totalMarks}} [(ngModel)]="categories[i].receivedMarks">
+                      <h6>/{{option.totalMarks}}</h6>  
+                    </div>
+                  </div>
+                <textarea class="w-100" name="feedback" id="" cols="2" rows="2" placeholder="Enter feedback here" [(ngModel)]="categories[i].feedback"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="templateData">
+        <div *ngIf="behaviourFeedback.categoryWiseFeedback.length==0">
+          <div class="card">
+            <div class="card-body">
+              <div *ngFor="let option of templateData.options; let i = index">
+                <div class="d-flex justify-content-between align-items-center px-2">
+                  <div class="m-2"><h5 class="m-0">{{option.categoryName}}</h5 ></div>
+                  <div class="d-flex gap-1 align-items-center" >
+                    <label for="marks">Marks:</label>
+                    <input class="my-1"  type="number" id="marks" min="0" max={{option.totalMarks}} [(ngModel)]="categories[i].receivedMarks">
+                    <h6>/{{option.totalMarks}}</h6>  
+                  </div>
+                </div>
+                <textarea class="w-100" name="feedback" id="" cols="2" rows="2" placeholder="Enter feedback here" [(ngModel)]="categories[i].feedback"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

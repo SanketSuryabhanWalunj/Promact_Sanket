@@ -1,0 +1,13 @@
+.holiday-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sr-no {
+  padding-left: 10px;
+}
+
+.no-holiday {
+  padding: 10px;
+}

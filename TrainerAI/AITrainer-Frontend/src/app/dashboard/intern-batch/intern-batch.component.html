@@ -1,0 +1,164 @@
+<div class="admin-table-header">
+  <h3 class="text-blue"> Intern Batch: </h3>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-batch" (click)="EditMode(false, '')">Add
+    <i class="fa-solid fa-plus"></i></button>
+</div>
+<hr>
+
+<div class="table-responsive small">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">
+          <p class="text-blue" style="padding-left: 10px;">Batch Name</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">Description</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">Daily Hours</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">Week Days</p>
+        </th>
+        <th scope="col" class="text-end" style="padding-right: 25px;">
+          <p class="text-blue" style="padding-right: 30px;"> Action </p>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <app-loader-table></app-loader-table>
+      <tr *ngFor="let batch of batches; index as i">
+        <ng-container *ngIf="!batch.isDeleted">
+          <td class="align-middle" style="padding-left: 10px;"> {{ batch.batchName }} </td>
+          <td class="align-middle"> {{ batch.description }} </td>
+          <td class="align-middle"> {{ batch.dailyHours}} </td>
+          <td class="align-middle"> {{ batch.weekdaysNames}} </td>
+          <td class="text-end" style="padding-right: 25px;">
+            <button class="btn btn-primary btn-small m-1" data-bs-toggle="modal" data-bs-target="#add-batch"
+              (click)="EditMode(true, batch.id)">
+              <i class="fa-solid fa-pencil text-light"></i>
+            </button>
+            <button class="btn btn-danger btn-small m-1" data-bs-toggle="modal" data-bs-target="#delete-batch"
+              (click)="selectToDelete(i)">
+              <i class="fa-solid fa-trash text-light"></i>
+            </button>
+          </td>
+        </ng-container>
+      </tr>
+      <tr *ngIf="batches.length==0 || isAllDeleted">
+        <td class="text-center" colspan="10">No Batch Available</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Batch Modal -->
+<div class="modal fade" id="add-batch">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="AddBatchForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">{{ editMode ? 'Edit Batch Details': 'Add Batch Details'}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetall()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="batchName" class="form-label fw-semibold">Batch Name: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="batchName" formControlName="batchName"
+              placeholder="Enter batchName" (input)="checkNameExists(AddBatchForm.get('batchName')?.value)" [ngClass]="{
+                'is-valid': (!getControl('batchName')?.errors && getControl('batchName')?.touched),
+                'is-invalid': (getControl('batchName')?.errors && getControl('batchName')?.touched) || isNameExists
+              }" required>
+            <small *ngIf="getControl('batchName')?.errors && getControl('batchName')?.touched" class="text-danger">
+              Batch Name is required</small>
+            <span *ngIf="isNameExists" class="text-danger">Batch name already exists.</span>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label fw-semibold">Description: <span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="description" formControlName="description"
+              placeholder="Enter Description" [ngClass]="{
+                'is-valid': (!getControl('description')?.errors && getControl('description')?.touched),
+                'is-invalid': (getControl('description')?.errors && getControl('description')?.touched) || isNameExists
+              }" required>
+            <small *ngIf="getControl('description')?.errors && getControl('description')?.touched"
+              class="text-danger">Description is required</small>
+          </div>
+
+          <div class="mb-3" [formGroup]="AddBatchForm">
+            <label for="WeekdaysNames" class="form-label fw-semibold">Select WeekDays: <span class="text-danger">*</span></label>
+            <div formArrayName="WeekdaysNames">
+              <div *ngFor="let day of getweekdaysName().controls; let i = index" class="form-check">
+                <input type="checkbox" [formControlName]="i" [id]="'day' + i"
+                  [checked]="WeekdaysNames[i] === 'Tuesday' || WeekdaysNames[i] === 'Friday'"
+                  (change)="validateWeekdays()">
+                <label style="margin-left: 10px;" [for]="'day' + i">{{ WeekdaysNames[i] }}</label>
+              </div>
+            </div>
+            <small *ngIf="noWeekdaysSelected" class="text-danger">Please select at least one weekday</small>
+          </div>
+
+          <div class="mb-3">
+            <label for=" DailyHours" class="form-label fw-semibold">Daily Hours: <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id=" DailyHours" formControlName="DailyHours"
+              placeholder="Enter daily hours" [min]="1" [max]="24" [ngClass]="{
+                'is-valid': (!getControl('DailyHours')?.errors && getControl('DailyHours')?.touched),
+                'is-invalid': (getControl('DailyHours')?.errors && getControl('DailyHours')?.touched)
+              }" required>
+            <small *ngIf="getControl('DailyHours')?.errors && getControl('DailyHours')?.touched"
+            class="text-danger">Daily Hours is required</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetall()">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="editMode ? editDetails(AddBatchForm.value) : addBatch(AddBatchForm.value)"
+            [disabled]="AddBatchForm.invalid ||noWeekdaysSelected||isNameExists">
+            Save changes</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Admin modal -->
+<div class="modal fade" id="delete-batch">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">Delete Admin </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="deleteBatch(this.selectedBatchToDelete)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add Pagination -->
+
+<nav aria-label="Page navigation example" *ngIf="totalPage > 1">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <button class="page-link" (click)="previous()">Previous</button>
+    </li>
+    <ng-container *ngFor="let pageNumber of pageNumbers">
+      <li class="page-item" [class.active]="pageNumber === currentPage">
+        <button class="page-link" (click)="goToPage(pageNumber)"> {{ pageNumber }} </button>
+      </li>
+    </ng-container>
+    <li class="page-item">
+      <button class="page-link" (click)="next()">Next</button>
+    </li>
+  </ul>
+</nav>

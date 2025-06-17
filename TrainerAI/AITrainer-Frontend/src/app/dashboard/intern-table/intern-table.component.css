@@ -1,0 +1,48 @@
+.intern-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.internlist {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 20px;
+}
+.course-list {
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /* Add ellipsis (...) for overflow text */
+  max-width: 100%; /* Limit the maximum width */
+}
+.title {
+  font-weight: bold;
+}
+.cursor {
+  cursor: pointer;
+}
+
+tbody.cursor tr:hover {
+  background-color: #ddd;
+  transition: background-color 0.3s ease;
+}
+
+tbody.cursor tr:hover td {
+  background-color: transparent;
+}
+.pop-up {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.card1-footer {
+  display: flex;
+  justify-content: flex-end;
+  color: white;
+}
+.w-94 {
+  width: 94%;
+}

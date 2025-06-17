@@ -1,0 +1,24 @@
+.course-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hover-pointer {
+  cursor: pointer;
+}
+.cursor {
+  cursor: pointer;
+}
+
+tbody.cursor tr:hover {
+  background-color: #ddd;
+  transition: background-color 0.3s ease;
+}
+
+tbody.cursor tr:hover td {
+  background-color: transparent;
+}
+button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}

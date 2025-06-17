@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  # Aitrainer API
+  aitrainer-api:
+    container_name: "${NAME}-api"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "${WEBPORT}:8082" # Adjust based on your security needs 443
+    env_file: .env
+    environment:
+      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=ocPBTSPvjgXWWZC;Server=postgresql;Port=5432;Database=AiTrainerDB;Integrated Security=true;Pooling=true;
+      - ASPNETCORE_URLS=http://+:8082
+    depends_on:
+      - postgresql
+
+  # PostgreSQL
+  postgresql:
+    container_name: "${NAME}-postgresql"
+    image: postgres:16
+    ports:
+      - "${DBPORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ocPBTSPvjgXWWZC
+      - POSTGRES_DB=AiTrainerDB
+
+volumes:
+  postgres_data:

@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="scoreboard-table-header col-10">
+    <h3 class="text-blue"> Scoreboard: </h3>
+    <button class="btn btn-primary"  *ngIf="role !== 'Intern'" (click)="GetOverAllFeedbackScoreboardFile()">Download</button>
+  </div>
+    <div class="col-2" *ngIf="role !== 'Intern' ||(role === 'Intern' && internBatch !==null)">
+      <form [formGroup]="selectbatchform">
+        <select class="form-select" id="batch" formControlName="batch" (change)="Select(selectbatchform.value)" >
+          <ng-container *ngIf="role === 'Intern' ">
+            <option [ngValue]="null" disabled selected>{{ internBatch }}</option>
+          </ng-container>
+          <ng-container *ngIf="role !== 'Intern'">
+            <option [ngValue]="null" disabled selected>Select Batch</option>
+            <option *ngFor="let batch of batches" [value]="batch.id">{{ batch.batchName }}</option>
+          </ng-container>
+        </select>
+      </form>
+    </div>
+<hr>
+
+<div class="table-responsive small">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">
+          <p class="text-blue" style="padding-left: 10px;"> Rank </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Student Name </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Score </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue"> Course </p>
+        </th>     
+      </tr>
+    </thead>
+    <tbody *ngIf="scoreDetails">
+      <app-loader-table></app-loader-table>
+      <tr *ngFor="let score of scoreDetails; index as i">
+        <ng-container>
+          <td class="align-middle" [ngClass]="{'cursor': role == 'Admin' || score.userId == userId,'rank-one': i === 0,'rank-two': i === 1,'rank-three': i === 2,'align-middle cursor no-rank': i > 2}" [routerLink]="(role == 'Admin' || score.userId == userId) ? '' + score.id : null" style="padding-left: 10px;">{{ i + 1 }}</td>
+          <td class="align-middle" [ngClass]="{'cursor': role == 'Admin' || score.userId == userId, 'rank-one': i === 0,'rank-two': i === 1,'rank-three': i === 2,' no-rank': i > 2}" [routerLink]="(role == 'Admin' || score.userId == userId) ? '' + score.id : null">{{ score.firstname |titlecase}} {{ score.lastname|titlecase }}</td> 
+          <td class="align-middle score" [ngClass]="{'cursor': role == 'Admin' || score.userId == userId,'rank-one': i === 0,'rank-two': i === 1,'rank-three': i === 2,' no-rank': i > 2}" [routerLink]="(role == 'Admin' || score.userId == userId) ? '' + score.id : null">{{ score.percentage | number: '1.1-1'}}%</td>
+          <td class="align-middle" [ngClass]="{'cursor': role == 'Admin' || score.userId == userId,'rank-one': i === 0,'rank-two': i === 1,'rank-three': i === 2,' no-rank': i > 2}" [routerLink]="(role == 'Admin' || score.userId == userId) ? '' + score.id : null">{{ score.course }}</td>
+        </ng-container>
+      </tr>
+      
+      
+      <tr *ngIf="scoreDetails.length<=0 ">
+        <td class="text-center" colspan="10">No Intern Score Avalibale </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

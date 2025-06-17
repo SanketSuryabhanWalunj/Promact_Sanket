@@ -1,0 +1,24 @@
+<div class="card">
+  <form [formGroup]="journalForm" (ngSubmit)="submit(journalForm.value)">
+    <div class="card-body">
+
+      <div class="template-title d-flex align-items-center mb-3">
+        <div class="title">Daily Journal</div>
+        <button type="submit" class="btn btn-primary" [disabled]="journalForm.invalid">Save</button>
+      </div>
+      <hr>
+
+      <div class="options" formArrayName="options">
+        <div *ngFor="let option of optionsArray.controls; let i = index" [formGroupName]="i" class="mb-1">
+          <div class="d-flex align-items-center fs-3"> {{topics[i].topicName}} </div>
+          <textarea class="textarea px-3" formControlName="notes" placeholder="Type here..."
+            (input)="adjustTextareaHeight($event)"></textarea>
+          <input type="text" class="w-100" hidden style="font-size: 15px;" formControlName="description"
+            placeholder="Enter Topic description">
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+</div>

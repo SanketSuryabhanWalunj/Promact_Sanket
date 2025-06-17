@@ -1,0 +1,136 @@
+.table {
+  width: 220%;
+  overflow-x: scroll;
+
+}
+
+.table td,
+.table th {
+
+  padding: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.table p {
+  margin-bottom: 0;
+}
+
+.fixed {
+  width: 10%;
+  word-wrap: break-word !important;
+  text-align: center;
+  word-break: break-all;
+
+}
+
+.fixed-large {
+  width: 17% !important;
+  word-wrap: break-word !important;
+  text-align: center;
+  word-break: break-all;
+
+}
+
+.table-wrapper {
+  height: 394px;
+  overflow-y: auto;
+  overflow-x: auto;
+
+}
+
+.text-break {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.fixed-height {
+  max-height: 243px;
+  width: 210px;
+  overflow-y: auto;
+}
+
+.table-responsive {
+  overflow-x: visible;
+
+}
+
+.form-check-label {
+  font-weight: normal;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 2;
+}
+
+.name {
+  margin: 0 !important;
+  padding-left: 30px !important;
+  margin-bottom: 10px !important;
+}
+
+.namedetail {
+  padding-right: 50px !important;
+  ;
+}
+
+.filter {
+  margin: 0 !important;
+  padding-left: 30px !important;
+  margin-bottom: 10px !important;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: rgb(1, 162, 255);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.form-select {
+  width: 200px;
+  margin-left: 10px;
+}
+
+.form-check {
+  margin-left: 1rem;
+
+}
+
+.dropdown-menu {
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.refresh {
+  margin-left: .6rem;
+}
+
+.dropdown {
+  padding-left: 0px;
+}
+
+.setright {
+  padding-right: 24px;
+}
+
+.dropdown-toggle {
+  padding-right: 24px;
+}
+
+.email {
+  margin-bottom: 10px !important;
+
+}
+
+.careerPath {
+  padding-left: 45px
+}
+
+.navbar-heading {
+  margin-bottom: 0;
+}

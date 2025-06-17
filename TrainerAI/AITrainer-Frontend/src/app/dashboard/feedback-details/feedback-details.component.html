@@ -1,0 +1,223 @@
+<!--Header Section-->
+<div class="row">
+  <div class="feedback-table-header d-flex justify-content-between col-12">
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-small bg-blue text-light rounded-circle" (click)="handleBack() ">
+        <i class="fa-solid fa-arrow-left text-small"></i>
+      </button>
+      <h3 class="text-blue ml-2 navbar-heading">Feedback Details:</h3>
+    </div>
+    <!--Download button-->
+    <div class="d-flex align-items-center">
+      <button class="btn btn-small bg-blue text-light" *ngIf="feedback.length"
+        (click)="GetOverAllFeedbackFile()">Download
+        <i class="fa-solid fa-download"></i>
+      </button>
+
+      <!-- Select Batch dropdown -->
+
+      <form [formGroup]="selectbatchform">
+        <select class="form-select" id="batch" formControlName="batch" (change)="Select()">
+          <ng-container>
+            <option [ngValue]="null" disabled selected>Select Batch</option>
+            <option *ngFor="let batch of batches" [value]="batch.id">{{ batch.batchName }}</option>
+          </ng-container>
+        </select>
+      </form>
+
+      <!--Refresh Button-->
+      <button class="btn bg-blue text-light refresh" (click)="reset()">
+        <i class="fa fa-refresh"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<hr>
+
+<!--Display all interns in the selected batch with their feedback details-->
+<div class="table-wrapper">
+  <div class="table-responsive">
+    <table class="table table-striped table-sm ">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="dropdown d-flex justify-content">
+              <p class="text-blue text-center filter ">Intern Name</p>
+              <button class="text-blue btn btn-link btn-sm dropdown-toggle" type="button" id="Dropdown"
+                data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+              </button>
+              <div class="dropdown-menu col-3 fixed-height" aria-labelledby="Dropdown">
+                <div class="form-check" *ngFor="let item of internsName">
+                  <input class="form-check-input" type="checkbox" [id]="'careerPath-' + item"
+                    (change)="handleNameSelection( $event,item)">
+                  <label class="form-check-label" for="{{ 'reviewer-' + item }}">
+                    {{ item }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </th>
+          <th scope="col">
+            <p class="text-blue text-center email ">Email Id</p>
+          </th>
+          <th scope="col">
+            <div class="dropdown d-flex justify-content-end">
+              <p class="text-blue text-center">Career Path</p>
+              <button class="text-blue btn btn-link btn-sm dropdown-toggle" type="button" id="Dropdown"
+                data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+              </button>
+              <div class="dropdown-menu col-3 fixed-height" aria-labelledby="Dropdown">
+                <ng-container *ngIf="careerPaths">
+                  <div class="form-check" *ngFor="let item of careerPaths">
+                    <input class="form-check-input" type="checkbox" [id]="'careerPath-' + item"
+                      (change)="handleCareerPathSelection($event, item.id)">
+                    <label class="form-check-label" [for]="'careerPath-' + item">
+                      {{ item.name }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </th>
+
+          <th scope="col">
+            <div class="dropdown d-flex justify-content-end">
+              <p class="text-blue text-center ">Course</p>
+              <button class="text-blue btn btn-link btn-sm dropdown-toggle" style="padding-right: 54px;" type="button"
+                id="Dropdown" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+              </button>
+              <div class="dropdown-menu col-3 fixed-height" aria-labelledby="Dropdown">
+                <div class="form-check" *ngFor="let item of courses">
+                  <input class="form-check-input" type="checkbox" [id]="'careerPath-' + item"
+                    (change)="handleCourseSelection( $event,item.name)">
+                  <label class="form-check-label" for="{{ 'course-' + item }}">
+                    {{ item.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </th>
+
+          <th scope="col">
+            <p class="text-blue text-center filter setright"> Topic </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue text-center filter setright"> Feedback Type </p>
+
+          </th>
+          <th scope="col">
+            <p class="text-blue text-center filter setright"> Feedback </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue text-center filter setright"> Improvement Area </p>
+          </th>
+          <th scope="col">
+            <p class="text-blue text-center filter setright"> Comment/Acknowledgement</p>
+          </th>
+          <th scope="col">
+            <p class="text-blue text-center filter setright"> Score </p>
+          </th>
+          <th scope="col">
+            <div class="dropdown d-flex justify-content-center">
+              <p class="text-blue text-center ">Reviewer</p>
+              <button class="text-blue btn btn-link btn-sm dropdown-toggle" style="padding-right: 1px;" type="button"
+                id="Dropdown" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+              </button>
+              <div class="dropdown-menu col-3 fixed-height" aria-labelledby="Dropdown">
+                <div class="form-check" *ngFor="let item of reviewers">
+                  <input class="form-check-input" type="checkbox" [id]="'careerPath-' + item"
+                    (change)="handleReviewerSelection( $event,item)">
+                  <label class="form-check-label" for="{{ 'reviewer-' + item }}">
+                    {{ item }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </th>
+
+          <th scope="col">
+            <p class="text-blue text-center filter setright">Date </p>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <app-loader-table></app-loader-table>
+        <ng-container *ngFor="let item of feedback">
+          <tr *ngFor="let feedbackItem of item.feedbackList; let i = index ">
+            <td class="fixed " style="padding-right:50px" *ngIf="i >= 0">{{ item.name|titlecase }}</td>
+            <td class="fixed ">{{item.emailId}}</td>
+            <td class="fixed careerPath">{{item.careerPath?.name}}</td>
+            <td class="fixed ">{{ feedbackItem.courseName }}</td>
+            <td class="fixed ">{{ feedbackItem.topicName }}</td>
+            <td class="fixed ">{{ feedbackItem.type }}</td>
+            <td class="fixed-large">
+              <span *ngIf="!feedbackItem.showFullText && shouldDisplayReadMore(feedbackItem.feedback)">
+                {{ preprocessFeedback(feedbackItem.feedback).slice(0, 100) }}...
+                <button class="link-button" (click)="toggleShowFullText(feedbackItem, 'feedback')">Read More</button>
+              </span>
+              <span *ngIf="feedbackItem.showFullText || !shouldDisplayReadMore(feedbackItem.feedback)">
+                {{ preprocessFeedback(feedbackItem.feedback) }}
+                <button class="link-button" *ngIf="feedbackItem.showLessFeedback"
+                  (click)="toggleShowFullText(feedbackItem, 'feedback')">Show Less</button>
+              </span>
+            </td>
+            <td class="fixed-large">
+              <span *ngIf="!feedbackItem.showFullText && shouldDisplayReadMore(feedbackItem.improvementArea)">
+                {{ feedbackItem.improvementArea?.slice(0, 100) }}...
+                <button class="link-button" (click)="toggleShowFullText(feedbackItem, 'improvementArea')">Read
+                  More</button>
+              </span>
+              <span *ngIf="feedbackItem.showFullText || !shouldDisplayReadMore(feedbackItem.improvementArea)">
+                {{ feedbackItem.improvementArea }}
+                <button class="link-button" *ngIf="feedbackItem.showLessImprovementArea"
+                  (click)="toggleShowFullText(feedbackItem, 'improvementArea')">Show Less</button>
+              </span>
+            </td>
+            <td class="fixed-large">
+              <span *ngIf="!feedbackItem.showFullText && shouldDisplayReadMore(feedbackItem.comment)">
+                {{ feedbackItem.comment?.slice(0, 100) }}...
+                <button class="link-button" (click)="toggleShowFullText(feedbackItem, 'comment')">Read More</button>
+              </span>
+              <span *ngIf="feedbackItem.showFullText || !shouldDisplayReadMore(feedbackItem.comment)">
+                {{ feedbackItem.comment }}
+                <button class="link-button" *ngIf="feedbackItem.showLessComment"
+                  (click)="toggleShowFullText(feedbackItem, 'comment')">Show Less</button>
+              </span>
+            </td>
+
+            <td class="fixed">
+              <ng-container *ngIf="feedbackItem.type === 'Assignment'">{{ feedbackItem.assignmentReceivedMarks }}/{{
+                feedbackItem.assignmentTotalMarks }}</ng-container>
+              <ng-container *ngIf="feedbackItem.type === 'Behaviour'">{{ feedbackItem.behaviouralScore }}/{{
+                feedbackItem.behaviouralTotalScore }}</ng-container>
+              <ng-container *ngIf="feedbackItem.type === 'Journal'">{{ feedbackItem.journalRating }}/10</ng-container>
+            </td>
+            <td class="fixed text-center">{{ feedbackItem.reviewerName }}</td>
+            <td class="fixed">{{ feedbackItem.updatedDate | date: 'dd MMM yyyy' }}</td>
+
+          </tr>
+        </ng-container>
+        <tr *ngIf="feedbackLength === 0">
+          <td class="text-left" style="padding-left: 30rem;" colspan="12">No Feedback Records Available</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--Pagination-->
+<nav aria-label="Page navigation" *ngIf="totalPage>1">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <button class="page-link" (click)="previous()">Previous</button>
+    </li>
+    <ng-container *ngFor="let pageNumber of pageNumbers">
+      <li class="page-item" [class.active]="pageNumber === currentPage">
+        <button class="page-link" (click)="goToPage(pageNumber)"> {{ pageNumber }} </button>
+      </li>
+    </ng-container>
+    <li class="page-item">
+      <button class="page-link" (click)="next()">Next</button>
+    </li>
+  </ul>
+</nav>

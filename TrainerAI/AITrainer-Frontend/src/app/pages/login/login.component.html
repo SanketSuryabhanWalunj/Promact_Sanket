@@ -1,0 +1,59 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <div class="card">
+      <form [formGroup]="loginForm">
+        <div class="card-header p-2">
+          <h3 class="card-title text-center text-blue" id="card-heading">Login</h3>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <div class="mb-3">
+              <label for="email" class="form-label fw-semibold">Email:</label>
+              <input type="text" class="form-control" id="email" formControlName="email" placeholder="Enter Email..."
+              [ngClass]="{ 'is-invalid' : (getControl('email')?.errors && getControl('email')?.touched)}"
+              [ngClass]="{ 'is-valid' : (!getControl('email')?.errors && getControl('email')?.touched)}"
+              required>
+                <small *ngIf="getControl('email')?.hasError('required') && getControl('email')?.touched" style="color: red;">Email is
+                  required.</small>
+                <small *ngIf="getControl('email')?.hasError('email') && getControl('email')?.touched" style="color: red;">Please enter 
+                  a valid email address.</small>
+            </div>
+            <!-- <div class="mb-3">
+              <label for="password" class="form-label fw-semibold">Passowrd :</label>
+              <input type="password" class="form-control" id="password" formControlName="password" placeholder="Enter Password..."
+              [ngClass]="{ 'is-invalid' : (getControl('password')?.errors && getControl('password')?.touched)}"
+              [ngClass]="{ 'is-valid' : (!getControl('password')?.errors && getControl('password')?.touched)}" required>
+              <small *ngIf="getControl('password')?.errors && getControl('password')?.touched" style="color: red;">Password is
+                required.</small>
+            </div> -->
+                  
+            <div class="mb-3">
+              <label for="newPassword" class="form-label fw-semibold">Password:</label>
+                <div class="d-flex">
+                  <input [type]="hidePass ? 'password' : 'text'" class="form-control" id="password" formControlName="password" placeholder="Enter Password...">
+                  <button class="btn btn-secondary text-light" (click)="togglePassword()">
+                    <i class="fa-solid" [ngClass]="hidePass ? 'fa-eye' : 'fa-eye-slash'"></i>
+                  </button>
+                </div>
+                 <small *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched" style="color: red;">
+                  Password is required.
+                </small>
+                <small *ngIf="loginForm.get('password')?.hasError('pattern') && loginForm.get('password')?.touched" style="color: red;">
+                  Password must contain at least 8 characters including one uppercase letter, one lowercase letter, one digit, and one special character from #?!@$%^&*-.
+                </small>
+              </div>
+            
+
+
+          </div>
+          <button type="button" class="btn btn-primary w-100" (click)="login(loginForm.value)" [disabled]="loginForm.invalid" >Login</button>
+          <div class="text-center py-1 ">
+            <small>Forgot Password <a class="text-primary text-decoration-none" routerLink="/forgot-password">click here</a></small>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>

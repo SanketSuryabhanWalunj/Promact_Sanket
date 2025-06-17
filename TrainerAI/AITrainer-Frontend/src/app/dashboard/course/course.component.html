@@ -1,0 +1,294 @@
+<!-- Course table -->
+<div class="course-header">
+  <h3 class="text-blue">{{ constantString.course.courseTitle }}:</h3>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-edit-course"
+    (click)="closeCourseForms()">
+    {{ constantString.add }} <i class="fa-solid fa-plus"></i>
+  </button>
+</div>
+<hr />
+
+<div class="table-responsive small">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">
+          <p class="text-blue" style="padding-left: 10px">
+            {{ constantString.course.courseTitle }}
+          </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">{{ constantString.course.courseDuration }}</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">
+            {{ constantString.course.courseDurationType }}
+          </p>
+        </th>
+        <th scope="col">
+          <p class="text-blue">{{ constantString.course.trainingLevel }}</p>
+        </th>
+        <th scope="col">
+          <p class="text-blue text-center">
+            {{ constantString.action }}
+          </p>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="courseList" class="cursor">
+      <tr *ngFor="let list of courseList; index as i">
+        <ng-container *ngIf="!list.isDeleted">
+          <td class="align-middle " [routerLink]="'' + list.id" style="padding-left: 10px">
+            {{ list.name }}
+          </td>
+          <td class="align-middle" [routerLink]="'' + list.id">
+            {{ list.duration }}
+          </td>
+          <td class="align-middle " [routerLink]="'' + list.id">
+            {{ list.durationType }}
+          </td>
+          <td class="align-middle " [routerLink]="'' + list.id">
+            {{ list.trainingLevel }}
+          </td>
+          <td class="text-center">
+            <button class="btn btn-primary btn-small m-1" data-bs-toggle="modal" data-bs-target="#create-edit-course"
+              (click)="editCourseForm(list)">
+              <i class="fa-solid fa-pen text-light"></i>
+            </button>
+            <button class="btn btn-danger btn-small m-1" data-bs-toggle="modal" data-bs-target="#delete-course"
+              (click)="selectToDelete(list)">
+              <i class="fa-solid fa-trash text-light"></i>
+            </button>
+          </td>
+        </ng-container>
+      </tr>
+    </tbody>
+    <tbody *ngIf="courseList && courseList.length <= 0">
+      <tr>
+        <td class="text-center" colspan="10">
+          {{ constantString.course.noCourseDetails }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add/Edit course Modal -->
+<div class="modal fade" id="create-edit-course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="create_editCourseForm">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-heading">
+            {{
+            isEditingCourse
+            ? constantString.course.updateCourse
+            : constantString.course.createCourse
+            }}
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closeCourseForms()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="course-name" class="form-label fw-semibold">
+              {{ constantString.course.courseTitle }}:
+              <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="course-name" formControlName="name"
+              placeholder="Enter Course Name" [value]="isEditingCourse ? selectedCourse?.name : null" [ngClass]="{ 'is-valid': getControl('name')?.touched && !getControl('name')?.errors,
+            'is-invalid': getControl('name')?.touched && getControl('name')?.errors?.['required'] }" required />
+            <small *ngIf="getControl('name')?.errors && getControl('name')?.touched" class="text-danger">{{
+              constantString.course.courseNameRequired }}</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="duration-type" class="form-label fw-semibold">{{ constantString.course.durationType }}:
+              <span class="text-danger">*</span>
+            </label>
+            <select class="form-select" id="duration-type" formControlName="durationType"
+              [attr.disabled]="isEditingCourse ? true : null">
+              <option value="Days">{{ constantString.daily }}</option>
+              <option value="Weeks">{{ constantString.weekly }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="course-duration" class="form-label fw-semibold">{{ constantString.course.courseDuration }}:
+              <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="course-duration" formControlName="duration"
+              placeholder="Enter Course duration" [min]="1" [ngClass]="{ 'is-valid': getControl('duration')?.touched && !getControl('duration')?.errors,
+            'is-invalid': getControl('duration')?.touched && getControl('duration')?.errors?.['required'] }" required
+              [attr.disabled]="isEditingCourse ? true : null" />
+            <small *ngIf="getControl('duration')?.errors?.['required'] && getControl('duration')?.touched"
+              class="text-danger">{{ constantString.course.courseDurationrequired }}</small>
+            <small *ngIf="getControl('duration')?.errors?.['min'] && getControl('duration')?.touched"
+              class="text-danger">{{ constantString.course.durationMustBeGreater }}</small>
+            <small *ngIf="
+                getControl('duration')?.value &&
+            getControl('duration')?.hasError('pattern') &&
+            !getControl('duration')?.errors?.['min']
+            " class="text-danger">{{ constantString.course.validNumberValidation }}</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="want-quiz" class="form-label fw-semibold">{{ constantString.course.quizLabel }}:
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-check form-check-inline mx-2" id="want-quiz">
+              <input class="form-check-input" type="radio" name="quiz" id="inlineRadio1" [value]="true"
+                formControlName="quiz" [attr.disabled]="isEditingCourse ? true : null"
+                [checked]="selectedCourse?.quiz === true" />
+              <label class="form-check-label" for="inlineRadio1">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="quiz" id="inlineRadio2" [value]="false"
+                formControlName="quiz" [attr.disabled]="isEditingCourse ? true : null"
+                [checked]="selectedCourse?.quiz === false" />
+              <label class="form-check-label" for="inlineRadio2">No</label>
+            </div>
+          </div>
+          <ng-container *ngIf="
+              create_editCourseForm.get('quiz')?.value == true &&
+              !isEditingCourse
+            ">
+            <div class="mb-3">
+              <label for="quiz-question-count" class="form-label fw-semibold">
+                {{ constantString.course.quizQuestionCount }}:
+                <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="quiz-question-count" formControlName="quizCount"
+                placeholder="Enter quiz question count" [ngClass]="{ 'is-valid': getControl('quizCount')?.touched && !getControl('quizCount')?.errors,
+              'is-invalid': getControl('quizCount')?.touched && getControl('quizCount')?.errors?.['required'] }"
+                required />
+              <small *ngIf="getControl('quizCount')?.errors?.['required'] && getControl('quizCount')?.touched"
+                class="text-danger">{{ constantString.course.quizQuestionCountRequired }}</small>
+            </div>
+
+            <div class="mb-3">
+              <label for="duration" class="form-label fw-semibold">{{ constantString.course.quizTimeDuration }}:
+                <span class="text-danger">*</span></label>
+              <div class="d-flex">
+                <input type="text" class="form-control" id="quiz-time-duration" formControlName="quizTime"
+                  placeholder="Enter the duration of the quiz" [ngClass]="{ 'is-valid': getControl('quizTime')?.touched && !getControl('quizTime')?.errors,
+                'is-invalid': getControl('quizTime')?.touched && getControl('quizTime')?.errors?.['required'] }"
+                  required />
+                <input type="text" class="form-control w-25" id="quiz-time-duration-type" value="Minutes" disabled
+                  [min]="0" [max]="240" />
+              </div>
+              <small *ngIf="getControl('quizTime')?.errors?.['required'] && getControl('quizTime')?.touched"
+                class="text-danger">{{ constantString.course.quizQuestionCountRequired }}</small>
+            </div>
+            <div class="mb-3">
+              <label for="quiz-question-marks" class="form-label fw-semibold">
+                {{ constantString.course.quizQuestionMarks }}:
+                <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="quiz-question-marks" formControlName="quizMarks"
+                placeholder="Enter marks for quiz" [ngClass]="{
+                  'is-valid':
+                    getControl('quizMarks')?.touched &&
+                    !getControl('quizMarks')?.errors,
+                  'is-invalid':
+                    getControl('quizMarks')?.touched &&
+                    getControl('quizMarks')?.errors
+                }" />
+
+              <!-- Error for required validation -->
+              <small *ngIf="
+                  getControl('quizMarks')?.hasError('required') &&
+                  getControl('quizMarks')?.touched
+                " class="text-danger">
+                {{ constantString.course.quizMarksRequired }}
+              </small>
+
+              <!-- Error for min validation -->
+              <small *ngIf="
+                  getControl('quizMarks')?.hasError('min') &&
+                  getControl('quizMarks')?.touched
+                " class="text-danger">
+                {{ constantString.course.marksMustBeGreaterThanZero }}
+              </small>
+
+              <!-- Error for pattern validation -->
+              <small *ngIf="
+                  getControl('quizMarks')?.hasError('pattern') &&
+                  getControl('quizMarks')?.touched
+                " class="text-danger">
+                {{ constantString.course.onlyPositiveWholeNumbersAllowed }}
+              </small>
+            </div>
+          </ng-container>
+
+          <div class="mb-3">
+            <label for="level" class="form-label fw-semibold">{{ constantString.level }}:
+              <span class="text-danger">*</span></label>
+            <select class="form-select" id="level" name="trainingLevel" formControlName="trainingLevel"
+              [attr.disabled]="isEditingCourse ? true : null">
+              <option *ngFor="let item of trainingLevelOptions" [value]="item">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeCourseForms()">
+            {{ constantString.close }}
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="isEditingCourse ? editCourse() : createCourse()" [disabled]="
+              isEditingCourse
+                ? !create_editCourseForm.get('name')?.value
+                : !create_editCourseForm.valid
+            ">
+            {{ constantString.saveChanges }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete course modal -->
+<div class="modal fade" id="delete-course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{ DeleteCourse }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ AreYouSure }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {{ Close }}
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteCourse()">
+          {{ Delete }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add Pagination -->
+<nav aria-label="Page navigation example" *ngIf="totalPage > 1">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <button [disabled]="!hasPreviousPage" class="page-link" (click)="previous()">
+        {{ constantString.previous }}
+      </button>
+    </li>
+    <ng-container *ngFor="let pageNumber of pageNumbers">
+      <li class="page-item" [class.active]="pageNumber === currentPage">
+        <button class="page-link" (click)="goToPage(pageNumber)">
+          {{ pageNumber }}
+        </button>
+      </li>
+    </ng-container>
+    <li class="page-item">
+      <button [disabled]="!hasNextPage" class="page-link" (click)="next()">
+        {{ constantString.next }}
+      </button>
+    </li>
+  </ul>
+</nav>

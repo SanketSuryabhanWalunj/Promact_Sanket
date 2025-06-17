@@ -1,0 +1,47 @@
+.card {
+  min-height: calc(100% - 75px);
+}
+
+.template-title input {
+  width: 100%;
+  height: 50px;
+  border: none;
+  outline: none;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.options {
+  margin-left: 20px;
+}
+
+.options input {
+  font-weight: 600;
+  font-size: 20px;
+  border: none;
+  outline: none;
+}
+
+.options .textarea {
+  width: 100%;
+  display: block;
+  overflow: auto;
+  min-height: 60px;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.topic{
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+}
+
+.description{
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+}

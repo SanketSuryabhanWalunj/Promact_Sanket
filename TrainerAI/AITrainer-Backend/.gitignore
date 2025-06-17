@@ -1,0 +1,5 @@
+.idea
+.vs
+AITrainer/bin
+AITrainer/obj
+AITrainer/appsettings.Development.json

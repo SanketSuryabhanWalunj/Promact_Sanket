@@ -1,0 +1,32 @@
+.card {
+  background-color: #9ec3de26;
+}
+
+.fixed-height {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.d-flex p {
+  margin-top: 1rem;
+}
+
+.border {
+  border: 2px solid black;
+  border-radius: 8px;
+}
+
+.scrollable-container {
+  max-height: 350px;
+  overflow-y: auto;
+}
+.no-feedback {
+  margin-top: 10px;
+  padding: 5px 20px 5px 20px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+}
+.mentor-assignment-reset {
+  font-size: 15px;
+  margin-left: 15px;
+}

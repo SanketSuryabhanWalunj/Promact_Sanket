@@ -1,0 +1,87 @@
+.leave-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fixed-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overflow-cell {
+  max-height: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-Requestbody {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.hover-pointer {
+  cursor: pointer;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.cursor:hover {
+  text-decoration: underline;
+  color: #0099ff;
+}
+
+.attachment-container {
+  max-height: 70px;
+}
+
+.attachment-container-display {
+  display: flex;
+  flex-wrap: nowrap;
+  max-height: 70px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.attachment-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  width: 80px;
+  height: 40px;
+  font-size: 12px;
+}
+
+.attachment-button-display {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  width: 80px;
+  height: 40px;
+  font-size: 12px;
+  position: relative;
+}
+
+.attachment {
+  margin-left: 235px;
+}
+
+.button-text {
+  max-width: 60px;
+}
+
+.td-class {
+  height: 50px;
+}

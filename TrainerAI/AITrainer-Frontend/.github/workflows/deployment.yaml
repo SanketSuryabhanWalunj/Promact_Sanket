@@ -1,0 +1,39 @@
+# frontend 
+name : CI/CD Pipeline 
+
+on:
+   push:
+     branches: ["development"]
+   workflow_dispatch:
+
+jobs:
+  deploy:
+      runs-on: ubuntu-latest
+
+      steps: 
+        - name: Checkout Code
+          uses: actions/checkout@v2
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with: 
+            node-version: 18
+
+        - name: Copy src Folder to Remote Server
+          uses: appleboy/scp-action@v0.1.4
+          with:
+              host: ${{ secrets.SSH_HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              source: "."
+              target: "/root/aitrainer-frontend"
+  
+        - name: Build and Deploy
+          uses: appleboy/ssh-action@v0.1.10
+          with:
+              host: ${{ secrets.SSH_HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              script: |
+                  cd aitrainer-frontend
+                  sudo docker-compose up -d --force-recreate --build

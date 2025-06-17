@@ -1,0 +1,43 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: ["production"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0'
+    
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+
+
+      - name: Copy src Folder to Remote Server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USERNAME }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            source: "."
+            target: "/root/aitrainer-production/backend"
+
+      - name: Build and Deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USERNAME }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            script: |
+                cd aitrainer-production/backend
+                export COMPOSE_INTERACTIVE_NO_CLI: "1"
+                sudo docker-compose up -d --force-recreate --build

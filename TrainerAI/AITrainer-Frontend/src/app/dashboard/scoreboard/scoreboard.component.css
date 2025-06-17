@@ -1,0 +1,30 @@
+.scoreboard-table-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cursor {
+  cursor: pointer;
+}
+
+.cursor:hover {
+  text-decoration: underline;
+  color: rgb(0, 153, 255);
+}
+.rank-one {
+  background-color: #ffc414;
+}
+
+.rank-two {
+  background-color: #ffd464;
+}
+
+.rank-three {
+  background-color: #ffecb4;
+}
+.no-rank {
+  background-color: #ffffff;
+}
+.score{
+  padding-right: 30px;
+}

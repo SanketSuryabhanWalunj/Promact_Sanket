@@ -1,0 +1,44 @@
+<!--Page title-->
+<div class="holiday-table-header">
+    <h3 class="text-blue">{{nationalHolidays}} </h3>
+</div>
+<hr>
+
+<div class="table-responsive small">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <p class="text-blue sr-no"> {{srNo}}</p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue"> {{date}} </p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue"> {{weekDays}} </p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue"> {{holidays}} </p>
+                </th>
+                <th scope="col">
+                    <p class="text-blue"> {{workLocation}} </p>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let holiday of holidayList; index as i">
+                <ng-container>
+                    <td class="align-middle sr-no">{{(i+1)}}</td>
+                    <td class="align-middle">{{ holiday.date | date:'dd-MM-yyyy'}}</td>
+                    <td class="align-middle">{{ holiday.weekDay}}</td>
+                    <td class="align-middle">{{ holiday.holidayName}}</td>
+                    <td class="align-middle " style="padding-right: 25px;"> {{ holiday.workLocation}} </td>
+                </ng-container>
+            </tr>
+            <tr *ngIf="holidayList.length <=0 ">
+                <td class="text-center no-holiday" colspan="10">{{noHolidaytoShow}} </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>

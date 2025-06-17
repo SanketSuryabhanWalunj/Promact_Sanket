@@ -1,0 +1,173 @@
+<body>
+  <div class="page-container d-flex">
+    <div class="leave-header d-flex justify-content-start">
+      <button type="button" class="btn btn-small bg-blue text-light rounded-circle bg-size"
+        routerLink="/dashboard/punch-records-details">
+        <i class="fa-solid fa-arrow-left text-small "></i>
+      </button>
+      <h3 class="text-blue px-2 m-0">{{RequestAttendance}} </h3>
+    </div>
+    <hr>
+    <form class="container" [formGroup]="punchRequestForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-3">
+            <label for="attendanceDate">{{AttendanceDate}}</label>
+          </div>
+          <div class="col-5">
+            <input type="date" id="attendanceDate" formControlName="attendanceDate"
+              class="form-control custom-date-picker" [max]="maxdate" [min]="minDate" #dateInput
+              (change)="onDateChange(dateInput.value)" />
+            <span *ngIf="setAlreadyApplied" class="text-danger">{{YouHaveAlreadyRequestOnThisDate}}</span>
+          </div>
+          <div class="col-4"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-3">
+            <label for="punches">{{Punches}}:</label>
+          </div>
+          <div class="col-5">
+            <span *ngFor="let punch of punchesArray">
+              <span class="previous-punch">{{punch}}</span>
+            </span>
+            <div class="form-control">
+              <ng-container *ngFor="let tag of tags">
+                <span class="tag" id="spantag">{{ tag }}
+                  <span class="remove" id="spanremove" (click)="removeTag(tag)">&times;</span>
+                </span>
+              </ng-container>
+              <input id="tagid" #tagInput type="text" formControlName="punches" (keydown)="onKeyDown($event)"
+                [value]="inputValue" (input)="onInput($event)"
+                placeholder="Enter punches in 24-hour format e.g., 9:00, 18:30" />
+
+              <!-- Display validation error -->
+
+            </div>
+            <div *ngIf="getpunches?.invalid && getpunches?.touched" class="text-danger">
+              <small *ngIf="isInvalidTimeFormatError()">{{InvalidFormatUseHHmmOrHHmmHHmme091830}}</small>
+              <small *ngIf="isRequiredError()">{{PunchTimesAreRequired}}</small>
+            </div>
+
+            <small class="form-text text-muted">
+              {{PleaseEnterPunchesIn24HoursFormateg9001830PressEnterAfterPuttingEachPunch}}
+              {{PunchesShouldBeInChronologicalSequenceDoNotUseAnyStringsLikeAMPMEtc}}
+            </small>
+          </div>
+          <div class="col-4"></div>
+          <div class="error"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="col-3">
+            <label for="comment">{{Comment}}</label>
+          </div>
+          <div class="col-5">
+            <textarea id="comment" formControlName="comment" class="form-control"
+              [ngClass]="{'is-invalid': punchRequestForm.get('comment')?.invalid && (punchRequestForm.get('comment')?.dirty || punchRequestForm.get('comment')?.touched)}"></textarea>
+            <span
+              *ngIf="punchRequestForm.get('comment')?.invalid && (punchRequestForm.get('comment')?.dirty || punchRequestForm.get('comment')?.touched)"
+              style="color: red;">{{EnterValidReason}}</span>
+          </div>
+          <div class="col-4"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-5">
+            <button type="submit" class="btn btn-primary"
+              [disabled]="punchRequestForm.invalid || setAlreadyApplied">{{Request}}</button>
+              <button type="button" (click)="reset()" class="btn btn-secondary">{{Reset}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <hr>
+    <!-- Intern Request Table -->
+    <div class="small intern-table">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">
+              <div class="d-flex ">
+                <p class="text-blue "> {{RequestedDate}}</p>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex punches-d">
+                <p class="text-blue"> {{Punches}}</p>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex ">
+                <p class="text-blue "> {{Comment}}</p>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex ">
+                <p class="text-blue ">{{Status}} </p>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex ">
+                <p class="text-blue action">{{Action}}</p>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="allRequestsForPunchInAndOut">
+          <tr *ngFor="let list of punchRecordRequestsDto index as i">
+            <ng-container *ngIf="!list.isDeleted">
+              <td class="align-middle col">{{ list.requestDate | date}}</td>
+              <td class="col">
+                <div class="d-flex flex-wrap gap-2">
+                  <div *ngFor="let punch of list.requestPunches">
+                    <span class="punch-time d-inline-block text-center punch-in">{{ getDate(punch)}}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="col text-break">{{list.requestReason}}</td>
+              <td class="col">{{list.status}}</td>
+              <td class="col">
+                <button class="btn btn-danger btn-small m-1" type="button" data-bs-toggle="modal"
+                  data-bs-target="#delete" (click)="selectToDelete(i)" *ngIf="list.status===Pending">
+                  <i class="fa-solid fa-trash text-light"></i>
+                </button>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td class="text-center" colspan="10" *ngIf="punchRecordRequestsDto.length==0">{{NoRequestedRecords}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+<!-- Delete Record modal -->
+<div class="modal fade" id="delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-heading">{{DeleteRequestRecord}} </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{AreYouSureYouWantToDelete}}?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{Close}}</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="deletePunchRequest(this.selectedRequest)">{{Delete}}</button>
+      </div>
+    </div>
+  </div>
+</div>
